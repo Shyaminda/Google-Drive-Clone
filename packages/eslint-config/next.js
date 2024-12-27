@@ -13,39 +13,57 @@ import { config as baseConfig } from "./base.js";
  * @type {import("eslint").Linter.Config}
  * */
 export const nextJsConfig = [
-  ...baseConfig,
-  js.configs.recommended,
-  eslintConfigPrettier,
-  ...tseslint.configs.recommended,
-  {
+	...baseConfig,
+	js.configs.recommended,
+	eslintConfigPrettier,
+	...tseslint.configs.recommended,
+	{
     ...pluginReact.configs.flat.recommended,
     languageOptions: {
-      ...pluginReact.configs.flat.recommended.languageOptions,
-      globals: {
+		...pluginReact.configs.flat.recommended.languageOptions,
+		globals: {
         ...globals.serviceworker,
-      },
     },
-  },
-  {
+    },
+	},
+	{
     plugins: {
-      "@next/next": pluginNext,
+    "@next/next": pluginNext,
     },
     rules: {
-      ...pluginNext.configs.recommended.rules,
-      ...pluginNext.configs["core-web-vitals"].rules,
-      "quotes": ["error", "double"],
-      "prettier/prettier": ["error", { "singleQuote": false }],
-    },
-  },
-  {
+		...pluginNext.configs.recommended.rules,
+		...pluginNext.configs["core-web-vitals"].rules,
+      // "quotes": ["error", "double"],
+      // "prettier/prettier": ["error", { "singleQuote": false }],
+      // "semi": ["error", "always"],
+      // "eol-last": ["error", "always"],
+      // "indent": ["error", "tab"],
+      // "prettier/prettier": ["error", { "useTabs": true, "tabWidth": 4 }]
+		"quotes": ["error", "double"],
+		"prettier/prettier": [
+			"error",
+			{
+			"singleQuote": false,
+			"useTabs": true,
+			"tabWidth": 2,
+			"endOfLine": "lf",
+			"trailingComma": "all"
+			}
+		],
+		"semi": ["error", "always"],
+		"eol-last": ["error", "always"],
+		"indent": ["error", "tab"]
+		},
+	},
+	{
     plugins: {
-      "react-hooks": pluginReactHooks,
+    "react-hooks": pluginReactHooks,
     },
     settings: { react: { version: "detect" } },
     rules: {
-      ...pluginReactHooks.configs.recommended.rules,
-      // React scope no longer necessary with new JSX transform.
-      "react/react-in-jsx-scope": "off",
+		...pluginReactHooks.configs.recommended.rules,
+		// React scope no longer necessary with new JSX transform.
+		"react/react-in-jsx-scope": "off",
     },
-  },
+},
 ];
