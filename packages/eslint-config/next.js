@@ -33,13 +33,6 @@ export const nextJsConfig = [
     rules: {
 		...pluginNext.configs.recommended.rules,
 		...pluginNext.configs["core-web-vitals"].rules,
-      // "quotes": ["error", "double"],
-      // "prettier/prettier": ["error", { "singleQuote": false }],
-      // "semi": ["error", "always"],
-      // "eol-last": ["error", "always"],
-      // "indent": ["error", "tab"],
-      // "prettier/prettier": ["error", { "useTabs": true, "tabWidth": 4 }]
-		"quotes": ["error", "double"],
 		"prettier/prettier": [
 			"error",
 			{
