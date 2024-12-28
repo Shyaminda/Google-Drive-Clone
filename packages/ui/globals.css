@@ -4,11 +4,11 @@
 
 @layer base {
   * {
-    @apply scroll-smooth;
+    @apply scroll-smooth border-border;
   }
 
   body {
-    @apply bg-white text-dark-200 min-h-screen;
+    @apply font-sans antialiased bg-background text-foreground;
   }
 
   .custom-scrollbar::-webkit-scrollbar {
@@ -30,7 +30,6 @@
     background: #fa7275;
   }
 
-  /* Remove scrollbar */
   .remove-scrollbar::-webkit-scrollbar {
     width: 0px;
     height: 0px;
@@ -47,18 +46,148 @@
   }
 
   .remove-scrollbar::-webkit-scrollbar-thumb:hover {
-    /* background: #1e2238; */
     background: transparent;
   }
 
   .recharts-responsive-container {
     height: initial !important;
   }
+
   :root {
     --radius: 0.5rem;
+    --background: 0 0% 100%;
+    --foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 47.4% 11.2%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 47.4% 11.2%;
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 100% 50%;
+    --destructive-foreground: 210 40% 98%;
+    --ring: 215 20.2% 65.1%;
+  }
+
+  .dark {
+    --background: 224 71% 4%;
+    --foreground: 213 31% 91%;
+    --muted: 223 47% 11%;
+    --muted-foreground: 215.4 16.3% 56.9%;
+    --accent: 216 34% 17%;
+    --accent-foreground: 210 40% 98%;
+    --popover: 224 71% 4%;
+    --popover-foreground: 215 20.2% 65.1%;
+    --border: 216 34% 17%;
+    --input: 216 34% 17%;
+    --card: 224 71% 4%;
+    --card-foreground: 213 31% 91%;
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 1.2%;
+    --secondary: 222.2 47.4% 11.2%;
+    --secondary-foreground: 210 40% 98%;
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 210 40% 98%;
+    --ring: 216 34% 17%;
   }
 }
 
+/* @layer utilities {
+  .h1 {
+    @apply text-[34px] leading-[42px] font-bold;
+  }
+
+  .h2 {
+    @apply text-[24px] leading-[36px] font-bold;
+  }
+
+  .h3 {
+    @apply text-[20px] leading-[28px] font-semibold;
+  }
+
+  .h4 {
+    @apply text-[18px] leading-[20px] font-medium;
+  }
+
+  .h5 {
+    @apply text-[16px] leading-[24px] font-semibold;
+  }
+
+  .subtitle-1 {
+    @apply text-[16px] leading-[24px] font-medium;
+  }
+
+  .subtitle-2 {
+    @apply text-[14px] leading-[20px] font-semibold;
+  }
+
+  .body-1 {
+    @apply text-[16px] leading-[24px] font-normal;
+  }
+
+  .body-2 {
+    @apply text-[14px] leading-[20px] font-normal;
+  }
+
+  .button {
+    @apply text-[14px] leading-[20px] font-medium;
+  }
+
+  .caption {
+    @apply text-[12px] leading-[16px] font-normal;
+  }
+
+  .overline {
+    @apply text-[10px] leading-[14px] font-normal;
+  }
+
+  .container {
+    @apply mx-auto max-w-7xl px-5;
+  }
+
+  .primary-btn {
+    @apply bg-brand hover:bg-brand-100 transition-all rounded-full button !important;
+  }
+
+  .flex-center {
+    @apply flex items-center justify-center;
+  }
+
+  .shad-no-focus {
+    @apply outline-none ring-offset-transparent focus:ring-transparent focus:ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-transparent focus-visible:ring-offset-0 !important;
+  }
+
+  .shad-input {
+    @apply border-none shadow-none p-0 shad-no-focus placeholder:text-light-200 body-2 !important;
+  }
+
+  .shad-form-item {
+    @apply flex h-[78px] flex-col justify-center rounded-xl border border-light-300 px-4 shadow-drop-1;
+  }
+
+  .shad-form-label {
+    @apply text-light-100 pt-2 body-2 w-full !important;
+  }
+
+  .shad-form-message {
+    @apply text-red body-2 ml-4 !important;
+  }
+
+  .shad-alert-dialog {
+    @apply space-y-4 max-w-[95%] sm:w-fit rounded-xl md:rounded-[30px] px-4 md:px-8 py-10 bg-white outline-none !important;
+  }
+
+  .shad-submit-btn {
+    @apply bg-brand button hover:bg-brand-100 transition-all rounded-full !important;
+  }
+} */
 @layer utilities {
 
   .h1 {
