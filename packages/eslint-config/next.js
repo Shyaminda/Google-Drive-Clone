@@ -34,12 +34,12 @@ export const nextJsConfig = [
 		...pluginNext.configs.recommended.rules,
 		...pluginNext.configs["core-web-vitals"].rules,
 		"prettier/prettier": [
-			"error",
+			"warn",
 			{
 			"singleQuote": false,
 			"useTabs": true,
 			"tabWidth": 2,
-			"endOfLine": "lf",
+			"endOfLine": "auto",
 			"trailingComma": "all"
 			}
 		],

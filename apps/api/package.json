@@ -1,12 +1,31 @@
-{
-  "name": "api",
-  "version": "1.0.0",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": ""
-}
+	{
+		"name": "api",
+		"version": "1.0.0",
+		"main": "index.js",
+		"scripts": {
+			"dev": "ts-node-dev --respawn src/index.ts",
+			"lint": "eslint .",
+			"format": "prettier --write \"**/*.{ts,tsx,md}\"",
+			"lint:fix": "eslint . --fix"
+		},
+		"keywords": [],
+		"author": "",
+		"license": "ISC",
+		"description": "",
+		"dependencies": {
+			"@repo/types": "*",
+			"@types/bcryptjs": "^2.4.6",
+			"@types/express": "^5.0.0",
+			"bcryptjs": "^2.4.3",
+			"eslint": "^9.17.0",
+			"express": "^4.21.2",
+			"module-alias": "^2.2.3"
+		},
+		"devDependencies": {
+			"@repo/eslint-config": "*",
+			"@repo/typescript-config": "*",
+			"@repo/ui": "*",
+			"ts-node": "^10.9.2",
+			"ts-node-dev": "^2.0.0"
+		}
+	}

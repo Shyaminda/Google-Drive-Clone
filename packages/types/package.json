@@ -1,0 +1,16 @@
+{
+  "name": "@repo/types",
+  "version": "1.0.0",
+  "main": "./dist/index.js",
+  "types": "./dist/types.js",
+  "scripts": {
+    "dev": "tsc -b && node dist/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "zod": "^3.24.1"
+  }
+}
