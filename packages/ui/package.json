@@ -9,7 +9,9 @@
     "./global": "./globals.css",
     "./button": "./components/ui/button.tsx",
     "./form": "./components/ui/form.tsx",
-    "./input": "./components/ui/input.tsx"
+    "./input": "./components/ui/input.tsx",
+    "./lib": "./lib/utils.ts",
+    "./card": "./components/ui/card.tsx"
   },
   "scripts": {
     "lint": "eslint . --max-warnings 0",
@@ -27,6 +29,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
+    "@radix-ui/react-icons": "^1.3.2",
     "@radix-ui/react-label": "^2.1.1",
     "@radix-ui/react-slot": "^1.1.1",
     "autoprefixer": "^10.4.20",

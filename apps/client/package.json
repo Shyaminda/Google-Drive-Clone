@@ -12,8 +12,12 @@
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
+    "@auth/prisma-adapter": "^2.7.4",
+    "@prisma/client": "^6.1.0",
+    "@types/bcryptjs": "^2.4.6",
+    "bcryptjs": "^2.4.3",
     "next": "15.1.2",
-    "next-auth": "^4.24.11",
+    "next-auth": "^5.0.0-beta.25",
     "node-appwrite": "^14.1.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
@@ -22,6 +26,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@repo/eslint-config": "*",
+    "@repo/types": "*",
     "@repo/typescript-config": "*",
     "@repo/ui": "*",
     "@types/react": "^19.0.2",

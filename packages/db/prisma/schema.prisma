@@ -8,32 +8,62 @@ datasource db {
 }
 
 model User {
-	id        				Int       @id @default(autoincrement())
+	id        				String       @id @default(cuid())
 	email     				String    @unique
 	name		  				String?
 	emailVerified 		DateTime?
 	avatar    				String?
 	password 					String
 	accountId 				String?    @unique
+	accounts					Account[]
 	files		  				File[]
 	createdAt 				DateTime  @default(now())
 	updatedAt 				DateTime  @updatedAt
 }
 
+model Account {
+  id                 String  @id @default(cuid())
+  userId             String  
+  type               String
+  provider           String
+  providerAccountId  String 
+  refresh_token      String? @db.Text
+  access_token       String? @db.Text
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String? @db.Text
+  session_state      String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
 model File {
-	id          Int       @id @default(autoincrement())
+	id          String       @id @default(cuid())
 	name        String
 	url         String
 	type			  type
 	bucketField String
 	accountId   String    @unique
-	ownerId     Int
+	ownerId     String
 	owner       User?     @relation(fields: [ownerId], references: [id])
 	extension   String?
 	size        Int?
 	user        String[]
 	createdAt   DateTime  @default(now())
 	updatedAt   DateTime  @updatedAt
+}
+
+model verificationToken {
+	id        String   @id @default(cuid())
+	email		  String
+	token     String   @unique
+	expiresAt DateTime
+
+	@@unique([email, token])
 }
 
 enum type {
