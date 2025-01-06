@@ -9,6 +9,7 @@ interface CardWrapperProps {
 	headerLabel: string;
 	backButtonLabel: string;
 	backButtonHref: string;
+	formLabel: string;
 }
 
 export const CardWrapper = ({
@@ -16,11 +17,12 @@ export const CardWrapper = ({
 	headerLabel,
 	backButtonLabel,
 	backButtonHref,
+	formLabel,
 }: CardWrapperProps) => {
 	return (
 		<Card className="w-[400px] shadow-md">
 			<CardHeader>
-				<Header label={headerLabel} />
+				<Header label={headerLabel} formLabel={formLabel} />
 			</CardHeader>
 			<CardContent>{children}</CardContent>
 			<CardFooter>

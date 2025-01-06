@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 

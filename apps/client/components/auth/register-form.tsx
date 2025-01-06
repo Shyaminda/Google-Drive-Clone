@@ -51,6 +51,7 @@ export const RegisterForm = () => {
 			headerLabel="Create an account"
 			backButtonLabel="Already have an account?"
 			backButtonHref="/auth/login"
+			formLabel="Register"
 		>
 			<Form {...form}>
 				<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -111,7 +112,11 @@ export const RegisterForm = () => {
 					</div>
 					<FormError message={error} />
 					<FormSuccess message={success} />
-					<Button disabled={isPending} type="submit" className="w-full">
+					<Button
+						disabled={isPending}
+						type="submit"
+						className="w-full rounded-2xl bg-brand"
+					>
 						Create an account
 					</Button>
 				</form>
