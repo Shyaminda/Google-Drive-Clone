@@ -3,6 +3,8 @@
 
 import { signIn } from "@/auth";
 import { getUserByEmail } from "@/data/user";
+import { sendVerificationEmail } from "@/lib/mail";
+import { generateVerificationToken } from "@/lib/tokens";
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 import { loginSchema } from "@repo/types";
 import { AuthError } from "next-auth";
@@ -21,6 +23,19 @@ export const login = async (values: z.infer<typeof loginSchema>) => {
 
 	if (!existingUser || !existingUser.password || !existingUser.email) {
 		return { error: "Email does not exist" };
+	}
+
+	if (!existingUser.emailVerified) {
+		const verificationToken = await generateVerificationToken(
+			existingUser.email,
+		);
+
+		await sendVerificationEmail(
+			verificationToken.email,
+			verificationToken.token,
+		);
+
+		return { success: "Confirmation email sent!" };
 	}
 
 	try {

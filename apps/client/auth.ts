@@ -11,34 +11,31 @@ export const {
 	signOut,
 } = NextAuth({
 	pages: {
-		signIn: "/auth/login", //this is the path to the login page always
-		error: "/auth/error", //this is the path to the error page always
+		signIn: "/auth/login",
+		error: "/auth/error",
 	},
 	events: {
 		async linkAccount({ user }) {
 			await prisma.user.update({
 				where: { id: user.id },
-				data: { emailVerified: new Date() }, //users who login with google or github will have their email verified already so we can set emailVerified to current date no need verify the email again
+				data: { emailVerified: new Date() },
 			});
 		},
 	},
 	callbacks: {
-		async signIn({ account }) {
-			//console.log("sign in callback", user, account); //also we can use type instead of provider check the console log
-			if (account?.provider !== "credentials") return true; //Allow OAuth without email verification
+		async signIn({ user, account }) {
+			if (account?.provider !== "credentials") return true;
 
-			// if (!user.id) return false;
-			// const existingUser = await getUserById(user.id);
+			if (!user.id) return false;
+			const existingUser = await getUserById(user.id);
 
-			// //prevent login if email is not verified
-			// if (!existingUser?.emailVerified) return false;
+			if (!existingUser?.emailVerified) return false;
 
 			return true;
 		},
 		async session({ session, token }) {
 			if (token.sub && session.user) {
-				//here sub is the user id
-				session.user.id = token.sub; //this is how we extract user id from token
+				session.user.id = token.sub;
 			}
 
 			if (session.user) {

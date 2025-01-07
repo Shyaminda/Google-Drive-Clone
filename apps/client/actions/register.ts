@@ -5,6 +5,8 @@ import bcrypt from "bcryptjs";
 import { getUserByEmail } from "@/data/user";
 import { registerSchema } from "@repo/types";
 import { prisma } from "@/lib/db";
+import { generateVerificationToken } from "@/lib/tokens";
+import { sendVerificationEmail } from "@/lib/mail";
 
 export const register = async (values: z.infer<typeof registerSchema>) => {
 	const validateFields = registerSchema.safeParse(values);
@@ -19,7 +21,7 @@ export const register = async (values: z.infer<typeof registerSchema>) => {
 	const existingUser = await getUserByEmail(email);
 
 	if (existingUser) {
-		return { error: "User already exists" };
+		return { error: "User already exists!" };
 	}
 
 	await prisma.user.create({
@@ -30,5 +32,8 @@ export const register = async (values: z.infer<typeof registerSchema>) => {
 		},
 	});
 
-	return { success: "user created successfully!" };
+	const verificationToken = await generateVerificationToken(email);
+	await sendVerificationEmail(verificationToken.email, verificationToken.token);
+
+	return { success: "Confirmation email sent!" };
 };
