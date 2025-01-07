@@ -1,19 +1,21 @@
 import React from "react";
 import Image from "next/image";
+import Link from "next/link";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
 	return (
 		<div className="flex min-h-screen overflow-auto scroll-smooth">
 			<section className="hidden w-1/2 items-center justify-center bg-brand p-10 lg:flex xl:w-2/5">
 				<div className="flex max-h-[800px] max-w-[430px] flex-col justify-center space-y-12">
-					<Image
-						src="/assets/icons/logo-full.svg"
-						alt="logo"
-						width={224}
-						height={82}
-						className="h-auto"
-					/>
-
+					<Link href="/" passHref>
+						<Image
+							src="/assets/icons/logo-full.svg"
+							alt="logo"
+							width={224}
+							height={82}
+							className="h-auto cursor-pointer transition-all hover:scale-105 ease-linear"
+						/>
+					</Link>
 					<div className="space-y-5 text-white">
 						<h1 className="h1">Manage your files the best way</h1>
 						<p className="body-1">
