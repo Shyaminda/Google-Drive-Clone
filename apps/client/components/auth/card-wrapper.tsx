@@ -2,7 +2,8 @@
 
 import { Card, CardContent, CardFooter, CardHeader } from "@repo/ui/card";
 import { BackButton } from "@/components/auth/back-button";
-import { Header } from "./header";
+import { Header } from "@/components/auth/header";
+import { Social } from "@/components/auth/social";
 
 interface CardWrapperProps {
 	children: React.ReactNode;
@@ -10,6 +11,7 @@ interface CardWrapperProps {
 	backButtonLabel: string;
 	backButtonHref: string;
 	formLabel: string;
+	showSocial?: boolean;
 }
 
 export const CardWrapper = ({
@@ -18,6 +20,7 @@ export const CardWrapper = ({
 	backButtonLabel,
 	backButtonHref,
 	formLabel,
+	showSocial,
 }: CardWrapperProps) => {
 	return (
 		<Card className="w-[400px] shadow-md">
@@ -25,6 +28,11 @@ export const CardWrapper = ({
 				<Header label={headerLabel} formLabel={formLabel} />
 			</CardHeader>
 			<CardContent>{children}</CardContent>
+			{showSocial && (
+				<CardContent>
+					<Social />
+				</CardContent>
+			)}
 			<CardFooter>
 				<BackButton label={backButtonLabel} href={backButtonHref} />
 			</CardFooter>

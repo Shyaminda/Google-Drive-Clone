@@ -8,10 +8,7 @@ import { loginSchema } from "@repo/types";
 import { AuthError } from "next-auth";
 import { z } from "zod";
 
-export const login = async (
-	values: z.infer<typeof loginSchema>,
-	callbackUrl?: string | null,
-) => {
+export const login = async (values: z.infer<typeof loginSchema>) => {
 	const validateFields = loginSchema.safeParse(values);
 
 	if (!validateFields.success) {
@@ -30,7 +27,7 @@ export const login = async (
 		await signIn("credentials", {
 			email,
 			password,
-			redirectTo: callbackUrl || DEFAULT_LOGIN_REDIRECT,
+			redirectTo: DEFAULT_LOGIN_REDIRECT,
 		});
 	} catch (error) {
 		if (error instanceof AuthError) {
