@@ -1,6 +1,6 @@
 "use server";
 
-import { getUserByEmail } from "@/data/user";
+import { getUserByEmail } from "@/helpers/user";
 import { sendResetPasswordEmail } from "@/lib/mail";
 import { generatePasswordRestToken } from "@/lib/tokens";
 import { resetSchema } from "@repo/types";

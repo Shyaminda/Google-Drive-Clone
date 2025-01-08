@@ -2,7 +2,7 @@
 "use server";
 
 import { signIn } from "@/auth";
-import { getUserByEmail } from "@/data/user";
+import { getUserByEmail } from "@/helpers/user";
 import { sendVerificationEmail } from "@/lib/mail";
 import { generateVerificationToken } from "@/lib/tokens";
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";

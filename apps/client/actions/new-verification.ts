@@ -1,7 +1,7 @@
 "use server";
 
-import { getUserByEmail } from "@/data/user";
-import { getVerificationTokenByToken } from "@/data/verification-token";
+import { getUserByEmail } from "@/helpers/user";
+import { getVerificationTokenByToken } from "@/helpers/verification-token";
 import { prisma } from "@/lib/db";
 
 export const newVerification = async (token: string) => {

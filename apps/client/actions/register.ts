@@ -2,7 +2,7 @@
 
 import { z } from "zod";
 import bcrypt from "bcryptjs";
-import { getUserByEmail } from "@/data/user";
+import { getUserByEmail } from "@/helpers/user";
 import { registerSchema } from "@repo/types";
 import { prisma } from "@/lib/db";
 import { generateVerificationToken } from "@/lib/tokens";
