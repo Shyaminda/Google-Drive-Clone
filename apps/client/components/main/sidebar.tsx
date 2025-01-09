@@ -1,7 +1,7 @@
 "use client";
 
 import { navItems } from "@/constants";
-import { useCurrentUser } from "@/hooks/use-current-user";
+import { useFetchUser } from "@/hooks/fetch-user";
 import { cn } from "@repo/ui/lib";
 import Image from "next/image";
 import Link from "next/link";
@@ -9,8 +9,11 @@ import { usePathname } from "next/navigation";
 import React from "react";
 
 const Sidebar = () => {
-	const user = useCurrentUser();
 	const pathname = usePathname();
+
+	const { user } = useFetchUser();
+	console.log("user", user?.name);
+
 	return (
 		<aside className="sidebar">
 			<Link href="/">
@@ -65,7 +68,7 @@ const Sidebar = () => {
 
 			<div className="sidebar-user-info">
 				<Image
-					src={user?.image || "/assets/images/user-default.jpg"}
+					src={user?.avatar || "/assets/images/user-default.jpg"}
 					alt="Avatar"
 					width={44}
 					height={44}

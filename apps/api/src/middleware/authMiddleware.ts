@@ -1,57 +1,64 @@
-// import { Response, NextFunction } from "express";
-// import { getToken } from "next-auth/jwt";
-// import { IncomingMessage } from "http";
-
-// const secret = process.env.AUTH_SECRET as string;
-
-// export interface AuthenticatedRequest extends Request {
-// 	user?: {
-// 		email?: string | null;
-// 		cookies?: Partial<{ [key: string]: string }>;
-// 	};
-// }
-
-// export const authenticateUser = async (
-// 	req: AuthenticatedRequest,
-// 	res: Response,
-// 	next: NextFunction,
-// ) => {
-// 	try {
-// 		const token = await getToken({
-// 			req: req as unknown as IncomingMessage & {
-// 				cookies: Partial<{ [key: string]: string }>;
-// 			},
-// 			secret,
-// 		});
-// 		if (token) {
-// 			req.user = { email: token.email };
-// 			return next();
-// 		}
-// 		res.status(401).json({ error: "Unauthorized" });
-// 	} catch {
-// 		res.status(500).json({ error: "Internal Server Error" });
-// 	}
-// };
-
 import { Request, Response, NextFunction } from "express";
-import { getToken } from "next-auth/jwt";
+import dotenv from "dotenv";
+import { hkdf } from "@panva/hkdf";
+import { jwtDecrypt } from "jose";
+dotenv.config();
 
-const secret = process.env.NEXTAUTH_SECRET as string;
+interface AuthenticatedRequest extends Request {
+	userId?: string;
+}
 
-export const authenticateUser = async (
-	req: Request,
-	res: Response,
-	next: NextFunction,
-): Promise<any> => {
-	try {
-		const token = await getToken({ req, secret });
-		if (token) {
-			(req as any).user = token;
-			return next();
-		}
-		return res.status(401).json({ error: "Unauthorized" });
-	} catch (error) {
-		console.error("Authentication error:", error);
-		res.status(500).json({ error: "Internal Server Error" });
-	}
+const deriveEncryptionKey = async (secret: string, salt: string) => {
+	const length = 64;
+	return hkdf(
+		"sha256",
+		secret,
+		salt,
+		`Auth.js Generated Encryption Key (${salt})`,
+		length,
+	);
 };
+
+const authMiddleware = () => {
+	return async (
+		req: AuthenticatedRequest,
+		res: Response,
+		next: NextFunction,
+	): Promise<void> => {
+		const token =
+			req.headers.authorization?.split(" ")[1] ||
+			req.cookies?.["authjs.session-token"];
+
+		if (!token) {
+			res.status(401).json({ error: "Unauthorized" });
+			return;
+		}
+		try {
+			const encryptionKey = await deriveEncryptionKey(
+				process.env.NEXTAUTH_SECRET!,
+				"authjs.session-token",
+			);
+
+			const { payload } = await jwtDecrypt(token, encryptionKey, {
+				clockTolerance: "15s",
+				contentEncryptionAlgorithms: ["A256CBC-HS512"],
+			});
+
+			if (!payload.sub) {
+				res
+					.status(403)
+					.json({ error: "Token does not contain a valid user ID" });
+				return;
+			}
+
+			req.userId = payload.sub;
+			next();
+		} catch (error) {
+			console.error("JWT Verification Error:", error);
+			res.status(403).json({ error: "Invalid or expired token" });
+			return;
+		}
+	};
+};
+
+export default authMiddleware;

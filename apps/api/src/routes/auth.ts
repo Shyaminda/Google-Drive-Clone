@@ -1,14 +1,14 @@
 import express from "express";
-import { registerController } from "../controllers/auth.controller";
 import asyncHandler from "../utils/handler";
-import { authenticateUser } from "../middleware/authMiddleware";
+import authMiddleware from "../middleware/authMiddleware";
+import { loggedUserController } from "../controllers/user.controller";
 
-const authRouter = express.Router();
+const userRouter = express.Router();
 
-authRouter.post(
-	"/register",
-	authenticateUser,
-	asyncHandler(registerController),
+userRouter.get(
+	"/authUser",
+	authMiddleware(),
+	asyncHandler(loggedUserController),
 );
 
-export default authRouter;
+export default userRouter;
