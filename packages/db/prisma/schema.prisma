@@ -12,8 +12,8 @@ model User {
 	email     				String    @unique
 	name		  				String?
 	emailVerified 		DateTime?
-	avatar    				String   @default("https://img.freepik.com/free-psd/3d-illustration-person-with-sunglasses_23-2149436188.jpg")
-	password 					String
+	image    					String?   @default("https://img.freepik.com/free-psd/3d-illustration-person-with-sunglasses_23-2149436188.jpg")
+	password 					String?
 	accountId 				String?    @unique
 	accounts					Account[]
 	files		  				File[]

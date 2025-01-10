@@ -68,8 +68,8 @@ const Sidebar = () => {
 
 			<div className="sidebar-user-info">
 				<Image
-					src={user?.avatar || "/assets/images/user-default.jpg"}
-					alt="Avatar"
+					src={user?.image || "/assets/images/user-default.jpg"}
+					alt="image"
 					width={44}
 					height={44}
 					className="sidebar-user-avatar"

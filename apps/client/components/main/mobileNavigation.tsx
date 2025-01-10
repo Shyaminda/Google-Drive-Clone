@@ -40,8 +40,8 @@ const MobileNavigation = () => {
 					<SheetTitle>
 						<div className="header-user">
 							<Image
-								src={user?.avatar || "/assets/images/user-default.jpg"}
-								alt="avatar"
+								src={user?.image || "/assets/images/user-default.jpg"}
+								alt="image"
 								width={44}
 								height={44}
 								className="header-user-avatar"

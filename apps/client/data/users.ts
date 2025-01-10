@@ -8,7 +8,7 @@ type User = {
 	email: string;
 	name: string | null;
 	emailVerified: Date | null;
-	avatar: string;
+	image: string;
 	password: string;
 	accountId: string | null;
 	createdAt: Date;

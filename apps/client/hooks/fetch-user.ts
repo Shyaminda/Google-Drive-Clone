@@ -8,7 +8,7 @@ export interface User {
 	email: string;
 	name: string | null;
 	emailVerified: string | null;
-	avatar: string;
+	image: string;
 	password: string;
 	accountId: string | null;
 	createdAt: string;
