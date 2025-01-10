@@ -9,8 +9,14 @@ import {
 	SheetTitle,
 	SheetTrigger,
 } from "@repo/ui/sheet";
+import { Separator } from "@repo/ui/separator";
 import { usePathname } from "next/navigation";
 import { useFetchUser } from "@/hooks/fetch-user";
+import Link from "next/link";
+import { navItems } from "@/constants";
+import { cn } from "@repo/ui/lib";
+import { UserButton } from "@/components/auth/user-button";
+import FileUploader from "./fileUploader";
 
 const MobileNavigation = () => {
 	const [open, setOpen] = useState(false);
@@ -48,13 +54,43 @@ const MobileNavigation = () => {
 							/>
 							<div className="sm:hidden lg:block">
 								<p className="subtitle-2 capitalize">{user?.name}</p>
+								<p className="caption">{user?.email}</p>
 							</div>
 						</div>
+						<Separator className="mb-4 bg-light-200/20" />
 					</SheetTitle>
-					<SheetDescription>
-						This action cannot be undone. This will permanently delete your
-						account and remove your data from our servers.
-					</SheetDescription>
+					<nav className="mobile-nav">
+						<ul className="mobile-nav-list">
+							{navItems.map(({ url, name, icon }) => (
+								<Link key={name} href={url} className="lg:w-full">
+									<li
+										className={cn(
+											"mobile-nav-item",
+											pathname === url && "shad-active",
+										)}
+									>
+										<Image
+											src={icon}
+											alt={name}
+											width={24}
+											height={24}
+											className={cn(
+												"nav-icon",
+												pathname === url && "nav-icon-active",
+											)}
+										/>
+										<p>{name}</p>
+									</li>
+								</Link>
+							))}
+						</ul>
+					</nav>
+					<Separator className="my-5 bg-light-200/20" />
+					<div className="gap-5">
+						<FileUploader />
+						<UserButton type="mobile" />
+						{/* //TODO: make the UserButton styles */}
+					</div>
 				</SheetContent>
 			</Sheet>
 		</header>
