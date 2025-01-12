@@ -42,19 +42,21 @@ model Account {
 }
 
 model File {
-	id          String       @id @default(cuid())
-	name        String
-	url         String
-	type			  type
-	bucketField String
-	accountId   String    @unique
-	ownerId     String
-	owner       User?     @relation(fields: [ownerId], references: [id])
-	extension   String?
-	size        Int?
-	user        String[]
-	createdAt   DateTime  @default(now())
-	updatedAt   DateTime  @updatedAt
+	id          	String       @id @default(cuid())
+	name        	String
+	url         	String
+	type			  	type
+	bucketField 	String
+	accountId   	String
+	ownerId     	String
+	owner       	User?     @relation(fields: [ownerId], references: [id])
+	extension   	String?
+	size        	Int?
+	user        	String[]
+	createdAt   	DateTime  @default(now())
+	updatedAt   	DateTime  @updatedAt
+
+	@@unique([accountId, bucketField])
 }
 
 model PasswordResetToken {

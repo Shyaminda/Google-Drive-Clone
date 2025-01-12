@@ -15,11 +15,17 @@
 	"dependencies": {
 		"@auth/express": "^0.8.4",
 		"@prisma/client": "^6.1.0",
+		"@repo/common": "*",
 		"@repo/types": "*",
+		"@types/aws-sdk": "^2.7.4",
 		"@types/bcryptjs": "^2.4.6",
 		"@types/cors": "^2.8.17",
 		"@types/dotenv": "^8.2.3",
 		"@types/jsonwebtoken": "^9.0.7",
+		"@types/multer": "^1.4.12",
+		"@types/streamifier": "^0.1.2",
+		"appwrite": "^16.1.0",
+		"aws-sdk": "^2.1692.0",
 		"bcryptjs": "^2.4.3",
 		"cookie-parser": "^1.4.7",
 		"cors": "^2.8.5",
@@ -29,7 +35,9 @@
 		"jose": "^5.9.6",
 		"jsonwebtoken": "^9.0.2",
 		"module-alias": "^2.2.3",
+		"multer": "^1.4.5-lts.1",
 		"next-auth": "^4.24.11",
+		"streamifier": "^0.1.1",
 		"zod": "^3.24.1"
 	},
 	"devDependencies": {

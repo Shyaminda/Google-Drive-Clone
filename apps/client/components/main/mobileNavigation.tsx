@@ -88,8 +88,7 @@ const MobileNavigation = () => {
 					<Separator className="my-5 bg-light-200/20" />
 					<div className="gap-5">
 						<FileUploader />
-						<UserButton type="mobile" />
-						{/* //TODO: make the UserButton styles */}
+						<UserButton style="mobile" />
 					</div>
 				</SheetContent>
 			</Sheet>

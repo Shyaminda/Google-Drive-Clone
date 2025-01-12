@@ -1,12 +1,19 @@
 {
   "name": "@repo/common",
   "version": "1.0.0",
-  "main": "index.js",
+	"main": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		"./config": "./src/config.ts"
+	},
   "scripts": {
     "dev": "tsc -b && node dist/index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": ""
+  "description": "",
+  "dependencies": {
+    "node-appwrite": "^14.1.0"
+  }
 }

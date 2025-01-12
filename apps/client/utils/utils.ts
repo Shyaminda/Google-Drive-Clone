@@ -1,13 +1,4 @@
-import { Request, Response, NextFunction } from "express";
-
-const asyncHandler =
-	(fn: (req: Request, res: Response, next: NextFunction) => Promise<unknown>) =>
-	(req: Request, res: Response, next: NextFunction) => {
-		Promise.resolve(fn(req, res, next)).catch(next);
-	};
-
-export default asyncHandler;
-
+/* eslint-disable indent */
 export const convertFileToUrl = (file: File) => URL.createObjectURL(file);
 
 export const convertFileSize = (sizeInBytes: number, digits?: number) => {
@@ -37,18 +28,10 @@ export const calculatePercentage = (sizeInBytes: number) => {
 	return Number(percentage.toFixed(1));
 };
 
-enum Type {
-	DOCUMENT = "DOCUMENT",
-	IMAGE = "IMAGE",
-	VIDEO = "VIDEO",
-	AUDIO = "AUDIO",
-	OTHER = "OTHER",
-}
-
 export const getFileType = (fileName: string) => {
 	const extension = fileName.split(".").pop()?.toLowerCase();
 
-	if (!extension) return { type: Type.OTHER, extension: "" };
+	if (!extension) return { type: "other", extension: "" };
 
 	const documentExtensions = [
 		"pdf",
@@ -82,15 +65,12 @@ export const getFileType = (fileName: string) => {
 	const audioExtensions = ["mp3", "wav", "ogg", "flac"];
 
 	if (documentExtensions.includes(extension))
-		return { type: Type.DOCUMENT, extension };
-	if (imageExtensions.includes(extension))
-		return { type: Type.IMAGE, extension };
-	if (videoExtensions.includes(extension))
-		return { type: Type.VIDEO, extension };
-	if (audioExtensions.includes(extension))
-		return { type: Type.AUDIO, extension };
+		return { type: "document", extension };
+	if (imageExtensions.includes(extension)) return { type: "image", extension };
+	if (videoExtensions.includes(extension)) return { type: "video", extension };
+	if (audioExtensions.includes(extension)) return { type: "audio", extension };
 
-	return { type: Type.OTHER, extension };
+	return { type: "other", extension };
 };
 
 export const formatDateTime = (isoString: string | null | undefined) => {
@@ -130,7 +110,7 @@ export const formatDateTime = (isoString: string | null | undefined) => {
 
 export const getFileIcon = (
 	extension: string | undefined,
-	type: Type | string,
+	type: FileType | string,
 ) => {
 	switch (extension) {
 		// Document
@@ -192,12 +172,12 @@ export const getFileIcon = (
 
 // APPWRITE URL UTILS
 // Construct appwrite file URL - https://appwrite.io/docs/apis/rest#images
-export const constructFileUrl = (bucketField: string) => {
-	return `https://${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${bucketField}`;
+export const constructFileUrl = (bucketFileId: string) => {
+	return `${process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT}/storage/buckets/${process.env.NEXT_PUBLIC_APPWRITE_BUCKET}/files/${bucketFileId}/view?project=${process.env.NEXT_PUBLIC_APPWRITE_PROJECT}`;
 };
 
-export const constructDownloadUrl = (bucketField: string) => {
-	return `${process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT}/storage/buckets/${process.env.NEXT_PUBLIC_APPWRITE_BUCKET}/files/${bucketField}/download?project=${process.env.NEXT_PUBLIC_APPWRITE_PROJECT}`;
+export const constructDownloadUrl = (bucketFileId: string) => {
+	return `${process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT}/storage/buckets/${process.env.NEXT_PUBLIC_APPWRITE_BUCKET}/files/${bucketFileId}/download?project=${process.env.NEXT_PUBLIC_APPWRITE_PROJECT}`;
 };
 
 // DASHBOARD UTILS
