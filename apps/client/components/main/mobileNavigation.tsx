@@ -2,27 +2,34 @@
 
 import Image from "next/image";
 import React, { useState } from "react";
-import {
-	Sheet,
-	SheetContent,
-	SheetDescription,
-	SheetTitle,
-	SheetTrigger,
-} from "@repo/ui/sheet";
+import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@repo/ui/sheet";
 import { Separator } from "@repo/ui/separator";
 import { usePathname } from "next/navigation";
-import { useFetchUser } from "@/hooks/fetch-user";
 import Link from "next/link";
 import { navItems } from "@/constants";
 import { cn } from "@repo/ui/lib";
 import { UserButton } from "@/components/auth/user-button";
 import FileUploader from "./fileUploader";
 
-const MobileNavigation = () => {
+interface MobileNavigationProps {
+	id?: string;
+	accountId?: string | null;
+	name?: string | null;
+	image?: string;
+	email?: string;
+}
+
+const MobileNavigation = ({
+	id,
+	accountId,
+	name,
+	image,
+	email,
+}: MobileNavigationProps) => {
 	const [open, setOpen] = useState(false);
 	const pathname = usePathname();
 
-	const { user } = useFetchUser();
+	// const { user } = useFetchUser();
 
 	return (
 		<header className="mobile-header">
@@ -46,15 +53,15 @@ const MobileNavigation = () => {
 					<SheetTitle>
 						<div className="header-user">
 							<Image
-								src={user?.image || "/assets/images/user-default.jpg"}
+								src={image || "/assets/images/user-default.jpg"}
 								alt="image"
 								width={44}
 								height={44}
 								className="header-user-avatar"
 							/>
 							<div className="sm:hidden lg:block">
-								<p className="subtitle-2 capitalize">{user?.name}</p>
-								<p className="caption">{user?.email}</p>
+								<p className="subtitle-2 capitalize">{name}</p>
+								<p className="caption">{email}</p>
 							</div>
 						</div>
 						<Separator className="mb-4 bg-light-200/20" />
@@ -87,7 +94,7 @@ const MobileNavigation = () => {
 					</nav>
 					<Separator className="my-5 bg-light-200/20" />
 					<div className="gap-5">
-						<FileUploader />
+						<FileUploader ownerId={id || ""} accountId={accountId || ""} />
 						<UserButton style="mobile" />
 					</div>
 				</SheetContent>

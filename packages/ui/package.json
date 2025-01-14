@@ -13,7 +13,10 @@
     "./lib": "./lib/utils.ts",
     "./card": "./components/ui/card.tsx",
     "./sheet": "./components/ui/sheet.tsx",
-		"./separator": "./components/ui/separator.tsx"
+    "./separator": "./components/ui/separator.tsx",
+    "./toaster": "./components/ui/toaster.tsx",
+    "./toasterHook": "./hooks/use-toast.ts",
+		"./progress": "./components/ui/progress.tsx"
   },
   "scripts": {
     "lint": "eslint . --max-warnings 0",
@@ -37,8 +40,10 @@
     "@radix-ui/react-dialog": "^1.1.4",
     "@radix-ui/react-icons": "^1.3.2",
     "@radix-ui/react-label": "^2.1.1",
+    "@radix-ui/react-progress": "^1.1.1",
     "@radix-ui/react-separator": "^1.1.1",
     "@radix-ui/react-slot": "^1.1.1",
+    "@radix-ui/react-toast": "^1.2.4",
     "autoprefixer": "^10.4.20",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
