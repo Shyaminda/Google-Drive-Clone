@@ -6,6 +6,7 @@ dotenv.config();
 
 interface AuthenticatedRequest extends Request {
 	userId?: string;
+	email?: string;
 }
 
 const deriveEncryptionKey = async (secret: string, salt: string) => {
@@ -52,6 +53,7 @@ const authMiddleware = () => {
 			}
 
 			req.userId = payload.sub;
+			req.email = (payload.email as string) || "";
 			next();
 		} catch (error) {
 			console.error("JWT Verification Error:", error);
