@@ -38,7 +38,9 @@ export const getFilesController = async (
 	res: Response,
 ) => {
 	const { type } = req.query;
+	const { limit } = req.query;
 	console.log("Type:", type);
+	console.log("Limit:", limit);
 	const userId = req.userId as string;
 	const email = req.email as string;
 
@@ -66,6 +68,7 @@ export const getFilesController = async (
 			currentUser: { id: userId, email: email },
 			type: mappedTypes,
 			sort: "desc",
+			limit: limit ? parseInt(limit as string) : undefined,
 		});
 
 		if (!files.success) {

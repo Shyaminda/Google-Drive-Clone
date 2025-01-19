@@ -1,7 +1,28 @@
-import Sort from "@/components/main/sort";
+"use client";
 
-const page = async ({ params }: SearchParamProps) => {
-	const type = ((await params)?.type as string) || "";
+import { useState, useEffect } from "react";
+import Sort from "@/components/main/sort";
+import { fetchFiles } from "@/hooks/fetch-files";
+import { File, SearchParamProps } from "@/types/types";
+
+const Page = ({ params }: SearchParamProps) => {
+	const [files, setFiles] = useState<File[]>([]);
+	const type = params?.type;
+	const limit = params?.limit || "10";
+
+	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				const fetchedFiles = await fetchFiles(type, limit);
+				setFiles(fetchedFiles);
+			} catch (error) {
+				console.error("Error fetching files:", error);
+			}
+		};
+
+		fetchData();
+	}, [type, limit]);
+
 	return (
 		<div className="page-container">
 			<section className="w-full">
@@ -16,8 +37,19 @@ const page = async ({ params }: SearchParamProps) => {
 					</div>
 				</div>
 			</section>
+			{files.length > 0 ? (
+				<section className="files-list">
+					{files.map((file) => (
+						<h1 className="h1" key={file.id}>
+							{file.name}
+						</h1>
+					))}
+				</section>
+			) : (
+				<p className="empty-list">No files uploaded</p>
+			)}
 		</div>
 	);
 };
 
-export default page;
+export default Page;

@@ -1,7 +1,4 @@
-interface HeaderProps {
-	label: string;
-	formLabel: string;
-}
+import { HeaderProps } from "@/types/types";
 
 export const Header = ({ label, formLabel }: HeaderProps) => {
 	return (

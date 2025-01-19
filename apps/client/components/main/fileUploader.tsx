@@ -10,12 +10,7 @@ import Thumbnail from "@/components/ui/Thumbnail";
 import { useToast } from "@repo/ui/toasterHook";
 import axios, { AxiosProgressEvent } from "axios";
 import { Progress } from "@repo/ui/progress";
-
-interface FileUploaderProps {
-	ownerId: string;
-	accountId: string;
-	className?: string;
-}
+import { FileUploaderProps } from "@/types/types";
 
 const FileUploader = ({ ownerId, accountId, className }: FileUploaderProps) => {
 	const [files, setFiles] = useState<File[]>([]);

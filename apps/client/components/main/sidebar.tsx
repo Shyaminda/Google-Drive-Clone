@@ -12,7 +12,7 @@ const Sidebar = () => {
 	const pathname = usePathname();
 
 	const { user } = useFetchUser();
-	console.log("user", user?.name);
+	//console.log("user", user?.name);
 
 	return (
 		<aside className="sidebar">

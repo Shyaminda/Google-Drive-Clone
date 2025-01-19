@@ -10,6 +10,6 @@ import authMiddleware from "../middleware/authMiddleware";
 const fileRouter = express.Router();
 
 fileRouter.post("/upload", uploadMiddleware, asyncHandler(uploadController));
-fileRouter.get("/files", authMiddleware(), asyncHandler(getFilesController));
+fileRouter.get("/", authMiddleware(), asyncHandler(getFilesController));
 
 export default fileRouter;

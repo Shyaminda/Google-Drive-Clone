@@ -3,19 +3,8 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import dotenv from "dotenv";
+import { User } from "@/types/types";
 dotenv.config();
-
-export interface User {
-	id: string;
-	email: string;
-	name: string | null;
-	emailVerified: string | null;
-	image: string;
-	password: string;
-	accountId: string | null;
-	createdAt: string;
-	updatedAt: string;
-}
 
 export const useFetchUser = () => {
 	const [user, setUser] = useState<User | null>(null);
@@ -36,7 +25,7 @@ export const useFetchUser = () => {
 		};
 		fetchUser();
 	}, []);
-	console.log("userdata", user);
+	//console.log("userdata", user);
 
 	return { user };
 };

@@ -2,12 +2,8 @@ import { Request, Response, NextFunction } from "express";
 import dotenv from "dotenv";
 import { hkdf } from "@panva/hkdf";
 import { jwtDecrypt } from "jose";
+import { AuthenticatedRequest } from "../type";
 dotenv.config();
-
-interface AuthenticatedRequest extends Request {
-	userId?: string;
-	email?: string;
-}
 
 const deriveEncryptionKey = async (secret: string, salt: string) => {
 	const length = 64;

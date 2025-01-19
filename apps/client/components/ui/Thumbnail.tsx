@@ -1,14 +1,7 @@
+import { ThumbnailProps } from "@/types/types";
 import { getFileIcon } from "@/utils/utils";
 import { cn } from "@repo/ui/lib";
 import Image from "next/image";
-
-interface ThumbnailProps {
-	type: string;
-	extension: string;
-	url: string;
-	imageClassName?: string;
-	className?: string;
-}
 
 const Thumbnail = ({
 	type,

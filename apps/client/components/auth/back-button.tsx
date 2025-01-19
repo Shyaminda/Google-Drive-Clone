@@ -2,11 +2,7 @@
 
 import Link from "next/link";
 import { Button } from "@repo/ui/button";
-
-interface BackButtonProps {
-	label: string;
-	href: string;
-}
+import { BackButtonProps } from "@/types/types";
 
 export const BackButton = ({ label, href }: BackButtonProps) => {
 	return (

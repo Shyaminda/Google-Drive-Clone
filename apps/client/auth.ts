@@ -41,7 +41,6 @@ export const {
 			if (session.user) {
 				session.user.name = token.name;
 				session.user.email = token.email || "";
-				//@ts-expect-error //this is a next auth issue
 				session.user.isOAuth = token.isOAuth as boolean;
 			}
 			return session;

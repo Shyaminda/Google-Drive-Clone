@@ -4,14 +4,9 @@ import dotenv from "dotenv";
 import { handleDbFailure } from "../helpers/dbFailure";
 import { Prisma } from "@prisma/client";
 import { type as PrismaType } from "@prisma/client";
+import { FileUploadRequest, GetFilesProps } from "../type";
 
 dotenv.config();
-
-interface FileUploadRequest {
-	files: Express.MulterS3.File[];
-	ownerId: string;
-	accountId: string;
-}
 
 export const uploadFile = async ({
 	files,
@@ -100,33 +95,21 @@ const createQueries = (
 	};
 };
 
-interface GetFilesProps {
-	currentUser: { id: string; email: string };
-	type?: PrismaType[];
-	//searchText?: string;
-	sort?: string;
-	limit?: number;
-}
-
 export const getFiles = async ({
 	currentUser,
 	type = [],
 	//searchText = "",
 	sort = "desc",
-	//limit,
+	limit,
 }: GetFilesProps) => {
 	try {
-		console.log({ currentUser, type, sort });
+		console.log({ currentUser, type, sort, limit });
 		if (!currentUser) throw new Error("User not found");
-		console.log("Current User:", currentUser.id);
 
-		const queries = createQueries(currentUser, type, sort);
-		console.log("Constructed Query:", JSON.stringify(queries, null, 2));
+		const queries = createQueries(currentUser, type, sort, limit);
 
 		const files = await prisma.file.findMany(queries);
-		console.log("Fetched Files:", files);
 
-		console.log({ files: files });
 		return { success: true, files };
 	} catch {
 		return { success: false, error: "Error fetching files" };

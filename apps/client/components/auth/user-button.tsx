@@ -1,10 +1,7 @@
 import { LogoutButton } from "@/components/auth/logout-button";
+import { UserButtonProps } from "@/types/types";
 import { Button } from "@repo/ui/button";
 import Image from "next/image";
-
-interface UserButtonProps {
-	style?: "desktop" | "mobile";
-}
 
 export const UserButton = ({ style = "desktop" }: UserButtonProps) => {
 	const buttonClass =

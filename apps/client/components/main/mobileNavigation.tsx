@@ -10,14 +10,7 @@ import { navItems } from "@/constants";
 import { cn } from "@repo/ui/lib";
 import { UserButton } from "@/components/auth/user-button";
 import FileUploader from "./fileUploader";
-
-interface MobileNavigationProps {
-	id?: string;
-	accountId?: string | null;
-	name?: string | null;
-	image?: string;
-	email?: string;
-}
+import { MobileNavigationProps } from "@/types/types";
 
 const MobileNavigation = ({
 	id,
@@ -28,8 +21,6 @@ const MobileNavigation = ({
 }: MobileNavigationProps) => {
 	const [open, setOpen] = useState(false);
 	const pathname = usePathname();
-
-	// const { user } = useFetchUser();
 
 	return (
 		<header className="mobile-header">
