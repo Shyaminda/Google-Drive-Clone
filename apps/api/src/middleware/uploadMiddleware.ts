@@ -13,8 +13,11 @@ const upload = multer({
 			const uniqueKey = `${Date.now()}-${file.originalname}`;
 			cb(null, uniqueKey);
 		},
+		contentType: (req, file, cb) => {
+			cb(null, file.mimetype); //solve the error of downloading the object with object url
+		},
 	}),
 	limits: { fileSize: 50 * 1024 * 1024 }, // Limit file size to 50 MB
 });
-
+console.log("multer reached");
 export const uploadMiddleware = upload.array("file");

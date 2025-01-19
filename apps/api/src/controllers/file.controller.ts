@@ -6,6 +6,7 @@ import { type as PrismaType } from "@prisma/client";
 export const uploadController = async (req: Request, res: Response) => {
 	const files = req.files as Express.MulterS3.File[];
 	const { ownerId, accountId } = req.body;
+	console.log("Files:", files, "OwnerId:", ownerId, "AccountId:", accountId);
 
 	if (!files || files.length === 0) {
 		return res.status(400).json({ error: "No file to upload" });
@@ -18,6 +19,7 @@ export const uploadController = async (req: Request, res: Response) => {
 	}
 
 	try {
+		console.log("reached here");
 		const upload = await uploadFile({ files, ownerId, accountId });
 
 		if (!upload || !upload.success) {

@@ -6,11 +6,11 @@ import Image from "next/image";
 const Thumbnail = ({
 	type,
 	extension,
-	url = "",
+	url,
 	imageClassName,
 	className,
 }: ThumbnailProps) => {
-	const isImage = type === "image" && extension !== "svg";
+	const isImage = type === "IMAGE" && extension !== "svg";
 	return (
 		<figure className={cn("thumbnail", className)}>
 			<Image

@@ -6,8 +6,9 @@ export interface File {
 	bucketField: string;
 	accountId: string;
 	ownerId: string;
-	extension?: string;
-	size?: number;
+	owner: User;
+	extension: string;
+	size: number;
 	user: string[];
 	createdAt: Date;
 	updatedAt: Date;
@@ -87,4 +88,15 @@ export interface User {
 	accountId: string | null;
 	createdAt: string;
 	updatedAt: string;
+}
+
+export interface CardProps {
+	file: File;
+}
+
+export interface FileType {
+	IMAGE: string;
+	DOCUMENT: string;
+	AUDIO: string;
+	VIDEO: string;
 }

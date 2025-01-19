@@ -1,3 +1,5 @@
+import { FileType } from "@/types/types";
+
 /* eslint-disable indent */
 export const convertFileToUrl = (file: File) => URL.createObjectURL(file);
 
@@ -156,13 +158,13 @@ export const getFileIcon = (
 
 		default:
 			switch (type) {
-				case "image":
+				case "IMAGE":
 					return "/assets/icons/file-image.svg";
-				case "document":
+				case "DOCUMENT":
 					return "/assets/icons/file-document.svg";
-				case "video":
+				case "VIDEO":
 					return "/assets/icons/file-video.svg";
-				case "audio":
+				case "AUDIO":
 					return "/assets/icons/file-audio.svg";
 				default:
 					return "/assets/icons/file-other.svg";

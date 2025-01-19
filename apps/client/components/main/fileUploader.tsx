@@ -26,7 +26,7 @@ const FileUploader = ({ ownerId, accountId, className }: FileUploaderProps) => {
 			acceptedFiles.forEach((file) => formData.append("file", file));
 			formData.append("ownerId", ownerId);
 			formData.append("accountId", accountId);
-
+			//Todo: remove ownerId accountId these can be obtained from the cookie
 			try {
 				const response = await axios.post(
 					"http://localhost:3001/api/v1/files/upload",

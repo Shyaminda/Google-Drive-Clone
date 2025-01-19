@@ -49,7 +49,7 @@ model File {
 	bucketField 	String
 	accountId   	String
 	ownerId     	String
-	owner       	User?     @relation(fields: [ownerId], references: [id])
+	owner       	User     @relation(fields: [ownerId], references: [id])
 	extension   	String?
 	size        	Int?
 	user        	String[]

@@ -17,6 +17,10 @@ const nextConfig: NextConfig = {
 				protocol: "https",
 				hostname: "lh3.googleusercontent.com",
 			},
+			{
+				protocol: "https",
+				hostname: "driveway-store.s3.us-east-1.amazonaws.com",
+			},
 		],
 	},
 };

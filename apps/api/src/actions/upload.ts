@@ -108,7 +108,10 @@ export const getFiles = async ({
 
 		const queries = createQueries(currentUser, type, sort, limit);
 
-		const files = await prisma.file.findMany(queries);
+		const files = await prisma.file.findMany({
+			...queries,
+			include: { owner: true },
+		});
 
 		return { success: true, files };
 	} catch {
