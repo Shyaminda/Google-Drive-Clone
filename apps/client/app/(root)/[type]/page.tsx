@@ -17,12 +17,12 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 		const fetchParams = async () => {
 			const params = await initialParams;
 			setType(params?.type);
-			setLimit(params?.limit || "10");
+			setLimit(params?.limit || "20");
 
 			try {
 				const fetchedFiles = await fetchFiles(
 					params?.type,
-					params?.limit || "10",
+					params?.limit || "20",
 				);
 				setFiles(fetchedFiles);
 			} catch (error) {

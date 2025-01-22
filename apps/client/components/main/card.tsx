@@ -1,12 +1,22 @@
 import { CardProps } from "@/types/types";
-import Link from "next/link";
 import Thumbnail from "@/components/ui/Thumbnail";
 import { convertFileSize } from "@/utils/utils";
 import FormattedDateTime from "@/components/main/formattedDateTime";
+import ActionDropdown from "@/components/main/actionDropdown";
+import { bucketObjectAction } from "@/hooks/bucket-file-action";
 
 export const Card = ({ file }: CardProps) => {
+	const { objectAction } = bucketObjectAction();
+
+	const handleView = async (e: React.MouseEvent) => {
+		e.preventDefault();
+		if (file.bucketField) {
+			await objectAction(file.bucketField, false);
+		}
+	};
+
 	return (
-		<Link href={file.url} target="_blank" className="file-card">
+		<div className="file-card" onClick={handleView}>
 			<div className="flex justify-between">
 				<Thumbnail
 					type={file.type}
@@ -16,7 +26,7 @@ export const Card = ({ file }: CardProps) => {
 					imageClassName="!size-11"
 				/>
 				<div className="flex flex-col items-end justify-between">
-					Actions
+					<ActionDropdown file={file} />
 					<p className="body-1">{convertFileSize(file.size)}</p>
 				</div>
 			</div>
@@ -30,6 +40,6 @@ export const Card = ({ file }: CardProps) => {
 					By: {file.owner?.name || "Unknown"}
 				</p>
 			</div>
-		</Link>
+		</div>
 	);
 };

@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { getFiles, uploadFile } from "../actions/upload";
 import { AuthenticatedRequest } from "../type";
 import { type as PrismaType } from "@prisma/client";
+import { getPresignedUrl } from "../actions/getObject";
 
 export const uploadController = async (req: Request, res: Response) => {
 	const files = req.files as Express.MulterS3.File[];
@@ -83,5 +84,35 @@ export const getFilesController = async (
 		return res
 			.status(500)
 			.json({ success: false, error: "Internal server error" });
+	}
+};
+
+export const preFileController = async (req: Request, res: Response) => {
+	const { bucketField, isDownload } = req.body;
+	console.log("Key:", bucketField);
+	console.log("isDownload:", isDownload);
+
+	if (!bucketField) {
+		return res.status(400).json({ error: "Missing bucketField" });
+	}
+
+	try {
+		const { success, url, error } = await getPresignedUrl(
+			bucketField,
+			isDownload === "false",
+		);
+
+		if (!success || !url) {
+			console.error("Error from getPresignedUrl:", error);
+			return res
+				.status(400)
+				.json({ error: error || "Failed to generate pre-signed URL" });
+		}
+
+		console.log("Fetched URL successfully:", url);
+		return res.status(200).json({ url, message: "Fetched URL successfully" });
+	} catch (error) {
+		console.error("Unexpected error in preFileController:", error);
+		return res.status(500).json({ error: "Internal server error" });
 	}
 };

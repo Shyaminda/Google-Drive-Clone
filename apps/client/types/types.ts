@@ -100,3 +100,13 @@ export interface FileType {
 	AUDIO: string;
 	VIDEO: string;
 }
+
+export interface DropDownProps {
+	file: File;
+}
+
+export interface ActionType {
+	label: string;
+	icon: string;
+	value: string;
+}
