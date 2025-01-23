@@ -1,7 +1,7 @@
 import prisma from "../lib/db";
 import { getFileType } from "../utils/handler";
 import dotenv from "dotenv";
-import { handleDbFailure } from "../helpers/dbFailure";
+import { handleDbFailure } from "../helpers/uploadDbFailure";
 import { Prisma } from "@prisma/client";
 import { type as PrismaType } from "@prisma/client";
 import { FileUploadRequest, GetFilesProps } from "../type";

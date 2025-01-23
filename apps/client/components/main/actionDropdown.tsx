@@ -1,8 +1,15 @@
+/* eslint-disable indent */
 "use client";
 
 import { actionsDropdownItems } from "@/constants";
 import { ActionType, DropDownProps } from "@/types/types";
-import { Dialog } from "@repo/ui/dialog";
+import {
+	Dialog,
+	DialogContent,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+} from "@repo/ui/dialog";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -14,31 +21,127 @@ import {
 import Image from "next/image";
 import { useState } from "react";
 import { bucketObjectAction } from "@/hooks/bucket-file-action";
+import { Input } from "@repo/ui/input";
+import { Button } from "@repo/ui/button";
+import { fileRenameAction } from "@/hooks/file-action";
 
 const ActionDropdown = ({ file }: DropDownProps) => {
 	const [isModalOpen, setIsModalOpen] = useState(false);
-	const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 	const [action, setAction] = useState<ActionType | null>(null);
+	const [name, setName] = useState(file.name);
+	const [isLoading, setIsLoading] = useState(false);
+	const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
 	const { objectAction } = bucketObjectAction();
 
-	const handleDownload = async (e: React.MouseEvent) => {
+	const handleAction = async (e: React.MouseEvent, actionItem: ActionType) => {
 		e.preventDefault();
 		e.stopPropagation();
-		if (file.bucketField) {
+
+		if (actionItem.value === "download" && file.bucketField) {
 			await objectAction(file.bucketField, true);
+			setIsDropdownOpen(false);
+		} else if (
+			["rename", "share", "delete", "details"].includes(actionItem.value)
+		) {
+			setAction(actionItem);
+			setIsModalOpen(true);
+			setIsDropdownOpen(false);
+		}
+	};
+	const handleActionSubmit = async () => {
+		if (!action) return;
+
+		setIsLoading(true);
+
+		try {
+			switch (action.value) {
+				case "rename":
+					await fileRenameAction(file.bucketField, name);
+					setIsModalOpen(false);
+					break;
+			}
+		} catch (err) {
+			console.error(`Error performing ${action.value}:`, err);
+		} finally {
+			setIsLoading(false);
 		}
 	};
 
+	const closeAllModels = () => {
+		setIsModalOpen(false);
+		setAction(null);
+		setIsDropdownOpen(false);
+	};
+
+	const renderDialogContent = () => {
+		if (!action) return null;
+		return (
+			<DialogContent
+				className="shad-dialog button"
+				onClick={(e) => e.stopPropagation()}
+			>
+				<DialogHeader className="flex flex-col gap-3">
+					<DialogTitle className="text-center text-light-100">{`${action.label}`}</DialogTitle>
+					{action.value === "rename" && (
+						<Input
+							type="text"
+							value={name}
+							onChange={(e) => setName(e.target.value)}
+						/>
+					)}
+				</DialogHeader>
+				{["share", "delete", "rename"].includes(action.value) && (
+					<DialogFooter className="flex flex-col gap-3 md:flex-row">
+						<Button
+							className="modal-cancel-button"
+							onClick={closeAllModels}
+							variant="normal"
+						>
+							Cancel
+						</Button>
+						<Button
+							onClick={handleActionSubmit}
+							className="modal-submit-button"
+						>
+							<p className="capitalize">{action.value}</p>
+							{isLoading && (
+								<Image
+									src="/assets/icons/loader.svg"
+									alt="loader"
+									width={24}
+									height={24}
+									className="animate-spin"
+								/>
+							)}
+						</Button>
+					</DialogFooter>
+				)}
+			</DialogContent>
+		);
+	};
+
 	return (
-		<Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-			<DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
+		<Dialog
+			open={isModalOpen}
+			onOpenChange={(isOpen) => {
+				setIsModalOpen(isOpen);
+				if (!isOpen) {
+					setAction(null);
+				}
+			}}
+		>
+			<DropdownMenu
+				open={isDropdownOpen}
+				onOpenChange={(isOpen) => setIsDropdownOpen(isOpen)}
+			>
 				<DropdownMenuTrigger className="shad-no-focus">
 					<Image
 						src="/assets/icons/dots.svg"
 						alt="dots"
 						width={20}
 						height={20}
+						onClick={() => setIsDropdownOpen(true)}
 					/>
 				</DropdownMenuTrigger>
 				<DropdownMenuContent>
@@ -50,24 +153,15 @@ const ActionDropdown = ({ file }: DropDownProps) => {
 						<DropdownMenuItem
 							key={actionItem.value}
 							className="shad-dropdown-item"
-							onClick={() => {
-								setAction(actionItem);
-
-								if (
-									["rename", "share", "delete", "details"].includes(
-										actionItem.value,
-									)
-								) {
-									setIsModalOpen(true);
-								}
-							}}
+							onClick={(e) => handleAction(e, actionItem)}
 						>
-							<div className="flex items-center gap-2" onClick={handleDownload}>
+							<div className="flex items-center gap-2">
 								<Image
 									src={actionItem.icon}
 									alt={actionItem.label}
 									width={30}
 									height={30}
+									onClick={(e) => e.preventDefault()}
 								/>
 								{actionItem.label}
 							</div>
@@ -75,97 +169,9 @@ const ActionDropdown = ({ file }: DropDownProps) => {
 					))}
 				</DropdownMenuContent>
 			</DropdownMenu>
+			{renderDialogContent()}
 		</Dialog>
 	);
 };
 
 export default ActionDropdown;
-
-//"use client";
-
-// import { actionsDropdownItems } from "@/constants";
-// import { usePreURL } from "@/hooks/pre-signed-url";
-// import { ActionType, DropDownProps } from "@/types/types";
-// import { Dialog } from "@repo/ui/dialog";
-// import {
-// 	DropdownMenu,
-// 	DropdownMenuContent,
-// 	DropdownMenuItem,
-// 	DropdownMenuLabel,
-// 	DropdownMenuSeparator,
-// 	DropdownMenuTrigger,
-// } from "@repo/ui/dropdown";
-// import Image from "next/image";
-// import { useState } from "react";
-
-// const ActionDropdown = ({ file }: DropDownProps) => {
-// 	const [isModalOpen, setIsModalOpen] = useState(false);
-// 	const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-// 	const [action, setAction] = useState<ActionType | null>(null);
-// 	const { url, fetchPreSignedURL } = usePreURL();
-
-// 	const handleAction = async (actionType: string) => {
-// 		if (!file.bucketField) return;
-
-// 		const isDownload = actionType === "download";
-// 		const { success, url } = await fetchPreSignedURL(
-// 			file.bucketField,
-// 			isDownload,
-// 		);
-
-// 		if (success && url) {
-// 			if (actionType === "view") {
-// 				window.open(url, "_blank"); // Open in a new tab
-// 			} else if (actionType === "download") {
-// 				const a = document.createElement("a");
-// 				a.href = url;
-// 				a.download = file.name; // Set download filename
-// 				document.body.appendChild(a);
-// 				a.click();
-// 				document.body.removeChild(a);
-// 			}
-// 		} else {
-// 			console.error("Failed to fetch the pre-signed URL.");
-// 		}
-// 	};
-
-// 	return (
-// 		<Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-// 			<DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
-// 				<DropdownMenuTrigger className="shad-no-focus">
-// 					<Image
-// 						src="/assets/icons/dots.svg"
-// 						alt="dots"
-// 						width={20}
-// 						height={20}
-// 					/>
-// 				</DropdownMenuTrigger>
-// 				<DropdownMenuContent>
-// 					<DropdownMenuLabel className="max-w-[200px] truncate">
-// 						{file.name}
-// 					</DropdownMenuLabel>
-// 					<DropdownMenuSeparator />
-// 					{actionsDropdownItems.map((actionItem) => (
-// 						<DropdownMenuItem
-// 							key={actionItem.value}
-// 							className="shad-dropdown-item"
-// 							onClick={() => handleAction(actionItem.value)}
-// 						>
-// 							<div className="flex items-center gap-2">
-// 								<Image
-// 									src={actionItem.icon}
-// 									alt={actionItem.label}
-// 									width={30}
-// 									height={30}
-// 								/>
-// 								{actionItem.label}
-// 							</div>
-// 						</DropdownMenuItem>
-// 					))}
-// 				</DropdownMenuContent>
-// 			</DropdownMenu>
-// 		</Dialog>
-// 	);
-// };
-
-// export default ActionDropdown;

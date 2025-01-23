@@ -1,6 +1,7 @@
 import multer from "multer";
 import multerS3 from "multer-s3";
 import { s3 } from "../utils/bucket";
+import { v4 as uuidv4 } from "uuid";
 
 const upload = multer({
 	storage: multerS3({
@@ -12,7 +13,7 @@ const upload = multer({
 			});
 		},
 		key: (req, file, cb) => {
-			const uniqueKey = `${Date.now()}-${file.originalname}`;
+			const uniqueKey = `${uuidv4()}`;
 			cb(null, uniqueKey);
 		},
 		contentType: (req, file, cb) => {

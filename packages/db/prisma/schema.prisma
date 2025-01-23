@@ -42,11 +42,11 @@ model Account {
 }
 
 model File {
-	id          	String       @id @default(cuid())
+	id          	String   @id @default(cuid())
 	name        	String
 	url         	String
 	type			  	type
-	bucketField 	String
+	bucketField 	String   @unique
 	accountId   	String
 	ownerId     	String
 	owner       	User     @relation(fields: [ownerId], references: [id])

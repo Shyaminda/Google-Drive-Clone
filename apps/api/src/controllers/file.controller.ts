@@ -3,6 +3,7 @@ import { getFiles, uploadFile } from "../actions/upload";
 import { AuthenticatedRequest } from "../type";
 import { type as PrismaType } from "@prisma/client";
 import { getPresignedUrl } from "../actions/getObject";
+import { renameFile } from "../actions/fileAction";
 
 export const uploadController = async (req: Request, res: Response) => {
 	const files = req.files as Express.MulterS3.File[];
@@ -114,5 +115,30 @@ export const preFileController = async (req: Request, res: Response) => {
 	} catch (error) {
 		console.error("Unexpected error in preFileController:", error);
 		return res.status(500).json({ error: "Internal server error" });
+	}
+};
+
+export const renameFileController = async (req: Request, res: Response) => {
+	const { bucketField, newName } = req.body;
+
+	if (!bucketField || !newName) {
+		return res
+			.status(400)
+			.json({ success: false, error: "Missing bucketField or newName" });
+	}
+
+	try {
+		const file = await renameFile(bucketField, newName);
+
+		if (!file.success) {
+			return res.status(400).json({ success: false, error: file.error });
+		}
+
+		return res.status(200).json({ file, message: "File renamed successfully" });
+	} catch (error) {
+		console.error("Unexpected error in renameController:", error);
+		return res
+			.status(500)
+			.json({ success: false, error: "Internal server error" });
 	}
 };

@@ -11,12 +11,17 @@ export const bucketObjectAction = () => {
 					withCredentials: true,
 				},
 			);
-			console.log("Response:", response.data.url);
+			const signedUrl = response.data.url;
+			console.log("Signed URL", signedUrl);
 
 			if (isDownload) {
-				const blob = new Blob([response.data]);
+				const fileResponse = await axios.get(signedUrl, {
+					responseType: "blob",
+				});
+				console.log("File Response", fileResponse);
+
+				const blob = new Blob([fileResponse.data]);
 				const url = window.URL.createObjectURL(blob);
-				console.log("URL:", url);
 
 				const link = document.createElement("a");
 				link.href = url;
@@ -27,12 +32,13 @@ export const bucketObjectAction = () => {
 
 				window.URL.revokeObjectURL(url);
 
-				return { url };
+				return { success: true, url };
+			} else {
+				console.log("Opening URL", signedUrl);
+				window.open(signedUrl, "_blank");
 			}
-			console.log("Opening URL in new tab:", response.data.url);
-			window.open(response.data.url, "_blank");
 		} catch (error) {
-			console.error("Error downloading or viewing file:", error);
+			console.error("Error handling file action", error);
 			return { success: false, url: "" };
 		}
 	};
