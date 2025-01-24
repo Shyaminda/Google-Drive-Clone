@@ -1,10 +1,14 @@
 import axios from "axios";
 
-export const bucketObjectAction = () => {
-	const objectAction = async (bucketField: string, isDownload: boolean) => {
+export const bucketObjectAccess = () => {
+	const objectAccess = async (
+		bucketField: string,
+		isDownload: boolean,
+		options?: { triggeredBy?: string },
+	) => {
 		try {
 			const response = await axios.post(
-				"http://localhost:3001/api/v1/files/action",
+				"http://localhost:3001/api/v1/files/access",
 				{ bucketField, isDownload },
 				{
 					responseType: "json",
@@ -34,8 +38,11 @@ export const bucketObjectAction = () => {
 
 				return { success: true, url };
 			} else {
-				console.log("Opening URL", signedUrl);
-				window.open(signedUrl, "_blank");
+				if (options?.triggeredBy !== "fetchThumbnail") {
+					console.log("Opening URL in new tab:", signedUrl);
+					window.open(signedUrl, "_blank");
+				}
+				return { success: true, url: signedUrl };
 			}
 		} catch (error) {
 			console.error("Error handling file action", error);
@@ -43,5 +50,5 @@ export const bucketObjectAction = () => {
 		}
 	};
 
-	return { objectAction };
+	return { objectAccess };
 };

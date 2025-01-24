@@ -20,7 +20,7 @@ import {
 } from "@repo/ui/dropdown";
 import Image from "next/image";
 import { useState } from "react";
-import { bucketObjectAction } from "@/hooks/bucket-file-action";
+import { bucketObjectAccess } from "@/hooks/bucket-file-action";
 import { Input } from "@repo/ui/input";
 import { Button } from "@repo/ui/button";
 import { fileRenameAction } from "@/hooks/file-action";
@@ -32,14 +32,14 @@ const ActionDropdown = ({ file }: DropDownProps) => {
 	const [isLoading, setIsLoading] = useState(false);
 	const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-	const { objectAction } = bucketObjectAction();
+	const { objectAccess } = bucketObjectAccess();
 
 	const handleAction = async (e: React.MouseEvent, actionItem: ActionType) => {
 		e.preventDefault();
 		e.stopPropagation();
 
 		if (actionItem.value === "download" && file.bucketField) {
-			await objectAction(file.bucketField, true);
+			await objectAccess(file.bucketField, true);
 			setIsDropdownOpen(false);
 		} else if (
 			["rename", "share", "delete", "details"].includes(actionItem.value)

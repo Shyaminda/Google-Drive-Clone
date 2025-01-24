@@ -13,7 +13,7 @@ const fileRouter = express.Router();
 
 fileRouter.post("/upload", uploadMiddleware, asyncHandler(uploadController));
 fileRouter.get("/", authMiddleware(), asyncHandler(getFilesController));
-fileRouter.post("/action", authMiddleware(), asyncHandler(preFileController));
+fileRouter.post("/access", authMiddleware(), asyncHandler(preFileController));
 fileRouter.post(
 	"/rename",
 	authMiddleware(),

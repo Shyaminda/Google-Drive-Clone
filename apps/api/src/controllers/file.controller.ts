@@ -2,8 +2,9 @@ import { Request, Response } from "express";
 import { getFiles, uploadFile } from "../actions/upload";
 import { AuthenticatedRequest } from "../type";
 import { type as PrismaType } from "@prisma/client";
-import { getPresignedUrl } from "../actions/getObject";
+import { getPresignedUrl } from "../actions/getObjectUrl";
 import { renameFile } from "../actions/fileAction";
+import { getExtensionFromFileName } from "../helpers/getExtension";
 
 export const uploadController = async (req: Request, res: Response) => {
 	const files = req.files as Express.MulterS3.File[];
@@ -128,7 +129,10 @@ export const renameFileController = async (req: Request, res: Response) => {
 	}
 
 	try {
-		const file = await renameFile(bucketField, newName);
+		const newExtension = getExtensionFromFileName(newName);
+		console.log("New Extension con:", newExtension);
+
+		const file = await renameFile(bucketField, newName, newExtension);
 
 		if (!file.success) {
 			return res.status(400).json({ success: false, error: file.error });

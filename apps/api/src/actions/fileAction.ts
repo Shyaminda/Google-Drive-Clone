@@ -18,13 +18,21 @@ export const renameFile = async (
 		}
 
 		const currentExtension = file.extension ? `.${file.extension}` : "";
+		const isExtensionChanged = newExtension && newExtension !== file.extension;
+		console.log("Is Extension Changed:", isExtensionChanged);
 
-		const newFileName = newExtension
-			? `${newName}.${newExtension}`
-			: `${newName}${currentExtension}`;
+		const newNameWithoutExtension = newName.replace(/\.[^/.]+$/, "");
+
+		const finalFileName = newExtension
+			? `${newNameWithoutExtension}.${newExtension}`
+			: `${newName}`;
+
 		const newKeyParts = bucketField.split("/");
-		newKeyParts[newKeyParts.length - 1] =
-			`${uuidv4()}${newExtension ? `.${newExtension}` : currentExtension}`;
+		if (isExtensionChanged) {
+			newKeyParts[newKeyParts.length - 1] = `${uuidv4()}.${newExtension}`;
+		} else {
+			newKeyParts[newKeyParts.length - 1] = `${uuidv4()}${currentExtension}`;
+		}
 		const newKey = newKeyParts.join("/");
 
 		await copyFileInS3(bucketField, newKey);
@@ -40,7 +48,7 @@ export const renameFile = async (
 			await prisma.file.update({
 				where: { bucketField },
 				data: {
-					name: newFileName,
+					name: finalFileName,
 					bucketField: newKey,
 					extension: newExtension || file.extension,
 				},

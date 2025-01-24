@@ -3,15 +3,15 @@ import Thumbnail from "@/components/ui/Thumbnail";
 import { convertFileSize } from "@/utils/utils";
 import FormattedDateTime from "@/components/main/formattedDateTime";
 import ActionDropdown from "@/components/main/actionDropdown";
-import { bucketObjectAction } from "@/hooks/bucket-file-action";
+import { bucketObjectAccess } from "@/hooks/bucket-file-action";
 
 export const Card = ({ file }: CardProps) => {
-	const { objectAction } = bucketObjectAction();
+	const { objectAccess } = bucketObjectAccess();
 
 	const handleView = async (e: React.MouseEvent) => {
 		e.preventDefault();
 		if (file.bucketField) {
-			await objectAction(file.bucketField, false);
+			await objectAccess(file.bucketField, false);
 		}
 	};
 
@@ -21,6 +21,7 @@ export const Card = ({ file }: CardProps) => {
 				<Thumbnail
 					type={file.type}
 					extension={file.extension}
+					bucketField={file.bucketField}
 					url={file.url}
 					className="!size-20"
 					imageClassName="!size-11"

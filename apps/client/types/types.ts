@@ -73,6 +73,7 @@ export interface FormSuccessProps {
 export interface ThumbnailProps {
 	type: string;
 	extension: string;
+	bucketField: string;
 	url: string;
 	imageClassName?: string;
 	className?: string;
