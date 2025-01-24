@@ -22,7 +22,7 @@ const Thumbnail = ({
 					triggeredBy: "fetchThumbnail",
 				});
 				if (success) {
-					console.log("Fetched thumbnail URL:", url);
+					console.log("Fetched thumbnail URL", url);
 					setImageUrl(url);
 				}
 			}

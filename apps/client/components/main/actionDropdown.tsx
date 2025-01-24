@@ -175,3 +175,4 @@ const ActionDropdown = ({ file }: DropDownProps) => {
 };
 
 export default ActionDropdown;
+//TODO: when rename function is open only select the file name don't select the extension
