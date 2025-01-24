@@ -24,6 +24,7 @@ import { bucketObjectAccess } from "@/hooks/bucket-file-action";
 import { Input } from "@repo/ui/input";
 import { Button } from "@repo/ui/button";
 import { fileRenameAction } from "@/hooks/file-action";
+import { FileDetails } from "@/components/main/actionsModalContent";
 
 const ActionDropdown = ({ file }: DropDownProps) => {
 	const [isModalOpen, setIsModalOpen] = useState(false);
@@ -90,6 +91,7 @@ const ActionDropdown = ({ file }: DropDownProps) => {
 							onChange={(e) => setName(e.target.value)}
 						/>
 					)}
+					{action.value === "details" && <FileDetails file={file} />}
 				</DialogHeader>
 				{["share", "delete", "rename"].includes(action.value) && (
 					<DialogFooter className="flex flex-col gap-3 md:flex-row">
@@ -176,3 +178,5 @@ const ActionDropdown = ({ file }: DropDownProps) => {
 
 export default ActionDropdown;
 //TODO: when rename function is open only select the file name don't select the extension
+//TODO: show the renamed file instantaneously without refreshing the page
+//TODO: add loading function for download action

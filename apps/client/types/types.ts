@@ -57,7 +57,7 @@ export interface FileUploaderProps {
 export interface MobileNavigationProps {
 	id?: string;
 	accountId?: string | null;
-	name?: string | null;
+	name: string;
 	image?: string;
 	email?: string;
 }
@@ -74,7 +74,6 @@ export interface ThumbnailProps {
 	type: string;
 	extension: string;
 	bucketField: string;
-	url: string;
 	imageClassName?: string;
 	className?: string;
 }
@@ -82,7 +81,7 @@ export interface ThumbnailProps {
 export interface User {
 	id: string;
 	email: string;
-	name: string | null;
+	name: string;
 	emailVerified: string | null;
 	image: string;
 	password: string;
@@ -110,4 +109,8 @@ export interface ActionType {
 	label: string;
 	icon: string;
 	value: string;
+}
+
+export interface DetailsProps {
+	file: File;
 }

@@ -22,7 +22,6 @@ export const Card = ({ file }: CardProps) => {
 					type={file.type}
 					extension={file.extension}
 					bucketField={file.bucketField}
-					url={file.url}
 					className="!size-20"
 					imageClassName="!size-11"
 				/>
