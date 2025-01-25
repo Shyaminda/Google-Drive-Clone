@@ -12,8 +12,8 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 		<main className="flex h-screen">
 			<Sidebar />
 			<section className="flex h-full flex-1 flex-col">
-				<MobileNavigation {...user} />
-				<Header userId={user?.id || ""} accountId={user?.accountId || ""} />
+				<MobileNavigation {...user} name={user?.name || ""} />
+				<Header userId={user?.id || ""} />
 				<div className="main-content">{children}</div>
 			</section>
 			<Toaster />

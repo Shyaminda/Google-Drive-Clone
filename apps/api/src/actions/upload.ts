@@ -8,11 +8,7 @@ import { FileUploadRequest, GetFilesProps } from "../type";
 
 dotenv.config();
 
-export const uploadFile = async ({
-	files,
-	ownerId,
-	accountId,
-}: FileUploadRequest) => {
+export const uploadFile = async ({ files, ownerId }: FileUploadRequest) => {
 	if (!files || files.length === 0) {
 		return { success: false, error: "No file to uploaded" };
 	}
@@ -37,7 +33,6 @@ export const uploadFile = async ({
 					extension: getFileType(file.originalname).extension,
 					size: file.size,
 					ownerId: ownerId,
-					accountId,
 					bucketField: fileKey,
 					user: [ownerId],
 				},

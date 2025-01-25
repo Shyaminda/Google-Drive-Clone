@@ -14,7 +14,6 @@ import { MobileNavigationProps } from "@/types/types";
 
 const MobileNavigation = ({
 	id,
-	accountId,
 	name,
 	image,
 	email,
@@ -85,7 +84,7 @@ const MobileNavigation = ({
 					</nav>
 					<Separator className="my-5 bg-light-200/20" />
 					<div className="gap-5">
-						<FileUploader ownerId={id || ""} accountId={accountId || ""} />
+						<FileUploader ownerId={id || ""} />
 						<UserButton style="mobile" />
 					</div>
 				</SheetContent>

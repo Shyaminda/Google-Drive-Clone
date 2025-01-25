@@ -12,7 +12,7 @@ import axios, { AxiosProgressEvent } from "axios";
 import { Progress } from "@repo/ui/progress";
 import { FileUploaderProps } from "@/types/types";
 
-const FileUploader = ({ ownerId, accountId, className }: FileUploaderProps) => {
+const FileUploader = ({ ownerId, className }: FileUploaderProps) => {
 	const [files, setFiles] = useState<File[]>([]);
 	const [uploadProgress, setUploadProgress] = useState<{
 		[key: string]: number;
@@ -25,8 +25,7 @@ const FileUploader = ({ ownerId, accountId, className }: FileUploaderProps) => {
 			const formData = new FormData();
 			acceptedFiles.forEach((file) => formData.append("file", file));
 			formData.append("ownerId", ownerId);
-			formData.append("accountId", accountId);
-			//Todo: remove ownerId accountId these can be obtained from the cookie
+			//Todo: remove ownerId these can be obtained from the cookie
 			try {
 				const response = await axios.post(
 					"http://localhost:3001/api/v1/files/upload",
@@ -89,7 +88,7 @@ const FileUploader = ({ ownerId, accountId, className }: FileUploaderProps) => {
 				});
 			}
 		},
-		[ownerId, accountId, toast],
+		[ownerId, toast],
 	);
 	const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
@@ -133,7 +132,7 @@ const FileUploader = ({ ownerId, accountId, className }: FileUploaderProps) => {
 									<Thumbnail
 										type={type}
 										extension={extension}
-										url={convertFileToUrl(file)}
+										bucketField={convertFileToUrl(file)}
 									/>
 									<div className="preview-file-name">
 										{file.name}

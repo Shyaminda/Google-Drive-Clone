@@ -9,7 +9,6 @@ export interface AuthenticatedRequest extends Request {
 export interface FileUploadRequest {
 	files: Express.MulterS3.File[];
 	ownerId: string;
-	accountId: string;
 }
 
 export interface GetFilesProps {

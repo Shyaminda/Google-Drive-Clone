@@ -14,9 +14,9 @@ model User {
 	emailVerified 		DateTime?
 	image    					String?   @default("https://img.freepik.com/free-psd/3d-illustration-person-with-sunglasses_23-2149436188.jpg")
 	password 					String?
-	accountId 				String?    @unique
 	accounts					Account[]
 	files		  				File[]
+	fileAccess   			FileAccess[]
 	createdAt 				DateTime  @default(now())
 	updatedAt 				DateTime  @updatedAt
 }
@@ -47,16 +47,27 @@ model File {
 	url         	String
 	type			  	type
 	bucketField 	String   @unique
-	accountId   	String
 	ownerId     	String
 	owner       	User     @relation(fields: [ownerId], references: [id])
 	extension   	String?
 	size        	Int?
 	user        	String[]
+	fileAccess    FileAccess[]
 	createdAt   	DateTime  @default(now())
 	updatedAt   	DateTime  @updatedAt
 
-	@@unique([accountId, bucketField])
+}
+
+model FileAccess {
+  id           String   @id @default(cuid())
+  fileId       String
+  userId       String
+  accessLevel  AccessLevel @default(VIEW)
+
+  file         File   @relation(fields: [fileId], references: [id])
+  user         User   @relation(fields: [userId], references: [id])
+
+  @@unique([fileId, userId])
 }
 
 model PasswordResetToken {
@@ -83,4 +94,10 @@ enum type {
 	VIDEO
 	AUDIO
 	OTHER
+}
+
+enum AccessLevel {
+  VIEW
+  EDIT
+  OWNER
 }

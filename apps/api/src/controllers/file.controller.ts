@@ -8,22 +8,22 @@ import { getExtensionFromFileName } from "../helpers/getExtension";
 
 export const uploadController = async (req: Request, res: Response) => {
 	const files = req.files as Express.MulterS3.File[];
-	const { ownerId, accountId } = req.body;
-	console.log("Files:", files, "OwnerId:", ownerId, "AccountId:", accountId);
+	const { ownerId } = req.body;
+	console.log("Files:", files, "OwnerId:", ownerId);
 
 	if (!files || files.length === 0) {
 		return res.status(400).json({ error: "No file to upload" });
 	}
 
-	if (!ownerId || !accountId) {
+	if (!ownerId) {
 		return res
 			.status(400)
-			.json({ error: "Missing ownerId or accountId in the request body" });
+			.json({ error: "Missing ownerId in the request body" });
 	}
 
 	try {
 		console.log("reached here");
-		const upload = await uploadFile({ files, ownerId, accountId });
+		const upload = await uploadFile({ files, ownerId });
 
 		if (!upload || !upload.success) {
 			return res.status(400).json({ error: upload?.error });

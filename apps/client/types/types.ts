@@ -4,7 +4,6 @@ export interface File {
 	url: string;
 	type: string;
 	bucketField: string;
-	accountId: string;
 	ownerId: string;
 	owner: User;
 	extension: string;
@@ -50,13 +49,11 @@ export interface UserButtonProps {
 
 export interface FileUploaderProps {
 	ownerId: string;
-	accountId: string;
 	className?: string;
 }
 
 export interface MobileNavigationProps {
 	id?: string;
-	accountId?: string | null;
 	name: string;
 	image?: string;
 	email?: string;
@@ -85,7 +82,6 @@ export interface User {
 	emailVerified: string | null;
 	image: string;
 	password: string;
-	accountId: string | null;
 	createdAt: string;
 	updatedAt: string;
 }
@@ -113,4 +109,10 @@ export interface ActionType {
 
 export interface DetailsProps {
 	file: File;
+}
+
+export interface ShareFileProps {
+	file: File;
+	onInputChange: React.Dispatch<React.SetStateAction<string[]>>;
+	onRemove: (email: string) => void;
 }

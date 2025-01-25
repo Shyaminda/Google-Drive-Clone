@@ -5,18 +5,12 @@ import { UserButton } from "@/components/auth/user-button";
 import Search from "@/components/main/search";
 import FileUploader from "@/components/main/fileUploader";
 
-const Header = ({
-	userId,
-	accountId,
-}: {
-	userId: string;
-	accountId: string;
-}) => {
+const Header = ({ userId }: { userId: string }) => {
 	return (
 		<header className="header">
 			<Search />
 			<div className="header-wrapper">
-				<FileUploader ownerId={userId} accountId={accountId} />
+				<FileUploader ownerId={userId} />
 				<form>
 					<UserButton />
 				</form>

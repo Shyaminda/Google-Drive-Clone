@@ -24,7 +24,7 @@ import { bucketObjectAccess } from "@/hooks/bucket-file-action";
 import { Input } from "@repo/ui/input";
 import { Button } from "@repo/ui/button";
 import { fileRenameAction } from "@/hooks/file-action";
-import { FileDetails } from "@/components/main/actionsModalContent";
+import { FileDetails, ShareFile } from "@/components/main/actionsModalContent";
 
 const ActionDropdown = ({ file }: DropDownProps) => {
 	const [isModalOpen, setIsModalOpen] = useState(false);
@@ -32,6 +32,7 @@ const ActionDropdown = ({ file }: DropDownProps) => {
 	const [name, setName] = useState(file.name);
 	const [isLoading, setIsLoading] = useState(false);
 	const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+	const [emails, setEmails] = useState<string[]>([]);
 
 	const { objectAccess } = bucketObjectAccess();
 
@@ -75,6 +76,8 @@ const ActionDropdown = ({ file }: DropDownProps) => {
 		setIsDropdownOpen(false);
 	};
 
+	const handleRemoveUser = () => {};
+
 	const renderDialogContent = () => {
 		if (!action) return null;
 		return (
@@ -92,6 +95,13 @@ const ActionDropdown = ({ file }: DropDownProps) => {
 						/>
 					)}
 					{action.value === "details" && <FileDetails file={file} />}
+					{action.value === "share" && (
+						<ShareFile
+							file={file}
+							onInputChange={setEmails}
+							onRemove={handleRemoveUser}
+						/>
+					)}
 				</DialogHeader>
 				{["share", "delete", "rename"].includes(action.value) && (
 					<DialogFooter className="flex flex-col gap-3 md:flex-row">
