@@ -58,10 +58,18 @@ const ActionDropdown = ({ file }: DropDownProps) => {
 
 		try {
 			switch (action.value) {
-				case "rename":
-					await fileRenameAction(file.bucketField, name);
+				case "rename": {
+					const permissionValue = action.value.trim().toUpperCase();
+					await fileRenameAction(
+						file.bucketField,
+						name,
+						file.id,
+						permissionValue,
+					);
+					console.log("action value:", action.value);
 					setIsModalOpen(false);
 					break;
+				}
 			}
 		} catch (err) {
 			console.error(`Error performing ${action.value}:`, err);

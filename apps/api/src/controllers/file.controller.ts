@@ -3,7 +3,7 @@ import { getFiles, uploadFile } from "../actions/upload";
 import { AuthenticatedRequest } from "../type";
 import { type as PrismaType } from "@prisma/client";
 import { getPresignedUrl } from "../actions/getObjectUrl";
-import { renameFile } from "../actions/fileAction";
+import { renameFile, shareFile, updateFileAccess } from "../actions/fileAction";
 import { getExtensionFromFileName } from "../helpers/getExtension";
 
 export const uploadController = async (req: Request, res: Response) => {
@@ -141,6 +141,78 @@ export const renameFileController = async (req: Request, res: Response) => {
 		return res.status(200).json({ file, message: "File renamed successfully" });
 	} catch (error) {
 		console.error("Unexpected error in renameController:", error);
+		return res
+			.status(500)
+			.json({ success: false, error: "Internal server error" });
+	}
+};
+
+export const shareFileAccessController = async (
+	req: Request,
+	res: Response,
+) => {
+	const { permissions, email } = req.body;
+	const { fileId } = req.query;
+	console.log("FileId:", fileId);
+	console.log("Email:", email);
+	console.log("permissions:", permissions);
+	console.log("email:", email);
+
+	if (!fileId || !email || !permissions) {
+		return res
+			.status(400)
+			.json({ success: false, error: "Missing required fields" });
+	}
+
+	try {
+		const sharedUser = await shareFile(fileId as string, email, permissions);
+
+		if (!sharedUser.success) {
+			return res.status(400).json({ success: false, error: sharedUser.error });
+		}
+
+		return res
+			.status(200)
+			.json({ sharedUser, message: "File shared successfully" });
+	} catch (error) {
+		console.error("Unexpected error in shareFileAccessController:", error);
+		return res
+			.status(500)
+			.json({ success: false, error: "Internal server error" });
+	}
+};
+
+export const shareFileAccessUpdateController = async (
+	req: Request,
+	res: Response,
+) => {
+	const { fileId, ownerId, email, newAccessLevel } = req.body;
+
+	if (!fileId || !ownerId || !email || !newAccessLevel) {
+		return res
+			.status(400)
+			.json({ success: false, error: "Missing required fields" });
+	}
+
+	try {
+		const updateSharedUser = await updateFileAccess(
+			fileId,
+			ownerId,
+			email,
+			newAccessLevel,
+		);
+
+		if (!updateSharedUser.success) {
+			return res
+				.status(400)
+				.json({ success: false, error: updateSharedUser.error });
+		}
+
+		return res
+			.status(200)
+			.json({ updateSharedUser, message: "File shared successfully" });
+	} catch (error) {
+		console.error("Unexpected error in shareFileAccessController:", error);
 		return res
 			.status(500)
 			.json({ success: false, error: "Internal server error" });

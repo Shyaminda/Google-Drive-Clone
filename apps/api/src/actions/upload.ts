@@ -35,6 +35,12 @@ export const uploadFile = async ({ files, ownerId }: FileUploadRequest) => {
 					ownerId: ownerId,
 					bucketField: fileKey,
 					user: [ownerId],
+					fileAccess: {
+						create: {
+							userId: ownerId,
+							accessLevel: "OWNER",
+						},
+					},
 				},
 			});
 
@@ -67,7 +73,11 @@ const createQueries = (
 	limit?: number,
 ): Prisma.FileFindManyArgs => {
 	const where: Prisma.FileWhereInput = {
-		OR: [{ ownerId: currentUser.id }, { user: { has: currentUser.email } }],
+		OR: [
+			{ ownerId: currentUser.id },
+			{ fileAccess: { some: { userId: currentUser.id } } },
+			{ user: { has: currentUser.email } },
+		],
 		...(type.length > 0 && {
 			type: { in: type.map((t) => t as PrismaType) },
 		}),
@@ -105,7 +115,13 @@ export const getFiles = async ({
 
 		const files = await prisma.file.findMany({
 			...queries,
-			include: { owner: true },
+			include: {
+				owner: true,
+				fileAccess: {
+					where: { userId: currentUser.id },
+					select: { permissions: true },
+				},
+			},
 		});
 
 		return { success: true, files };

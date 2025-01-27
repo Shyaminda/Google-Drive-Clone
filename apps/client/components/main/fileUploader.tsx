@@ -1,6 +1,6 @@
 "use client";
 
-import { convertFileToUrl, getFileType } from "@/utils/utils";
+import { getFileType } from "@/utils/utils";
 import { Button } from "@repo/ui/button";
 import { cn } from "@repo/ui/lib";
 import Image from "next/image";
@@ -132,7 +132,7 @@ const FileUploader = ({ ownerId, className }: FileUploaderProps) => {
 									<Thumbnail
 										type={type}
 										extension={extension}
-										bucketField={convertFileToUrl(file)}
+										//bucketField={file.bucketField}
 									/>
 									<div className="preview-file-name">
 										{file.name}

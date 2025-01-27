@@ -6,8 +6,11 @@ import {
 	getFilesController,
 	uploadController,
 	renameFileController,
+	shareFileAccessController,
+	shareFileAccessUpdateController,
 } from "../controllers/file.controller";
 import authMiddleware from "../middleware/authMiddleware";
+import { checkFilePermission } from "../middleware/permissionMiddleware";
 
 const fileRouter = express.Router();
 
@@ -17,7 +20,20 @@ fileRouter.post("/access", authMiddleware(), asyncHandler(preFileController));
 fileRouter.post(
 	"/rename",
 	authMiddleware(),
+	checkFilePermission(),
 	asyncHandler(renameFileController),
+);
+fileRouter.post(
+	"/share",
+	authMiddleware(),
+	checkFilePermission(),
+	asyncHandler(shareFileAccessController),
+);
+fileRouter.post(
+	"/access/update",
+	authMiddleware(),
+	checkFilePermission(),
+	asyncHandler(shareFileAccessUpdateController),
 );
 
 export default fileRouter;

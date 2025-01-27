@@ -59,13 +59,17 @@ model File {
 }
 
 model FileAccess {
-  id           String   @id @default(cuid())
-  fileId       String
-  userId       String
-  accessLevel  AccessLevel @default(VIEW)
-
-  file         File   @relation(fields: [fileId], references: [id])
-  user         User   @relation(fields: [userId], references: [id])
+  id            String   @id @default(cuid())
+  fileId        String
+  userId        String
+  accessLevel   AccessLevel @default(VIEW)
+	permissions   Permission[]
+	sharedAt   		DateTime?  @default(now())
+  lastAccessed  DateTime?
+	canShare  		Boolean  @default(false)
+	deletedAt    	DateTime?
+  file         	File   @relation(fields: [fileId], references: [id])
+  user         	User   @relation(fields: [userId], references: [id])
 
   @@unique([fileId, userId])
 }
@@ -100,4 +104,15 @@ enum AccessLevel {
   VIEW
   EDIT
   OWNER
+	DOWNLOAD
+	SHARE
+	FULL
+}
+
+enum Permission {
+	VIEW
+  DOWNLOAD
+  RENAME
+  SHARE
+  DELETE
 }
