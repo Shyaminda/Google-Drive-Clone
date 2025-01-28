@@ -115,4 +115,5 @@ export interface ShareFileProps {
 	file: File;
 	onInputChange: React.Dispatch<React.SetStateAction<string[]>>;
 	onRemove: (email: string) => void;
+	onPermissionChange: React.Dispatch<React.SetStateAction<string[]>>;
 }

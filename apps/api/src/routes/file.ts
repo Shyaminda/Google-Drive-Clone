@@ -8,6 +8,7 @@ import {
 	renameFileController,
 	shareFileAccessController,
 	shareFileAccessUpdateController,
+	fileAccessPermissionController,
 } from "../controllers/file.controller";
 import authMiddleware from "../middleware/authMiddleware";
 import { checkFilePermission } from "../middleware/permissionMiddleware";
@@ -34,6 +35,12 @@ fileRouter.post(
 	authMiddleware(),
 	checkFilePermission(),
 	asyncHandler(shareFileAccessUpdateController),
+);
+
+fileRouter.get(
+	"/p",
+	authMiddleware(),
+	asyncHandler(fileAccessPermissionController),
 );
 
 export default fileRouter;

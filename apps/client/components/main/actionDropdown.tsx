@@ -19,11 +19,11 @@ import {
 	DropdownMenuTrigger,
 } from "@repo/ui/dropdown";
 import Image from "next/image";
-import { useState } from "react";
+import { act, useState } from "react";
 import { bucketObjectAccess } from "@/hooks/bucket-file-action";
 import { Input } from "@repo/ui/input";
 import { Button } from "@repo/ui/button";
-import { fileRenameAction } from "@/hooks/file-action";
+import { fileRenameAction, fileShareAction } from "@/hooks/file-action";
 import { FileDetails, ShareFile } from "@/components/main/actionsModalContent";
 
 const ActionDropdown = ({ file }: DropDownProps) => {
@@ -33,6 +33,7 @@ const ActionDropdown = ({ file }: DropDownProps) => {
 	const [isLoading, setIsLoading] = useState(false);
 	const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 	const [emails, setEmails] = useState<string[]>([]);
+	const [grantPermissions, setGrantPermissions] = useState<string[]>([]);
 
 	const { objectAccess } = bucketObjectAccess();
 
@@ -59,14 +60,29 @@ const ActionDropdown = ({ file }: DropDownProps) => {
 		try {
 			switch (action.value) {
 				case "rename": {
-					const permissionValue = action.value.trim().toUpperCase();
+					const requestingPermission = action.value.trim().toUpperCase();
 					await fileRenameAction(
 						file.bucketField,
 						name,
 						file.id,
-						permissionValue,
+						requestingPermission,
 					);
 					console.log("action value:", action.value);
+					setIsModalOpen(false);
+					break;
+				}
+
+				case "share": {
+					if (emails.length === 0) {
+						throw new Error("Please provide at least one email.");
+					}
+					const requestingPermission = action.value.trim().toUpperCase();
+					await fileShareAction(
+						file.id,
+						emails,
+						grantPermissions,
+						requestingPermission,
+					);
 					setIsModalOpen(false);
 					break;
 				}
@@ -108,6 +124,7 @@ const ActionDropdown = ({ file }: DropDownProps) => {
 							file={file}
 							onInputChange={setEmails}
 							onRemove={handleRemoveUser}
+							onPermissionChange={setGrantPermissions}
 						/>
 					)}
 				</DialogHeader>

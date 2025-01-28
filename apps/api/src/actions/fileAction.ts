@@ -71,55 +71,75 @@ export const renameFile = async (
 
 export const shareFile = async (
 	fileId: string,
-	email: string,
-	permissions: string,
+	emails: string[],
+	permissions: string[],
 ) => {
+	const results = [];
 	try {
-		const user = await prisma.user.findUnique({ where: { email: email } });
+		for (const email of emails) {
+			const user = await prisma.user.findUnique({ where: { email: email } });
 
-		if (!user) {
-			return {
-				success: false,
-				error: "User not found with the provided email",
-			};
-		}
-		console.log("fileId action:", fileId);
-
-		const userId = user.id;
-		console.log("userId action:", userId);
-
-		const file = await prisma.file.findUnique({
-			where: { id: fileId },
-		});
-
-		if (!file) {
-			return { success: false, error: "File not found" };
-		}
-
-		const existingAccess = await prisma.fileAccess.findUnique({
-			where: { fileId_userId: { fileId, userId: userId } },
-		});
-
-		if (existingAccess) {
-			return { success: false, error: "User already has access to the file" };
-		}
-
-		const validPermissions = permissions.split(",").map((perm) => {
-			const trimmedPerm = perm.trim().toUpperCase();
-			if (!Object.values(Permission).includes(trimmedPerm as Permission)) {
-				throw new Error(`Invalid permission: ${trimmedPerm}`);
+			if (!user) {
+				results.push({
+					email,
+					success: false,
+					error: "User not found with the provided email",
+				});
+				continue;
 			}
-			return trimmedPerm as Permission;
-		});
+			console.log("fileId action:", fileId);
 
-		const fileAccess = await prisma.fileAccess.create({
-			data: {
-				fileId,
-				userId: userId,
-				permissions: { set: validPermissions },
-			},
-		});
-		return { success: true, fileAccess };
+			const userId = user.id;
+			console.log("userId action:", userId);
+
+			const file = await prisma.file.findUnique({
+				where: { id: fileId },
+			});
+
+			if (!file) {
+				results.push({
+					email,
+					success: false,
+					error: "File not found",
+				});
+				continue;
+			}
+
+			const existingAccess = await prisma.fileAccess.findUnique({
+				where: { fileId_userId: { fileId, userId: userId } },
+			});
+
+			if (existingAccess) {
+				results.push({
+					email,
+					success: false,
+					error: "User already has access to the file",
+				});
+				continue;
+			}
+
+			const validPermissions = permissions.map((perm) => {
+				const trimmedPerm = perm.trim().toUpperCase();
+				if (!Object.values(Permission).includes(trimmedPerm as Permission)) {
+					throw new Error(`Invalid permission: ${trimmedPerm}`);
+				}
+				return trimmedPerm as Permission;
+			});
+
+			const fileAccess = await prisma.fileAccess.create({
+				data: {
+					fileId,
+					userId: userId,
+					permissions: { set: validPermissions },
+				},
+			});
+			results.push({
+				email,
+				success: true,
+				fileAccess,
+			});
+		}
+		return { success: true, results };
 	} catch (error) {
 		console.error("Error sharing file:", error);
 		return { success: false, error: "Failed to share file" };

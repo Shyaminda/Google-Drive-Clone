@@ -5,6 +5,7 @@ import { type as PrismaType } from "@prisma/client";
 import { getPresignedUrl } from "../actions/getObjectUrl";
 import { renameFile, shareFile, updateFileAccess } from "../actions/fileAction";
 import { getExtensionFromFileName } from "../helpers/getExtension";
+import { userFilePermission } from "../actions/checkAccessAction";
 
 export const uploadController = async (req: Request, res: Response) => {
 	const files = req.files as Express.MulterS3.File[];
@@ -147,25 +148,77 @@ export const renameFileController = async (req: Request, res: Response) => {
 	}
 };
 
-export const shareFileAccessController = async (
-	req: Request,
+export const fileAccessPermissionController = async (
+	req: AuthenticatedRequest,
 	res: Response,
 ) => {
-	const { permissions, email } = req.body;
 	const { fileId } = req.query;
-	console.log("FileId:", fileId);
-	console.log("Email:", email);
-	console.log("permissions:", permissions);
-	console.log("email:", email);
+	const userId = req.userId;
+	console.log("userId permission:", userId);
+	console.log("fileId permission:", fileId);
 
-	if (!fileId || !email || !permissions) {
+	if (!fileId || !userId) {
 		return res
 			.status(400)
 			.json({ success: false, error: "Missing required fields" });
 	}
 
+	const fileAccess = await userFilePermission(fileId as string, userId);
+
+	if (!fileAccess.success) {
+		return res.status(400).json({ success: false, error: fileAccess.error });
+	}
+	console.log("File Access check:", fileAccess);
+	return res.status(200).json({ fileAccess, message: "File access checked" });
+};
+
+export const shareFileAccessController = async (
+	req: Request,
+	res: Response,
+) => {
+	const { grantPermissions, emails } = req.body;
+	const { fileId } = req.query;
+	console.log("FileId:", fileId);
+	console.log("Email:", emails);
+	console.log("permissions:", grantPermissions);
+	console.log("email:", emails);
+
+	if (!fileId || !emails || !grantPermissions) {
+		return res
+			.status(400)
+			.json({ success: false, error: "Missing required fields" });
+	}
+
+	let emailArray: string[];
+	if (typeof emails === "string") {
+		emailArray = emails.split(",").map((email) => email.trim());
+	} else if (Array.isArray(emails)) {
+		emailArray = emails;
+	} else {
+		return res
+			.status(400)
+			.json({ success: false, error: "Invalid format for emails" });
+	}
+
+	let permissionArray: string[];
+	if (typeof grantPermissions === "string") {
+		permissionArray = grantPermissions
+			.split(",")
+			.map((permission) => permission.trim());
+	} else if (Array.isArray(grantPermissions)) {
+		permissionArray = grantPermissions;
+	} else {
+		return res
+			.status(400)
+			.json({ success: false, error: "Invalid format for permissions" });
+	}
+
 	try {
-		const sharedUser = await shareFile(fileId as string, email, permissions);
+		const sharedUser = await shareFile(
+			fileId as string,
+			emailArray,
+			permissionArray,
+		);
 
 		if (!sharedUser.success) {
 			return res.status(400).json({ success: false, error: sharedUser.error });

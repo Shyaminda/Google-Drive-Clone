@@ -1,11 +1,14 @@
 import { DetailsProps, ShareFileProps } from "@/types/types";
-import React from "react";
 import Thumbnail from "@/components/ui/Thumbnail";
 import FormattedDateTime from "./formattedDateTime";
 import { convertFileSize, formatDateTime } from "@/utils/utils";
 import { Input } from "@repo/ui/input";
 import { Button } from "@repo/ui/button";
+import { Checkbox } from "@repo/ui/checkbox";
 import Image from "next/image";
+import { useEffect, useState } from "react";
+import { fetchFilePermissions } from "@/hooks/fetch-file-permissions";
+import { useCurrentUser } from "@/hooks/use-current-user";
 
 const ImageThumbnail = ({ file }: DetailsProps) => {
 	return (
@@ -56,20 +59,80 @@ export const ShareFile = ({
 	file,
 	onInputChange,
 	onRemove,
+	onPermissionChange,
 }: ShareFileProps) => {
+	const [permissions, setPermissions] = useState<string[]>([]);
+	const [selectedPermissions, setSelectedPermissions] = useState<string[]>([]);
+
+	const permissionList = [
+		{ id: "DOWNLOAD", label: "Download" },
+		{ id: "SHARE", label: "Share" },
+		{ id: "RENAME", label: "rename" },
+		{ id: "DELETE", label: "delete" },
+	];
+
+	const userId = useCurrentUser()?.id || "";
+	console.log("userId context:", userId);
+
+	useEffect(() => {
+		const fetchPermissions = async () => {
+			await fetchFilePermissions(file.id, setPermissions);
+		};
+
+		fetchPermissions();
+	}, [file.id, userId]);
+
+	const handlePermissionChange = (permissionId: string, checked: boolean) => {
+		const updatedPermissions = checked
+			? [...selectedPermissions, permissionId]
+			: selectedPermissions.filter((id) => id !== permissionId);
+
+		setSelectedPermissions(updatedPermissions);
+
+		onPermissionChange(updatedPermissions);
+	};
+
+	const filteredPermissionList = permissionList.filter(
+		(perm) => Array.isArray(permissions) && permissions.includes(perm.id),
+	);
+
 	return (
 		<div>
 			<ImageThumbnail file={file} />
 			<div className="share-wrapper">
-				<p className="subtitle-2 pl-1 text-light-100">
-					Share file with other users
-				</p>
-				<Input
-					type="email"
-					placeholder="Enter Email address"
-					onChange={(e) => onInputChange(e.target.value.trim().split(","))} //multiple emails
-					className="share-input-field"
-				/>
+				{filteredPermissionList.length > 0 && (
+					<>
+						<p className="subtitle-2 pl-1 text-light-100">
+							Share file with other users
+						</p>
+						<Input
+							type="email"
+							placeholder="Enter Email address"
+							onChange={(e) => onInputChange(e.target.value.trim().split(","))} // multiple emails
+							className="share-input-field"
+						/>
+						<div className="mt-4">
+							<p className="subtitle-2 text-light-100 mb-2">
+								Select Permissions:
+							</p>
+							<div>
+								{filteredPermissionList.map((perm) => (
+									<div key={perm.id} className="flex items-center gap-2 mb-2">
+										<Checkbox
+											id={perm.id}
+											onCheckedChange={(checked) =>
+												handlePermissionChange(perm.id, !!checked)
+											}
+										/>
+										<label htmlFor={perm.id} className="text-sm text-light-100">
+											{perm.label}
+										</label>
+									</div>
+								))}
+							</div>
+						</div>
+					</>
+				)}
 				<div className="pt-4">
 					<div className="flex justify-between">
 						<p className="subtitle-2 text-light-100">Shared with:</p>
