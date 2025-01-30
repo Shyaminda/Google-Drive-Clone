@@ -173,11 +173,12 @@ export const fileAccessPermissionController = async (
 };
 
 export const shareFileAccessController = async (
-	req: Request,
+	req: AuthenticatedRequest,
 	res: Response,
 ) => {
 	const { grantPermissions, emails } = req.body;
 	const { fileId } = req.query;
+	const userId = req.userId;
 	console.log("FileId:", fileId);
 	console.log("Email:", emails);
 	console.log("permissions:", grantPermissions);
@@ -218,6 +219,7 @@ export const shareFileAccessController = async (
 			fileId as string,
 			emailArray,
 			permissionArray,
+			userId as string,
 		);
 
 		if (!sharedUser.success) {

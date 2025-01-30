@@ -39,6 +39,7 @@ export const uploadFile = async ({ files, ownerId }: FileUploadRequest) => {
 						create: {
 							userId: ownerId,
 							accessLevel: "OWNER",
+							sharedById: ownerId,
 						},
 					},
 				},

@@ -73,6 +73,7 @@ export const shareFile = async (
 	fileId: string,
 	emails: string[],
 	permissions: string[],
+	userId: string,
 ) => {
 	const results = [];
 	try {
@@ -89,8 +90,8 @@ export const shareFile = async (
 			}
 			console.log("fileId action:", fileId);
 
-			const userId = user.id;
-			console.log("userId action:", userId);
+			const accessGrantingUserId = user.id;
+			console.log("userId action:", accessGrantingUserId);
 
 			const file = await prisma.file.findUnique({
 				where: { id: fileId },
@@ -106,7 +107,7 @@ export const shareFile = async (
 			}
 
 			const existingAccess = await prisma.fileAccess.findUnique({
-				where: { fileId_userId: { fileId, userId: userId } },
+				where: { fileId_userId: { fileId, userId: accessGrantingUserId } },
 			});
 
 			if (existingAccess) {
@@ -129,8 +130,9 @@ export const shareFile = async (
 			const fileAccess = await prisma.fileAccess.create({
 				data: {
 					fileId,
-					userId: userId,
+					userId: accessGrantingUserId,
 					permissions: { set: validPermissions },
+					sharedById: userId,
 				},
 			});
 			results.push({

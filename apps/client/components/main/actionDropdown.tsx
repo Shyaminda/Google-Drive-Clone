@@ -19,7 +19,7 @@ import {
 	DropdownMenuTrigger,
 } from "@repo/ui/dropdown";
 import Image from "next/image";
-import { act, useState } from "react";
+import { useState } from "react";
 import { bucketObjectAccess } from "@/hooks/bucket-file-action";
 import { Input } from "@repo/ui/input";
 import { Button } from "@repo/ui/button";
@@ -124,7 +124,7 @@ const ActionDropdown = ({ file }: DropDownProps) => {
 							file={file}
 							onInputChange={setEmails}
 							onRemove={handleRemoveUser}
-							onPermissionChange={setGrantPermissions}
+							onPermissionChange={setGrantPermissions} //checkbox permissions
 						/>
 					)}
 				</DialogHeader>
@@ -140,6 +140,9 @@ const ActionDropdown = ({ file }: DropDownProps) => {
 						<Button
 							onClick={handleActionSubmit}
 							className="modal-submit-button"
+							disabled={
+								action.value === "share" && grantPermissions.length === 0
+							}
 						>
 							<p className="capitalize">{action.value}</p>
 							{isLoading && (

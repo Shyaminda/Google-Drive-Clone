@@ -8,7 +8,6 @@ import { Checkbox } from "@repo/ui/checkbox";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { fetchFilePermissions } from "@/hooks/fetch-file-permissions";
-import { useCurrentUser } from "@/hooks/use-current-user";
 
 const ImageThumbnail = ({ file }: DetailsProps) => {
 	return (
@@ -61,8 +60,9 @@ export const ShareFile = ({
 	onRemove,
 	onPermissionChange,
 }: ShareFileProps) => {
-	const [permissions, setPermissions] = useState<string[]>([]);
+	const [permissions, setPermissions] = useState<string[]>([]); //permissions that the user have for the file fetched from the server
 	const [selectedPermissions, setSelectedPermissions] = useState<string[]>([]);
+	const [sharedUsers, setSharedUsers] = useState<string[]>([]);
 
 	const permissionList = [
 		{ id: "DOWNLOAD", label: "Download" },
@@ -71,17 +71,13 @@ export const ShareFile = ({
 		{ id: "DELETE", label: "delete" },
 	];
 
-	const userId = useCurrentUser()?.id || "";
-	console.log("userId context:", userId);
-
 	useEffect(() => {
 		const fetchPermissions = async () => {
-			await fetchFilePermissions(file.id, setPermissions);
+			await fetchFilePermissions(file.id, setPermissions, setSharedUsers);
 		};
 
 		fetchPermissions();
-	}, [file.id, userId]);
-
+	}, [file.id]);
 	const handlePermissionChange = (permissionId: string, checked: boolean) => {
 		const updatedPermissions = checked
 			? [...selectedPermissions, permissionId]
@@ -98,7 +94,7 @@ export const ShareFile = ({
 
 	return (
 		<div>
-			<ImageThumbnail file={file} />
+			{filteredPermissionList.length > 0 && <ImageThumbnail file={file} />}
 			<div className="share-wrapper">
 				{filteredPermissionList.length > 0 && (
 					<>
@@ -134,14 +130,20 @@ export const ShareFile = ({
 					</>
 				)}
 				<div className="pt-4">
-					<div className="flex justify-between">
-						<p className="subtitle-2 text-light-100">Shared with:</p>
+					{sharedUsers.length > 0 ? (
+						<div className="flex justify-between">
+							<p className="subtitle-2 text-light-100">Shared with:</p>
+							<p className="subtitle-2 text-light-200">
+								{sharedUsers.length ?? 0} users
+							</p>
+						</div>
+					) : (
 						<p className="subtitle-2 text-light-200">
-							{file.user.length} users
+							You don&apos;t have permission to share this file
 						</p>
-					</div>
+					)}
 					<ul className="pt-2">
-						{file.user.map((email) => (
+						{sharedUsers.map((email) => (
 							<li
 								key={email}
 								className="flex items-center justify-between gap-2"

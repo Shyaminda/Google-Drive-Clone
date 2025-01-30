@@ -16,7 +16,8 @@ model User {
 	password 					String?
 	accounts					Account[]
 	files		  				File[]
-	fileAccess   			FileAccess[]
+	fileAccess   			FileAccess[] @relation("FileAccessRecipient")
+	sharedFiles   		FileAccess[] @relation("FileAccessSharer") 
 	createdAt 				DateTime  @default(now())
 	updatedAt 				DateTime  @updatedAt
 }
@@ -62,6 +63,7 @@ model FileAccess {
   id            String   @id @default(cuid())
   fileId        String
   userId        String
+	sharedById    String
   accessLevel   AccessLevel @default(VIEW)
 	permissions   Permission[]
 	sharedAt   		DateTime?  @default(now())
@@ -69,7 +71,8 @@ model FileAccess {
 	canShare  		Boolean  @default(false)
 	deletedAt    	DateTime?
   file         	File   @relation(fields: [fileId], references: [id])
-  user         	User   @relation(fields: [userId], references: [id])
+  user         	User   @relation(name: "FileAccessRecipient",fields: [userId], references: [id])
+	sharedBy      User   @relation(name: "FileAccessSharer",fields: [sharedById], references: [id])
 
   @@unique([fileId, userId])
 }
