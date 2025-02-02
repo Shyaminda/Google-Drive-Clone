@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useState, useEffect } from "react";
 
 const Thumbnail = ({
+	id,
 	type,
 	extension,
 	bucketField,
@@ -19,9 +20,15 @@ const Thumbnail = ({
 	useEffect(() => {
 		const fetchThumbnail = async () => {
 			if (!imageUrl && bucketField) {
-				const { success, url } = await objectAccess(bucketField, false, {
-					triggeredBy: "fetchThumbnail",
-				});
+				const { success, url } = await objectAccess(
+					bucketField,
+					false,
+					"VIEW",
+					id,
+					{
+						triggeredBy: "fetchThumbnail",
+					},
+				);
 				if (success) {
 					console.log("Fetched thumbnail URL", url);
 					setImageUrl(url);

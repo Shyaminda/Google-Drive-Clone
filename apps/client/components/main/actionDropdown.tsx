@@ -44,7 +44,8 @@ const ActionDropdown = ({ file }: DropDownProps) => {
 		e.stopPropagation();
 
 		if (actionItem.value === "download" && file.bucketField) {
-			await objectAccess(file.bucketField, true);
+			const requestedPermission = actionItem.value.trim().toUpperCase();
+			await objectAccess(file.bucketField, true, requestedPermission, file.id);
 			setIsDropdownOpen(false);
 		} else if (
 			["rename", "share", "delete", "details"].includes(actionItem.value)

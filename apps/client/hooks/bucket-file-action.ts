@@ -4,6 +4,8 @@ export const bucketObjectAccess = () => {
 	const objectAccess = async (
 		bucketField: string,
 		isDownload: boolean,
+		requestedPermission: string,
+		fileId: string,
 		options?: { triggeredBy?: string },
 	) => {
 		try {
@@ -41,10 +43,11 @@ export const bucketObjectAccess = () => {
 
 			const response = await axios.post(
 				"http://localhost:3001/api/v1/files/access",
-				{ bucketField, isDownload },
+				{ bucketField, isDownload, requestedPermission },
 				{
 					responseType: "json",
 					withCredentials: true,
+					params: { fileId },
 				},
 			);
 			const signedUrl = response.data.url;

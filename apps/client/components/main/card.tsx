@@ -11,7 +11,7 @@ export const Card = ({ file }: CardProps) => {
 	const handleView = async (e: React.MouseEvent) => {
 		e.preventDefault();
 		if (file.bucketField) {
-			await objectAccess(file.bucketField, false);
+			await objectAccess(file.bucketField, false, "VIEW", file.id);
 		}
 	};
 
@@ -19,6 +19,7 @@ export const Card = ({ file }: CardProps) => {
 		<div className="file-card" onClick={handleView}>
 			<div className="flex justify-between">
 				<Thumbnail
+					id={file.id}
 					type={file.type}
 					extension={file.extension}
 					bucketField={file.bucketField}
