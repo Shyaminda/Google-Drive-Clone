@@ -3,9 +3,13 @@ import { getFiles, uploadFile } from "../actions/upload";
 import { AuthenticatedRequest } from "../type";
 import { type as PrismaType } from "@prisma/client";
 import { getPresignedUrl } from "../actions/getObjectUrl";
-import { renameFile, shareFile, updateFileAccess } from "../actions/fileAction";
 import { getExtensionFromFileName } from "../helpers/getExtension";
 import { userFilePermission } from "../actions/checkAccessAction";
+import { renameFile } from "../actions/renameFile";
+import { shareFile } from "../actions/shareFile";
+import { updateFileAccess } from "../actions/updateFileAccess";
+import { deleteFile } from "../actions/deleteFile";
+import { revokeFileAccess } from "../actions/revokeFileAccess";
 
 export const uploadController = async (req: Request, res: Response) => {
 	const files = req.files as Express.MulterS3.File[];
@@ -268,6 +272,66 @@ export const shareFileAccessUpdateController = async (
 			.json({ updateSharedUser, message: "File shared successfully" });
 	} catch (error) {
 		console.error("Unexpected error in shareFileAccessController:", error);
+		return res
+			.status(500)
+			.json({ success: false, error: "Internal server error" });
+	}
+};
+
+export const deleteFileController = async (
+	req: AuthenticatedRequest,
+	res: Response,
+) => {
+	const { fileId } = req.query;
+	const userId = req.userId;
+
+	try {
+		const removeFile = await deleteFile(userId as string, fileId as string);
+
+		if (!removeFile.success) {
+			return res.status(400).json({ success: false, error: removeFile.error });
+		}
+
+		return res.status(200).json({ success: true, message: removeFile.message });
+	} catch (error) {
+		console.error("Unexpected error in deleteFileController:", error);
+		return res
+			.status(500)
+			.json({ success: false, error: "Internal server error" });
+	}
+};
+
+export const revokeFileAccessController = async (
+	req: AuthenticatedRequest,
+	res: Response,
+) => {
+	const { email, fileId } = req.body;
+	const userId = req.userId;
+
+	if (!email || !fileId) {
+		return res
+			.status(400)
+			.json({ success: false, error: "Missing required fields" });
+	}
+
+	try {
+		const revokeAccess = await revokeFileAccess(
+			email as string,
+			userId as string,
+			fileId as string,
+		);
+
+		if (!revokeAccess.success) {
+			return res
+				.status(400)
+				.json({ success: false, error: revokeAccess.error });
+		}
+
+		return res
+			.status(200)
+			.json({ success: true, message: revokeAccess.message });
+	} catch (error) {
+		console.error("Unexpected error in revokeFileAccessController:", error);
 		return res
 			.status(500)
 			.json({ success: false, error: "Internal server error" });

@@ -9,6 +9,8 @@ import {
 	shareFileAccessController,
 	shareFileAccessUpdateController,
 	fileAccessPermissionController,
+	deleteFileController,
+	revokeFileAccessController,
 } from "../controllers/file.controller";
 import authMiddleware from "../middleware/authMiddleware";
 import { checkFilePermission } from "../middleware/permissionMiddleware";
@@ -43,4 +45,11 @@ fileRouter.get(
 	asyncHandler(fileAccessPermissionController),
 );
 
+fileRouter.delete("/", authMiddleware(), asyncHandler(deleteFileController));
+
+fileRouter.post(
+	"/revoke",
+	authMiddleware(),
+	asyncHandler(revokeFileAccessController),
+);
 export default fileRouter;

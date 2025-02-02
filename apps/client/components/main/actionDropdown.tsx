@@ -25,6 +25,8 @@ import { Input } from "@repo/ui/input";
 import { Button } from "@repo/ui/button";
 import { fileRenameAction, fileShareAction } from "@/hooks/file-action";
 import { FileDetails, ShareFile } from "@/components/main/actionsModalContent";
+import { deleteFile } from "@/hooks/delete-file";
+import { revokeAccess } from "@/hooks/revoke-access";
 
 const ActionDropdown = ({ file }: DropDownProps) => {
 	const [isModalOpen, setIsModalOpen] = useState(false);
@@ -86,6 +88,11 @@ const ActionDropdown = ({ file }: DropDownProps) => {
 					setIsModalOpen(false);
 					break;
 				}
+				case "delete": {
+					await deleteFile(file.id);
+					setIsModalOpen(false);
+					break;
+				}
 			}
 		} catch (err) {
 			console.error(`Error performing ${action.value}:`, err);
@@ -100,7 +107,9 @@ const ActionDropdown = ({ file }: DropDownProps) => {
 		setIsDropdownOpen(false);
 	};
 
-	const handleRemoveUser = () => {};
+	const handleRemoveUser = async (email: string) => {
+		await revokeAccess(email, file.id);
+	};
 
 	const renderDialogContent = () => {
 		if (!action) return null;
@@ -140,9 +149,9 @@ const ActionDropdown = ({ file }: DropDownProps) => {
 						<Button
 							onClick={handleActionSubmit}
 							className="modal-submit-button"
-							disabled={
-								action.value === "share" && grantPermissions.length === 0
-							}
+							// disabled={
+							// 	action.value === "share" && grantPermissions.length === 0
+							// }
 						>
 							<p className="capitalize">{action.value}</p>
 							{isLoading && (

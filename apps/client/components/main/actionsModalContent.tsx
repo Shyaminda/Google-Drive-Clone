@@ -68,7 +68,6 @@ export const ShareFile = ({
 		{ id: "DOWNLOAD", label: "Download" },
 		{ id: "SHARE", label: "Share" },
 		{ id: "RENAME", label: "rename" },
-		{ id: "DELETE", label: "delete" },
 	];
 
 	useEffect(() => {
