@@ -1,3 +1,4 @@
+import { deleteFileInS3 } from "../helpers/deleteObject";
 import prisma from "../lib/db";
 
 export const deleteFile = async (userId: string, fileId: string) => {
@@ -7,7 +8,7 @@ export const deleteFile = async (userId: string, fileId: string) => {
 		if (!user) {
 			return {
 				success: false,
-				error: "User not found",
+				message: "User not found",
 			};
 		}
 
@@ -16,16 +17,31 @@ export const deleteFile = async (userId: string, fileId: string) => {
 		});
 
 		if (!file) {
-			return { success: false, error: "File not found" };
+			return { success: false, message: "File not found" };
 		}
 
 		const isOwner = file.ownerId === userId;
 
 		if (isOwner) {
-			await prisma.fileAccess.deleteMany({ where: { fileId } });
-			await prisma.file.delete({ where: { id: fileId } });
+			const transaction = await prisma.$transaction(async (tx) => {
+				try {
+					await deleteFileInS3(file.bucketField);
+					console.log("File deleted from the s3 bucket");
+				} catch (error) {
+					console.error("Error deleting file from the s3 bucket", error);
+					return {
+						success: false,
+						message: "Error deleting file from the s3 bucket",
+					};
+				}
 
-			return { success: true, message: "File deleted successfully" };
+				await tx.fileAccess.deleteMany({ where: { fileId } });
+				await tx.file.delete({ where: { id: fileId } });
+
+				return { success: true, message: "File deleted successfully" };
+			});
+
+			return transaction;
 		}
 
 		const sharedAccess = await prisma.fileAccess.findFirst({
@@ -35,7 +51,7 @@ export const deleteFile = async (userId: string, fileId: string) => {
 		if (!sharedAccess) {
 			return {
 				success: false,
-				error: "You do not have access to this file",
+				message: "You do not have access to this file",
 			};
 		}
 

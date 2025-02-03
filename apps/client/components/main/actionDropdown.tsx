@@ -137,6 +137,12 @@ const ActionDropdown = ({ file }: DropDownProps) => {
 							onPermissionChange={setGrantPermissions} //checkbox permissions
 						/>
 					)}
+					{action.value === "delete" && (
+						<p className="delete-confirmation">
+							Are you sure you want to delete{` `}
+							<span className="delete-file-name">{file.name}</span>?
+						</p>
+					)}
 				</DialogHeader>
 				{["share", "delete", "rename"].includes(action.value) && (
 					<DialogFooter className="flex flex-col gap-3 md:flex-row">
