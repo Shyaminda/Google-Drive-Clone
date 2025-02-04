@@ -49,8 +49,10 @@ export const getFilesController = async (
 ) => {
 	const { type } = req.query;
 	const { limit } = req.query;
+	const { searchText } = req.query;
 	console.log("Type:", type);
 	console.log("Limit:", limit);
+	console.log("Search Text:", searchText);
 	const userId = req.userId as string;
 	const email = req.email as string;
 
@@ -65,12 +67,18 @@ export const getFilesController = async (
 		console.log("Valid Types:", validTypes);
 
 		const mappedTypes = Array.isArray(type)
-			? type
-					.filter((t) => validTypes.includes(t as PrismaType))
-					.map((t) => t as PrismaType)
-			: validTypes.includes(type as PrismaType)
-				? [type as PrismaType]
-				: [];
+			? type.flatMap((t) =>
+					t === "MEDIA"
+						? [PrismaType.VIDEO, PrismaType.AUDIO]
+						: validTypes.includes(t as PrismaType)
+							? [t as PrismaType]
+							: [],
+				)
+			: type === "MEDIA"
+				? [PrismaType.VIDEO, PrismaType.AUDIO]
+				: validTypes.includes(type as PrismaType)
+					? [type as PrismaType]
+					: [];
 
 		console.log("Mapped Types:", mappedTypes);
 
@@ -79,6 +87,7 @@ export const getFilesController = async (
 			type: mappedTypes,
 			sort: "desc",
 			limit: limit ? parseInt(limit as string) : undefined,
+			searchText: typeof searchText === "string" ? searchText : undefined,
 		});
 
 		if (!files.success) {

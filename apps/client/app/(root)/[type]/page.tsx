@@ -5,24 +5,27 @@ import Sort from "@/components/main/sort";
 import { fetchFiles } from "@/hooks/fetch-files";
 import { File, SearchParamProps } from "@/types/types";
 import { Card } from "@/components/main/card";
+import { getFileTypesParams } from "@/utils/utils";
 
 const Page = ({ params: initialParams }: SearchParamProps) => {
 	const [files, setFiles] = useState<File[]>([]);
-	const [type, setType] = useState<string | undefined>(undefined);
+	const [type, setType] = useState<string[] | undefined>(undefined);
 	const [limit, setLimit] = useState<string>("10");
-	// const type = params?.type;
-	// const limit = params?.limit || "10";
 
 	useEffect(() => {
 		const fetchParams = async () => {
 			const params = await initialParams;
-			setType(params?.type);
+			const fileTypes = getFileTypesParams(params?.type || "");
+
+			setType(fileTypes);
 			setLimit(params?.limit || "20");
 
 			try {
 				const fetchedFiles = await fetchFiles(
-					params?.type,
+					fileTypes.join(","),
 					params?.limit || "20",
+					params?.searchText,
+					params?.sort,
 				);
 				setFiles(fetchedFiles);
 			} catch (error) {
@@ -61,20 +64,3 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 };
 
 export default Page;
-
-// {
-// 	"Version": "2012-10-17",
-// 	"Statement": [
-// 		{
-// 			"Sid": "Statement1",
-// 			"Effect": "Allow",
-// 			"Principal": "*",
-// 			"Action": [
-// 				"s3:GetObject",
-// 				"s3:PutObject",
-// 				"s3:DeleteObject"
-// 			],
-// 			"Resource": "arn:aws:s3:::driveway-store/*"
-// 		}
-// 	]
-// }

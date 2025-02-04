@@ -69,19 +69,28 @@ export const uploadFile = async ({ files, ownerId }: FileUploadRequest) => {
 const createQueries = (
 	currentUser: { id: string; email: string },
 	type: string[],
-	//searchText: string,
+	searchText: string,
 	sort: string,
 	limit?: number,
 ): Prisma.FileFindManyArgs => {
 	const where: Prisma.FileWhereInput = {
-		OR: [
-			{ ownerId: currentUser.id },
-			{ fileAccess: { some: { userId: currentUser.id } } },
-			{ user: { has: currentUser.email } },
+		AND: [
+			{
+				OR: [
+					{ ownerId: currentUser.id },
+					{ fileAccess: { some: { userId: currentUser.id } } },
+					{ user: { has: currentUser.email } },
+				],
+			},
+			type.length > 0 ? { type: { in: type.map((t) => t as PrismaType) } } : {},
+			searchText
+				? {
+						OR: searchText.split(" ").map((word) => ({
+							name: { contains: word, mode: "insensitive" },
+						})),
+					}
+				: {},
 		],
-		...(type.length > 0 && {
-			type: { in: type.map((t) => t as PrismaType) },
-		}),
 	};
 
 	const orderBy: Prisma.FileOrderByWithRelationInput[] = [];
@@ -104,15 +113,17 @@ const createQueries = (
 export const getFiles = async ({
 	currentUser,
 	type = [],
-	//searchText = "",
+	searchText = "",
 	sort = "desc",
 	limit,
 }: GetFilesProps) => {
 	try {
-		console.log({ currentUser, type, sort, limit });
+		console.log({ getFiles: { currentUser, type, sort, limit } });
 		if (!currentUser) throw new Error("User not found");
 
-		const queries = createQueries(currentUser, type, sort, limit);
+		const queries = createQueries(currentUser, type, searchText, sort, limit);
+
+		console.log("Final Query:", JSON.stringify(queries, null, 2));
 
 		const files = await prisma.file.findMany({
 			...queries,
@@ -126,7 +137,10 @@ export const getFiles = async ({
 		});
 
 		return { success: true, files };
-	} catch {
+	} catch (error) {
+		console.error("Error fetching files:", error);
 		return { success: false, error: "Error fetching files" };
 	}
 };
+
+//TODO: add CREATE INDEX file_name_fulltext_idx ON "File" USING gin(to_tsvector('english', name)); to prisma migration by docker later for faster search with tsvector

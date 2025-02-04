@@ -17,6 +17,8 @@ export interface SearchParamProps {
 	params: {
 		type: string;
 		limit?: string;
+		sort?: string;
+		searchText?: string;
 	};
 }
 

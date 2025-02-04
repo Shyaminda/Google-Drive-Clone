@@ -14,7 +14,7 @@ export interface FileUploadRequest {
 export interface GetFilesProps {
 	currentUser: { id: string; email: string };
 	type?: PrismaType[];
-	//searchText?: string;
+	searchText?: string;
 	sort?: string;
 	limit?: number;
 }
