@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const fetchFiles = async (
-	type: string,
+	type?: string,
 	limit?: string,
 	sort?: string,
 	searchText?: string,

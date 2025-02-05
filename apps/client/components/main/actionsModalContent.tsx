@@ -13,6 +13,7 @@ const ImageThumbnail = ({ file }: DetailsProps) => {
 	return (
 		<div className="file-details-thumbnail">
 			<Thumbnail
+				id={file.id}
 				type={file.type}
 				extension={file.extension}
 				bucketField={file.bucketField}

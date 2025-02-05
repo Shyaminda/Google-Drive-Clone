@@ -50,9 +50,9 @@ export const getFilesController = async (
 	const { type } = req.query;
 	const { limit } = req.query;
 	const { searchText } = req.query;
-	console.log("Type:", type);
-	console.log("Limit:", limit);
-	console.log("Search Text:", searchText);
+	console.log("Type controller:", type);
+	console.log("Limit controller:", limit);
+	console.log("Search Text controller:", searchText);
 	const userId = req.userId as string;
 	const email = req.email as string;
 

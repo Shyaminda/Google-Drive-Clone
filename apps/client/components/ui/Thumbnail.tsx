@@ -38,7 +38,7 @@ const Thumbnail = ({
 			}
 		};
 		fetchThumbnail();
-	}, [bucketField, objectAccess, type, imageUrl]);
+	}, [bucketField, objectAccess, type, imageUrl, id]);
 
 	const isImage = type === "IMAGE" && extension !== "svg";
 
