@@ -1,4 +1,4 @@
-/* eslint-disable prettier/prettier */
+/* eslint-disable indent */
 "use client";
 
 import { useState, useEffect } from "react";
@@ -13,6 +13,7 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 	const [files, setFiles] = useState<File[]>([]);
 	const [type, setType] = useState<string[] | undefined>(undefined);
 	const [limit, setLimit] = useState<string>("10");
+	const [sort, setSort] = useState<string>("date-newest");
 
 	const searchParams = useSearchParams();
 	const fileId = searchParams.get("f") || "";
@@ -29,8 +30,8 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 				const fetchedFiles = await fetchFiles(
 					fileTypes.join(","),
 					params?.limit || "20",
+					sort,
 					params?.searchText,
-					params?.sort,
 				);
 				console.log("Fetched files page:", fetchedFiles);
 				if (fetchedFiles && Array.isArray(fetchedFiles.files)) {
@@ -45,7 +46,7 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 		};
 
 		fetchParams();
-	}, [initialParams, limit]);
+	}, [initialParams, limit, sort]);
 
 	const selectedFile = files.find((file) => file.id === fileId);
 
@@ -62,7 +63,7 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 						</p>
 						<div className="sort-container">
 							<p className="body-1 hidden sm:block text-light-200">Sort by:</p>
-							<Sort file={files} />
+							<Sort setSort={setSort} />
 						</div>
 					</div>
 				)}

@@ -95,11 +95,28 @@ const createQueries = (
 
 	const orderBy: Prisma.FileOrderByWithRelationInput[] = [];
 	if (sort) {
-		const [sortBy, orderByDirection] = sort.split("-");
-		if (sortBy && orderByDirection) {
-			orderBy.push({
-				[sortBy]: orderByDirection === "asc" ? "asc" : "desc",
-			});
+		switch (sort) {
+			case "name-asc":
+				orderBy.push({ name: "asc" });
+				break;
+			case "name-desc":
+				orderBy.push({ name: "desc" });
+				break;
+			case "date-newest":
+				orderBy.push({ createdAt: "desc" });
+				break;
+			case "date-oldest":
+				orderBy.push({ createdAt: "asc" });
+				break;
+			case "size-largest":
+				orderBy.push({ size: "desc" });
+				break;
+			case "size-smallest":
+				orderBy.push({ size: "asc" });
+				break;
+			default:
+				orderBy.push({ createdAt: "desc" });
+				break;
 		}
 	}
 
@@ -114,7 +131,7 @@ export const getFiles = async ({
 	currentUser,
 	type = [],
 	searchText = "",
-	sort = "desc",
+	sort = "date-newest",
 	limit = 10,
 	cursor,
 }: GetFilesProps) => {

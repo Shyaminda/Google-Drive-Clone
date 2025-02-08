@@ -1,4 +1,3 @@
-import { SortProps } from "@/types/types";
 import {
 	Select,
 	SelectContent,
@@ -6,20 +5,20 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@repo/ui/select";
-import { useRouter } from "next/navigation";
 
-const Sort = ({ file }: SortProps) => {
-	const router = useRouter();
-
+const Sort = ({ setSort }: { setSort: (value: string) => void }) => {
 	return (
-		<Select>
+		<Select onValueChange={setSort}>
 			<SelectTrigger className="w-[180px]">
-				<SelectValue placeholder="Theme" />
+				<SelectValue placeholder="Sort by" />
 			</SelectTrigger>
 			<SelectContent>
-				<SelectItem value="light">Light</SelectItem>
-				<SelectItem value="dark">Dark</SelectItem>
-				<SelectItem value="system">System</SelectItem>
+				<SelectItem value="name-asc">Name (A-Z)</SelectItem>
+				<SelectItem value="name-desc">Name (Z-A)</SelectItem>
+				<SelectItem value="date-newest">Newest</SelectItem>
+				<SelectItem value="date-oldest">Oldest</SelectItem>
+				<SelectItem value="size-largest">Largest</SelectItem>
+				<SelectItem value="size-smallest">Smallest</SelectItem>
 			</SelectContent>
 		</Select>
 	);

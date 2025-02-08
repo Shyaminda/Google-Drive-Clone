@@ -51,6 +51,7 @@ export const getFilesController = async (
 	const { limit } = req.query;
 	const { searchText } = req.query;
 	const { cursor } = req.query;
+	const { sort } = req.query;
 	console.log("Type controller:", type);
 	console.log("Limit controller:", limit);
 	console.log("Search Text controller:", searchText);
@@ -87,7 +88,7 @@ export const getFilesController = async (
 		const files = await getFiles({
 			currentUser: { id: userId, email: email },
 			type: mappedTypes,
-			sort: "desc",
+			sort: sort ? (sort as string) : undefined,
 			limit: limit ? parseInt(limit as string) : undefined,
 			searchText: typeof searchText === "string" ? searchText : undefined,
 			cursor: typeof cursor === "string" ? cursor : undefined,
