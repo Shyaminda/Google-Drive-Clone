@@ -115,7 +115,8 @@ export const getFiles = async ({
 	type = [],
 	searchText = "",
 	sort = "desc",
-	limit,
+	limit = 10,
+	cursor,
 }: GetFilesProps) => {
 	try {
 		console.log({ getFiles: { currentUser, type, sort, limit } });
@@ -134,9 +135,16 @@ export const getFiles = async ({
 					select: { permissions: true },
 				},
 			},
+			take: limit + 1,
+			cursor: cursor ? { id: cursor } : undefined,
 		});
 
-		return { success: true, files };
+		const hasMore = files.length > limit;
+		const nextCursor = hasMore ? files[limit].id : null;
+
+		const trimmedFiles = files.slice(0, limit);
+
+		return { success: true, files: trimmedFiles, nextCursor };
 	} catch (error) {
 		console.error("Error fetching files:", error);
 		return { success: false, error: "Error fetching files" };

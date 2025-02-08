@@ -17,6 +17,7 @@ export interface GetFilesProps {
 	searchText?: string;
 	sort?: string;
 	limit?: number;
+	cursor?: string;
 }
 
 export interface AuthenticatedRequest extends Request {

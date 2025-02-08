@@ -50,9 +50,11 @@ export const getFilesController = async (
 	const { type } = req.query;
 	const { limit } = req.query;
 	const { searchText } = req.query;
+	const { cursor } = req.query;
 	console.log("Type controller:", type);
 	console.log("Limit controller:", limit);
 	console.log("Search Text controller:", searchText);
+	console.log("Cursor controller:", cursor);
 	const userId = req.userId as string;
 	const email = req.email as string;
 
@@ -88,13 +90,18 @@ export const getFilesController = async (
 			sort: "desc",
 			limit: limit ? parseInt(limit as string) : undefined,
 			searchText: typeof searchText === "string" ? searchText : undefined,
+			cursor: typeof cursor === "string" ? cursor : undefined,
 		});
 
 		if (!files.success) {
 			return res.status(404).json({ success: false, error: files.error });
 		}
 
-		return res.status(200).json({ success: true, files: files.files });
+		return res.status(200).json({
+			success: true,
+			files: files.files,
+			nextCursor: files.nextCursor,
+		});
 	} catch (error) {
 		console.error("Unexpected error in getFilesController:", error);
 		return res

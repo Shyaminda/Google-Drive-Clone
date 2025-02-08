@@ -5,6 +5,7 @@ export const fetchFiles = async (
 	limit?: string,
 	sort?: string,
 	searchText?: string,
+	cursor?: string,
 ) => {
 	try {
 		const queryParams: Record<string, string> = {};
@@ -13,13 +14,15 @@ export const fetchFiles = async (
 		if (limit) queryParams.limit = limit;
 		if (sort) queryParams.sort = sort;
 		if (searchText) queryParams.searchText = searchText;
+		if (cursor) queryParams.cursor = cursor;
 
 		const response = await axios.get(`http://localhost:3001/api/v1/files`, {
 			params: queryParams,
 			withCredentials: true,
 		});
-		console.log("Response:", response.data.files);
-		return response.data.files;
+		console.log("Response data:", response.data.files);
+		console.log("Response next cursor:", response.data.nextCursor);
+		return response.data;
 	} catch (error) {
 		console.error("Error fetching files:", error);
 

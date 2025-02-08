@@ -120,3 +120,7 @@ export interface ShareFileProps {
 	onRemove: (email: string) => void;
 	onPermissionChange: React.Dispatch<React.SetStateAction<string[]>>;
 }
+
+export interface SortProps {
+	file: File[];
+}

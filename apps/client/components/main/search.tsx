@@ -6,15 +6,19 @@ import { getFileTypesParams } from "@/utils/utils";
 import { Input } from "@repo/ui/input";
 import Image from "next/image";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Thumbnail from "../ui/Thumbnail";
 import FormattedDateTime from "./formattedDateTime";
+import { debounce } from "lodash";
+import { Button } from "@repo/ui/button";
 
 const Search = () => {
 	const [search, setSearch] = useState("");
 	const [results, setResults] = useState<File[]>([]);
 	const [open, setOpen] = useState(false);
 	const [hasSearched, setHasSearched] = useState(false);
+	const [cursor, setCursor] = useState<string | null>(null);
+	const [hasMore, setHasMore] = useState(true);
 
 	const router = useRouter();
 	const searchParams = useSearchParams();
@@ -27,33 +31,55 @@ const Search = () => {
 		}
 	}, [searchQuery]);
 
-	useEffect(() => {
-		if (!search.trim() || hasSearched) return;
-
-		const delaySearch = setTimeout(async () => {
-			const pathType = pathname.split("/").filter(Boolean);
-			console.log("Path type:", pathType);
-			const filteredTypeFromPath = pathType.length > 0 ? pathType[0] : "";
-
-			const fileTypes = getFileTypesParams(filteredTypeFromPath || "");
-			console.log("File types:", fileTypes);
+	console.log("cursor:", cursor);
+	const debouncedFetch = useMemo(() => {
+		return debounce(async (search, fileTypes, cursor) => {
+			if (!search.trim()) return;
 			try {
 				const files = await fetchFiles(
 					fileTypes.join(","),
-					"10",
-					"asc",
+					"4",
+					"desc",
 					search,
+					cursor,
 				);
-				console.log("Files search:", files);
-				setResults(files);
+				console.log("Files searched:", files);
+				setResults((prev) =>
+					cursor ? [...prev, ...(files?.files || [])] : files?.files || [],
+				);
+				setCursor(files.nextCursor);
+				console.log("Results:", results);
+				setCursor(files.nextCursor);
+				setHasMore(!!files.nextCursor);
 				setOpen(true);
 			} catch (error) {
 				console.error("Error fetching search results:", error);
 			}
 		}, 500);
+	}, []);
 
-		return () => clearTimeout(delaySearch);
-	}, [search, pathname, hasSearched]);
+	useEffect(() => {
+		if (hasSearched) return;
+
+		const pathType = pathname.split("/").filter(Boolean);
+		console.log("Path type:", pathType);
+		const filteredTypeFromPath = pathType.length > 0 ? pathType[0] : "";
+
+		const fileTypes = getFileTypesParams(filteredTypeFromPath || "");
+		console.log("File types:", fileTypes);
+		try {
+			debouncedFetch(search, fileTypes, cursor);
+			console.log("Fetching search results...");
+		} catch (error) {
+			console.error("Error fetching search results:", error);
+		}
+
+		return () => {
+			debouncedFetch.cancel();
+			setCursor(null);
+			setResults([]);
+		};
+	}, [search, pathname, hasSearched, debouncedFetch]);
 
 	const handleClickSearch = async (file: File) => {
 		setResults([]);
@@ -66,6 +92,9 @@ const Search = () => {
 		const value = e.target.value;
 		setSearch(value);
 		setHasSearched(false);
+		setCursor(null);
+		setResults([]);
+		debouncedFetch.cancel();
 
 		let pathType = pathname.split("/").filter(Boolean)[0] || "";
 
@@ -78,11 +107,19 @@ const Search = () => {
 		if (value.trim() === "") {
 			setResults([]);
 			setOpen(false);
+			setHasSearched(false);
 
 			if (pathType) {
 				router.push(`/${pathVariable}`);
 			}
 		}
+	};
+
+	const handleLoadMore = () => {
+		if (!cursor || !hasMore) return;
+		const pathType = pathname.split("/").filter(Boolean)[0] || "";
+		const fileTypes = getFileTypesParams(pathType || "");
+		debouncedFetch(search, fileTypes, cursor);
 	};
 
 	return (
@@ -128,7 +165,12 @@ const Search = () => {
 								</li>
 							))
 						) : (
-							<p className="empty-result"> No files found</p>
+							<p className="empty-result">No files found</p>
+						)}
+						{hasMore && (
+							<Button variant="link" onClick={handleLoadMore}>
+								Load More
+							</Button>
 						)}
 					</ul>
 				)}
@@ -138,3 +180,6 @@ const Search = () => {
 };
 
 export default Search;
+
+//TODO: add pagination for search results
+//TODO: add state resets for error handling

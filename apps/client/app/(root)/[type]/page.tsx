@@ -32,7 +32,13 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 					params?.searchText,
 					params?.sort,
 				);
-				setFiles(fetchedFiles);
+				console.log("Fetched files page:", fetchedFiles);
+				if (fetchedFiles && Array.isArray(fetchedFiles.files)) {
+					setFiles(fetchedFiles.files);
+				} else {
+					console.error("Invalid response format:", fetchedFiles);
+					setFiles([]);
+				}
 			} catch (error) {
 				console.error("Error fetching files:", error);
 			}
@@ -56,7 +62,7 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 						</p>
 						<div className="sort-container">
 							<p className="body-1 hidden sm:block text-light-200">Sort by:</p>
-							<Sort />
+							<Sort file={files} />
 						</div>
 					</div>
 				)}
