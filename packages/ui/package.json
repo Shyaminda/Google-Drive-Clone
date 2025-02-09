@@ -20,7 +20,9 @@
     "./dialog": "./components/ui/dialog.tsx",
     "./dropdown": "./components/ui/dropdown-menu.tsx",
     "./checkbox": "./components/ui/checkbox.tsx",
-		"./select": "./components/ui/select.tsx"
+    "./select": "./components/ui/select.tsx",
+    "./table": "./components/ui/table.tsx",
+		"./switch": "./components/ui/switch.tsx"
   },
   "scripts": {
     "lint": "eslint . --max-warnings 0",
@@ -50,6 +52,7 @@
     "@radix-ui/react-select": "^2.1.5",
     "@radix-ui/react-separator": "^1.1.1",
     "@radix-ui/react-slot": "^1.1.1",
+    "@radix-ui/react-switch": "^1.1.3",
     "@radix-ui/react-toast": "^1.2.4",
     "autoprefixer": "^10.4.20",
     "class-variance-authority": "^0.7.1",

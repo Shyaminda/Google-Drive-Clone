@@ -1,3 +1,4 @@
+import { sortTypes } from "@/constants";
 import {
 	Select,
 	SelectContent,
@@ -9,16 +10,19 @@ import {
 const Sort = ({ setSort }: { setSort: (value: string) => void }) => {
 	return (
 		<Select onValueChange={setSort}>
-			<SelectTrigger className="w-[180px]">
+			<SelectTrigger className="sort-select">
 				<SelectValue placeholder="Sort by" />
 			</SelectTrigger>
-			<SelectContent>
-				<SelectItem value="name-asc">Name (A-Z)</SelectItem>
-				<SelectItem value="name-desc">Name (Z-A)</SelectItem>
-				<SelectItem value="date-newest">Newest</SelectItem>
-				<SelectItem value="date-oldest">Oldest</SelectItem>
-				<SelectItem value="size-largest">Largest</SelectItem>
-				<SelectItem value="size-smallest">Smallest</SelectItem>
+			<SelectContent className="sort-select-content">
+				{sortTypes.map((sortType) => (
+					<SelectItem
+						key={sortType.value}
+						value={sortType.value}
+						className="shad-select-item"
+					>
+						{sortType.label}
+					</SelectItem>
+				))}
 			</SelectContent>
 		</Select>
 	);

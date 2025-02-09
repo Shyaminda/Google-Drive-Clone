@@ -8,12 +8,15 @@ import { File, SearchParamProps } from "@/types/types";
 import { Card } from "@/components/main/card";
 import { getFileTypesParams } from "@/utils/utils";
 import { useSearchParams } from "next/navigation";
+import { Switch } from "@repo/ui/switch";
+import List from "@/components/main/list";
 
 const Page = ({ params: initialParams }: SearchParamProps) => {
 	const [files, setFiles] = useState<File[]>([]);
 	const [type, setType] = useState<string[] | undefined>(undefined);
 	const [limit, setLimit] = useState<string>("10");
 	const [sort, setSort] = useState<string>("date-newest");
+	const [isGridView, setIsGridView] = useState<boolean>(true);
 
 	const searchParams = useSearchParams();
 	const fileId = searchParams.get("f") || "";
@@ -29,7 +32,7 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 			try {
 				const fetchedFiles = await fetchFiles(
 					fileTypes.join(","),
-					params?.limit || "20",
+					params?.limit || "10",
 					sort,
 					params?.searchText,
 				);
@@ -61,6 +64,9 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 						<p className="body-1">
 							Total: <span className="h5">0 MB</span>
 						</p>
+						<div className="">
+							<Switch checked={isGridView} onCheckedChange={setIsGridView} />
+						</div>
 						<div className="sort-container">
 							<p className="body-1 hidden sm:block text-light-200">Sort by:</p>
 							<Sort setSort={setSort} />
@@ -69,12 +75,20 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 				)}
 			</section>
 			{files.length > 0 ? (
-				<section className="file-list">
+				<section className={isGridView ? "file-list" : "w-full"}>
 					{fileId
 						? files
 								.filter((file) => file.id === fileId)
-								.map((file) => <Card key={file.id} file={file} />)
-						: files.map((file) => <Card key={file.id} file={file} />)}
+								.map((file) =>
+									isGridView ? (
+										<Card key={file.id} file={file} />
+									) : (
+										<List key={file.id} file={[file]} />
+									),
+								)
+						: isGridView
+							? files.map((file) => <Card key={file.id} file={file} />)
+							: files.length > 0 && <List file={files} />}
 				</section>
 			) : (
 				<p className="empty-list">No files uploaded</p>

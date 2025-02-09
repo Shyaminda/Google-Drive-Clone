@@ -93,6 +93,10 @@ export interface CardProps {
 	file: File;
 }
 
+export interface ListViewProps {
+	file: File[];
+}
+
 export interface FileType {
 	IMAGE: string;
 	DOCUMENT: string;

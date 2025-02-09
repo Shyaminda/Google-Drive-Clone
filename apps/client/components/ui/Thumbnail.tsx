@@ -54,9 +54,10 @@ const Thumbnail = ({
 				alt="thumbnail"
 				width={100}
 				height={100}
-				unoptimized // Disable Next.js optimization
+				loading="lazy"
+				unoptimized // Disable Nextjs optimization
 				className={cn(
-					"size-8 object-contain",
+					"object-contain size-8",
 					imageClassName,
 					isImage && "thumbnail-image",
 				)}
