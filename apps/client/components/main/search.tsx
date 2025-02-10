@@ -39,7 +39,7 @@ const Search = () => {
 				const files = await fetchFiles(
 					fileTypes.join(","),
 					"4",
-					"desc",
+					"date-newest",
 					search,
 					cursor,
 				);
@@ -181,5 +181,4 @@ const Search = () => {
 
 export default Search;
 
-//TODO: add pagination for search results
 //TODO: add state resets for error handling

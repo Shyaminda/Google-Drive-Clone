@@ -2,9 +2,7 @@ import prisma from "../lib/db";
 import { getFileType } from "../utils/handler";
 import dotenv from "dotenv";
 import { handleDbFailure } from "../helpers/uploadDbFailure";
-import { Prisma } from "@prisma/client";
-import { type as PrismaType } from "@prisma/client";
-import { FileUploadRequest, GetFilesProps } from "../type";
+import { FileUploadRequest } from "../type";
 
 dotenv.config();
 
@@ -63,108 +61,6 @@ export const uploadFile = async ({ files, ownerId }: FileUploadRequest) => {
 			}
 		}
 		return { success: false, error: "Error uploading file" };
-	}
-};
-
-const createQueries = (
-	currentUser: { id: string; email: string },
-	type: string[],
-	searchText: string,
-	sort: string,
-	limit?: number,
-): Prisma.FileFindManyArgs => {
-	const where: Prisma.FileWhereInput = {
-		AND: [
-			{
-				OR: [
-					{ ownerId: currentUser.id },
-					{ fileAccess: { some: { userId: currentUser.id } } },
-					{ user: { has: currentUser.email } },
-				],
-			},
-			type.length > 0 ? { type: { in: type.map((t) => t as PrismaType) } } : {},
-			searchText
-				? {
-						OR: searchText.split(" ").map((word) => ({
-							name: { contains: word, mode: "insensitive" },
-						})),
-					}
-				: {},
-		],
-	};
-
-	const orderBy: Prisma.FileOrderByWithRelationInput[] = [];
-	if (sort) {
-		switch (sort) {
-			case "name-asc":
-				orderBy.push({ name: "asc" });
-				break;
-			case "name-desc":
-				orderBy.push({ name: "desc" });
-				break;
-			case "date-newest":
-				orderBy.push({ createdAt: "desc" });
-				break;
-			case "date-oldest":
-				orderBy.push({ createdAt: "asc" });
-				break;
-			case "size-largest":
-				orderBy.push({ size: "desc" });
-				break;
-			case "size-smallest":
-				orderBy.push({ size: "asc" });
-				break;
-			default:
-				orderBy.push({ createdAt: "desc" });
-				break;
-		}
-	}
-
-	return {
-		where,
-		...(orderBy.length > 0 && { orderBy }),
-		...(limit && { take: limit }),
-	};
-};
-
-export const getFiles = async ({
-	currentUser,
-	type = [],
-	searchText = "",
-	sort = "date-newest",
-	limit = 10,
-	cursor,
-}: GetFilesProps) => {
-	try {
-		console.log({ getFiles: { currentUser, type, sort, limit } });
-		if (!currentUser) throw new Error("User not found");
-
-		const queries = createQueries(currentUser, type, searchText, sort, limit);
-
-		console.log("Final Query:", JSON.stringify(queries, null, 2));
-
-		const files = await prisma.file.findMany({
-			...queries,
-			include: {
-				owner: true,
-				fileAccess: {
-					where: { userId: currentUser.id },
-					select: { permissions: true },
-				},
-			},
-			take: limit + 1,
-			cursor: cursor ? { id: cursor } : undefined,
-		});
-
-		const hasMore = files.length > limit;
-		const nextCursor = hasMore ? files[limit].id : null;
-
-		const trimmedFiles = files.slice(0, limit);
-
-		return { success: true, files: trimmedFiles, nextCursor };
-	} catch (error) {
-		console.error("Error fetching files:", error);
-		return { success: false, error: "Error fetching files" };
 	}
 };
 

@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { getFiles, uploadFile } from "../actions/upload";
+import { uploadFile } from "../actions/upload";
 import { AuthenticatedRequest } from "../type";
 import { type as PrismaType } from "@prisma/client";
 import { getPresignedUrl } from "../actions/getObjectUrl";
@@ -10,6 +10,7 @@ import { shareFile } from "../actions/shareFile";
 import { updateFileAccess } from "../actions/updateFileAccess";
 import { deleteFile } from "../actions/deleteFile";
 import { revokeFileAccess } from "../actions/revokeFileAccess";
+import { getFiles } from "../actions/getFiles";
 
 export const uploadController = async (req: Request, res: Response) => {
 	const files = req.files as Express.MulterS3.File[];
