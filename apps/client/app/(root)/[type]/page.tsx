@@ -1,7 +1,6 @@
-/* eslint-disable indent */
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import Sort from "@/components/main/sort";
 import { fetchFiles } from "@/hooks/fetch-files";
 import { File, SearchParamProps } from "@/types/types";
@@ -11,6 +10,7 @@ import { useSearchParams } from "next/navigation";
 import { Switch } from "@repo/ui/switch";
 import List from "@/components/main/list";
 import { Button } from "@repo/ui/button";
+import { ClipLoader, PulseLoader } from "react-spinners";
 
 const Page = ({ params: initialParams }: SearchParamProps) => {
 	const [files, setFiles] = useState<File[]>([]);
@@ -24,13 +24,15 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 	const searchParams = useSearchParams();
 	const fileId = searchParams.get("f") || "";
 
+	const observerRef = useRef<IntersectionObserver | null>(null);
+
 	useEffect(() => {
 		const fetchParams = async () => {
 			const params = await initialParams;
 			const fileTypes = getFileTypesParams(params?.type || "");
 
 			setType(fileTypes);
-			setLimit(params?.limit || "20");
+			setLimit(params?.limit || "15");
 
 			try {
 				const fetchedFiles = await fetchFiles(
@@ -62,7 +64,7 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 		try {
 			const fetchedMoreFiles = await fetchFiles(
 				type?.join(",") || "",
-				"10",
+				"15",
 				sort,
 				searchParams.get("searchText") || "",
 				nextCursor,
@@ -82,6 +84,26 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 			setLoadingMore(false);
 		}
 	};
+
+	const lastFileCallback = useCallback(
+		(node: HTMLDivElement | null) => {
+			if (loadingMore || !nextCursor || isGridView) return;
+
+			if (observerRef.current) observerRef.current.disconnect();
+
+			observerRef.current = new IntersectionObserver(
+				(entries) => {
+					if (entries[0].isIntersecting) {
+						handleLoadMore();
+					}
+				},
+				{ threshold: 1.0 },
+			);
+
+			if (node) observerRef.current.observe(node);
+		},
+		[loadingMore, nextCursor, isGridView],
+	);
 
 	const selectedFile = files.find((file) => file.id === fileId);
 
@@ -115,31 +137,38 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 			{files.length > 0 ? (
 				<>
 					<section className={isGridView ? "file-list" : "w-full"}>
-						{fileId
-							? files
-									.filter((file) => file.id === fileId)
-									.map((file) =>
-										isGridView ? (
-											<Card key={file.id} file={file} />
-										) : (
-											<List key={file.id} file={[file]} />
-										),
-									)
-							: isGridView
-								? files.map((file) => <Card key={file.id} file={file} />)
-								: files.length > 0 && <List file={files} />}
+						{fileId ? (
+							files
+								.filter((file) => file.id === fileId)
+								.map((file) =>
+									isGridView ? (
+										<Card key={file.id} file={file} />
+									) : (
+										<List key={file.id} file={[file]} />
+									),
+								)
+						) : isGridView ? (
+							files.map((file) => <Card key={file.id} file={file} />)
+						) : (
+							<div ref={lastFileCallback}>
+								<List file={files} />
+							</div>
+						)}
 					</section>
-					{nextCursor && !fileId && (
+					{loadingMore && !isGridView && <ClipLoader color="#997dff" />}
+					{loadingMore && isGridView ? (
+						<PulseLoader size={15} color="#997dff" />
+					) : nextCursor && !fileId && isGridView ? (
 						<div className="flex justify-center mt-8">
 							<Button
 								variant="load"
 								onClick={handleLoadMore}
 								disabled={loadingMore}
 							>
-								{loadingMore ? "Loading..." : "Load More"}
+								{"Load More"}
 							</Button>
 						</div>
-					)}
+					) : null}
 				</>
 			) : (
 				<p className="empty-list">No files uploaded</p>

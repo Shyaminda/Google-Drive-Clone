@@ -27,6 +27,7 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-dropzone": "^14.3.5",
+    "react-spinners": "^0.15.0",
     "resend": "^4.0.1",
     "uuid": "^11.0.4",
     "zod": "^3.24.1"
