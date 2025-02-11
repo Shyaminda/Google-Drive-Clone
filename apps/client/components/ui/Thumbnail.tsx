@@ -19,7 +19,7 @@ const Thumbnail = ({
 
 	useEffect(() => {
 		const fetchThumbnail = async () => {
-			if (!imageUrl && bucketField) {
+			if (!imageUrl && bucketField && id) {
 				const { success, url } = await objectAccess(
 					bucketField,
 					false,

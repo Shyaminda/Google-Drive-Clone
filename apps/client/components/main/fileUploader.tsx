@@ -34,6 +34,7 @@ const FileUploader = ({ ownerId, className }: FileUploaderProps) => {
 						headers: {
 							"Content-Type": "multipart/form-data",
 						},
+						withCredentials: true,
 						onUploadProgress: (progressEvent: AxiosProgressEvent) => {
 							if (progressEvent.total) {
 								const percent = Math.round(

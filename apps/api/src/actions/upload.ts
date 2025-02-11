@@ -3,6 +3,7 @@ import { getFileType } from "../utils/handler";
 import dotenv from "dotenv";
 import { handleDbFailure } from "../helpers/uploadDbFailure";
 import { FileUploadRequest } from "../type";
+import { serializeBigInt } from "../utils/bigIntSerializer";
 
 dotenv.config();
 
@@ -14,6 +15,25 @@ export const uploadFile = async ({ files, ownerId }: FileUploadRequest) => {
 	const uploadedFiles = [];
 
 	try {
+		const user = await prisma.user.findUnique({
+			where: { id: ownerId },
+			select: { usedStorage: true, maxStorage: true },
+		});
+
+		if (!user) {
+			return { success: false, error: "User not found" };
+		}
+
+		let totalFileSize = 0;
+		for (const file of files) {
+			totalFileSize += file.size;
+		}
+
+		const remainingStorage = BigInt(user.maxStorage) - BigInt(user.usedStorage);
+		if (BigInt(totalFileSize) > remainingStorage) {
+			return { success: false, error: "Not enough storage space available" };
+		}
+
 		for (const file of files) {
 			const fileKey = file.key;
 
@@ -46,7 +66,14 @@ export const uploadFile = async ({ files, ownerId }: FileUploadRequest) => {
 			uploadedFiles.push(fileDocument);
 		}
 
-		return { success: true, files: uploadedFiles };
+		await prisma.user.update({
+			where: { id: ownerId },
+			data: {
+				usedStorage: BigInt(user.usedStorage) + BigInt(totalFileSize),
+			},
+		});
+
+		return serializeBigInt({ success: true, files: uploadedFiles });
 	} catch (error) {
 		console.error("Error processing file:", error);
 		for (const file of files) {

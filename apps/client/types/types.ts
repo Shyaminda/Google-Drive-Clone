@@ -70,7 +70,7 @@ export interface FormSuccessProps {
 }
 
 export interface ThumbnailProps {
-	id: string;
+	id?: string;
 	type: string;
 	extension: string;
 	bucketField?: string;

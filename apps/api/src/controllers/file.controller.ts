@@ -11,6 +11,7 @@ import { updateFileAccess } from "../actions/updateFileAccess";
 import { deleteFile } from "../actions/deleteFile";
 import { revokeFileAccess } from "../actions/revokeFileAccess";
 import { getFiles } from "../actions/getFiles";
+import { serializeBigInt } from "../utils/bigIntSerializer";
 
 export const uploadController = async (req: Request, res: Response) => {
 	const files = req.files as Express.MulterS3.File[];
@@ -99,16 +100,18 @@ export const getFilesController = async (
 			return res.status(404).json({ success: false, error: files.error });
 		}
 
-		return res.status(200).json({
-			success: true,
-			files: files.files,
-			nextCursor: files.nextCursor,
-		});
+		return res.status(200).json(
+			serializeBigInt({
+				success: true,
+				files: files.files,
+				nextCursor: files.nextCursor,
+			}),
+		);
 	} catch (error) {
 		console.error("Unexpected error in getFilesController:", error);
 		return res
 			.status(500)
-			.json({ success: false, error: "Internal server error" });
+			.json({ success: false, error: "Internal server error(gfc)" });
 	}
 };
 
@@ -138,7 +141,7 @@ export const preFileController = async (req: Request, res: Response) => {
 		return res.status(200).json({ url, message: "Fetched URL successfully" });
 	} catch (error) {
 		console.error("Unexpected error in preFileController:", error);
-		return res.status(500).json({ error: "Internal server error" });
+		return res.status(500).json({ error: "Internal server error(pfc)" });
 	}
 };
 
@@ -166,7 +169,7 @@ export const renameFileController = async (req: Request, res: Response) => {
 		console.error("Unexpected error in renameController:", error);
 		return res
 			.status(500)
-			.json({ success: false, error: "Internal server error" });
+			.json({ success: false, error: "Internal server error(rfc)" });
 	}
 };
 
@@ -255,7 +258,7 @@ export const shareFileAccessController = async (
 		console.error("Unexpected error in shareFileAccessController:", error);
 		return res
 			.status(500)
-			.json({ success: false, error: "Internal server error" });
+			.json({ success: false, error: "Internal server error(sfac)" });
 	}
 };
 
@@ -292,7 +295,7 @@ export const shareFileAccessUpdateController = async (
 		console.error("Unexpected error in shareFileAccessController:", error);
 		return res
 			.status(500)
-			.json({ success: false, error: "Internal server error" });
+			.json({ success: false, error: "Internal server error(afauc)" });
 	}
 };
 
@@ -315,7 +318,7 @@ export const deleteFileController = async (
 		console.error("Unexpected error in deleteFileController:", error);
 		return res
 			.status(500)
-			.json({ success: false, error: "Internal server error" });
+			.json({ success: false, error: "Internal server error(dfc)" });
 	}
 };
 
@@ -352,6 +355,6 @@ export const revokeFileAccessController = async (
 		console.error("Unexpected error in revokeFileAccessController:", error);
 		return res
 			.status(500)
-			.json({ success: false, error: "Internal server error" });
+			.json({ success: false, error: "Internal server error(rfac)" });
 	}
 };

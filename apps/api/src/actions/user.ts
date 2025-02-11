@@ -1,4 +1,5 @@
 import { getUserById } from "../helpers/user";
+import { serializeBigInt } from "../utils/bigIntSerializer";
 
 export const loggedUser = async (id: string) => {
 	try {
@@ -8,7 +9,7 @@ export const loggedUser = async (id: string) => {
 			return { success: false, error: "User not found" };
 		}
 
-		return { success: true, user };
+		return serializeBigInt({ success: true, user });
 	} catch {
 		return {
 			success: false,

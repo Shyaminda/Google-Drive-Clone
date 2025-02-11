@@ -38,6 +38,11 @@ export const deleteFile = async (userId: string, fileId: string) => {
 				await tx.fileAccess.deleteMany({ where: { fileId } });
 				await tx.file.delete({ where: { id: fileId } });
 
+				await tx.user.update({
+					where: { id: userId },
+					data: { usedStorage: { decrement: file.size || 0 } },
+				});
+
 				return { success: true, message: "File deleted successfully" };
 			});
 
