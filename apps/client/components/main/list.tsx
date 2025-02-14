@@ -55,7 +55,7 @@ const List = ({ file }: ListViewProps) => {
 						{file.map((file) => (
 							<TableRow
 								key={file.id}
-								className="hover:bg-gray-200 cursor-pointer"
+								className="hover:bg-gray-300 cursor-pointer"
 								onClick={(e) => handleView(e, file.bucketField, file.id)}
 							>
 								<TableCell className="flex items-center gap-4">

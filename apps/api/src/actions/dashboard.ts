@@ -32,6 +32,8 @@ export const getDashboardData = async (ownerId: string) => {
 				size: true,
 				url: true,
 				createdAt: true,
+				bucketField: true,
+				extension: true,
 			},
 		});
 
@@ -41,17 +43,45 @@ export const getDashboardData = async (ownerId: string) => {
 			_sum: { size: true },
 		});
 
+		const lastCreatedFile = await prisma.file.findMany({
+			where: { ownerId: ownerId },
+			orderBy: { createdAt: "desc" },
+			select: {
+				type: true,
+				createdAt: true,
+			},
+		});
+
+		const getLatestFileDate = (fileType: string) => {
+			const file = lastCreatedFile.find((f) => f.type === fileType);
+			return file ? file.createdAt : null;
+		};
+
 		const summary = {
-			Documents:
-				fileSummary.find((f) => f.type === "DOCUMENT")?._sum?.size || 0,
-			Video: fileSummary.find((f) => f.type === "VIDEO")?._sum?.size || 0,
-			Audio: fileSummary.find((f) => f.type === "AUDIO")?._sum?.size || 0,
-			Images: fileSummary.find((f) => f.type === "IMAGE")?._sum?.size || 0,
-			Others: fileSummary
-				.filter(
-					(f) => !["document", "Video", "Audio", "image"].includes(f.type),
-				)
-				.reduce((sum, f) => sum + (f._sum?.size || 0), 0), //sum up
+			Documents: {
+				size: fileSummary.find((f) => f.type === "DOCUMENT")?._sum?.size || 0,
+				latestDate: getLatestFileDate("DOCUMENT"),
+			},
+			Videos: {
+				size: fileSummary.find((f) => f.type === "VIDEO")?._sum?.size || 0,
+				latestDate: getLatestFileDate("VIDEO"),
+			},
+			Audios: {
+				size: fileSummary.find((f) => f.type === "AUDIO")?._sum?.size || 0,
+				latestDate: getLatestFileDate("AUDIO"),
+			},
+			Images: {
+				size: fileSummary.find((f) => f.type === "IMAGE")?._sum?.size || 0,
+				latestDate: getLatestFileDate("IMAGE"),
+			},
+			Others: {
+				size: fileSummary
+					.filter(
+						(f) => !["DOCUMENT", "VIDEO", "AUDIO", "IMAGE"].includes(f.type),
+					)
+					.reduce((sum, f) => sum + (f._sum?.size || 0), 0), // Sum up other types
+				latestDate: getLatestFileDate("OTHER"),
+			},
 		};
 
 		return {

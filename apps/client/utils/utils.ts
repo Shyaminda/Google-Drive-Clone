@@ -1,4 +1,4 @@
-import { FileType } from "@/types/types";
+import { DashboardDataProps, FileType } from "@/types/types";
 
 /* eslint-disable indent */
 export const convertFileToUrl = (file: File) => URL.createObjectURL(file);
@@ -183,36 +183,40 @@ export const constructDownloadUrl = (bucketFileId: string) => {
 };
 
 // DASHBOARD UTILS
-export const getUsageSummary = (totalSpace: any) => {
+export const getUsageSummary = (summary: DashboardDataProps["summary"]) => {
 	return [
 		{
 			title: "Documents",
-			size: totalSpace.document.size,
-			latestDate: totalSpace.document.latestDate,
+			size: summary.Documents.size,
+			latestDate: summary.Documents.latestDate,
 			icon: "/assets/icons/file-document-light.svg",
 			url: "/documents",
 		},
 		{
 			title: "Images",
-			size: totalSpace.image.size,
-			latestDate: totalSpace.image.latestDate,
+			size: summary.Images.size,
+			latestDate: summary.Images.latestDate,
 			icon: "/assets/icons/file-image-light.svg",
 			url: "/images",
 		},
 		{
-			title: "Media",
-			size: totalSpace.video.size + totalSpace.audio.size,
-			latestDate:
-				totalSpace.video.latestDate > totalSpace.audio.latestDate
-					? totalSpace.video.latestDate
-					: totalSpace.audio.latestDate,
+			title: "Videos",
+			size: summary.Videos.size,
+			latestDate: summary.Videos.latestDate,
 			icon: "/assets/icons/file-video-light.svg",
-			url: "/media",
+			url: "/videos",
+		},
+		{
+			title: "Audios",
+			size: summary.Audios.size,
+			latestDate: summary.Audios.latestDate,
+			icon: "/assets/icons/file-audio-light.svg",
+			url: "/audios",
 		},
 		{
 			title: "Others",
-			size: totalSpace.other.size,
-			latestDate: totalSpace.other.latestDate,
+			size: summary.Others.size,
+			latestDate: summary.Others.latestDate,
 			icon: "/assets/icons/file-other-light.svg",
 			url: "/others",
 		},
@@ -225,9 +229,9 @@ export const getFileTypesParams = (type: string) => {
 			return ["DOCUMENT"];
 		case "images":
 			return ["IMAGE"];
-		case "audio":
+		case "audios":
 			return ["AUDIO"];
-		case "video":
+		case "videos":
 			return ["VIDEO"];
 		case "others":
 			return ["OTHER"];

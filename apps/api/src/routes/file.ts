@@ -18,7 +18,11 @@ import { checkFilePermission } from "../middleware/permissionMiddleware";
 
 const fileRouter = express.Router();
 
-fileRouter.get("/", authMiddleware(), asyncHandler(dashboardController));
+fileRouter.get(
+	"/dashboard",
+	authMiddleware(),
+	asyncHandler(dashboardController),
+);
 
 fileRouter.post(
 	"/upload",

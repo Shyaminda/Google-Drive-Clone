@@ -16,7 +16,10 @@ export const Card = ({ file }: CardProps) => {
 	};
 
 	return (
-		<div className="file-card" onClick={handleView}>
+		<div
+			className="file-card hover:ease-in-out hover:scale-105 transition-transform duration-250"
+			onClick={handleView}
+		>
 			<div className="flex justify-between">
 				<Thumbnail
 					id={file.id}

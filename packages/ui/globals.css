@@ -27,7 +27,7 @@
   }
 
   .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: #fa7275;
+    background: #a48cfb;
   }
 
   .remove-scrollbar::-webkit-scrollbar {
@@ -304,7 +304,7 @@
     @apply mt-6 grid grid-cols-1 gap-4 xl:mt-10 xl:grid-cols-2 xl:gap-9 !important;
   }
   .dashboard-summary-card {
-    @apply relative mt-6 rounded-[20px] bg-white p-5 transition-all hover:scale-105 !important;
+    @apply relative mt-6 rounded-[20px] bg-white p-5 hover:ease-in-out hover:scale-105 transition-transform duration-200 !important;
   }
   .summary-type-icon {
     @apply absolute -left-3 top-[-25px] z-10 w-[190px] object-contain !important;
@@ -316,7 +316,7 @@
     @apply h5 relative z-20 text-center !important;
   }
   .dashboard-recent-files {
-    @apply h-full rounded-[20px] xl:h-[654px] custom-scrollbar overflow-auto bg-white p-5 xl:p-7 !important;
+    @apply h-full rounded-[20px] xl:h-[694px] custom-scrollbar overflow-auto bg-white p-5 xl:p-7 !important;
   }
   .recent-file-details {
     @apply flex w-full justify-between items-center !important;
@@ -545,4 +545,6 @@
 	.upload-progress span {
 		@apply absolute top-[-20px] right-0 text-[12px] text-[#333];
 	}
+
+	
 }

@@ -3,7 +3,7 @@ import axios from "axios";
 export const dashboardData = async () => {
 	try {
 		const dashboardData = await axios.get(
-			"http://localhost:3001/api/v1/files",
+			"http://localhost:3001/api/v1/files/dashboard",
 			{
 				withCredentials: true,
 			},

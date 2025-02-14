@@ -128,3 +128,34 @@ export interface ShareFileProps {
 export interface SortProps {
 	file: File[];
 }
+
+export interface FileCategorySummaryProps {
+	size: number;
+	latestDate: string;
+}
+
+export interface DashboardFileProps {
+	id: string;
+	name: string;
+	type: string;
+	size: string;
+	url: string;
+	createdAt: string;
+	bucketField: string;
+	extension: string;
+	file: File;
+}
+
+export interface DashboardDataProps {
+	usedStorage: string;
+	maxStorage: string;
+	remainingStorage: string;
+	summary: {
+		Documents: FileCategorySummaryProps;
+		Images: FileCategorySummaryProps;
+		Videos: FileCategorySummaryProps;
+		Audios: FileCategorySummaryProps;
+		Others: FileCategorySummaryProps;
+	};
+	recentFiles: File[];
+}

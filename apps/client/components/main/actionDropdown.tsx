@@ -198,7 +198,7 @@ const ActionDropdown = ({ file }: DropDownProps) => {
 						width={20}
 						height={20}
 						onClick={() => setIsDropdownOpen(true)}
-						className="cursor-pointer hover:bg-slate-100 rounded-full size-9 p-2 ease-in-out duration-200"
+						className="cursor-pointer hover:bg-slate-200 rounded-full size-9 p-2 hover:ease-in-out duration-200"
 					/>
 				</DropdownMenuTrigger>
 				<DropdownMenuContent>

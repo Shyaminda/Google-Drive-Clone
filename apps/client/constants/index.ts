@@ -17,12 +17,12 @@ export const navItems = [
 	{
 		name: "Videos",
 		icon: "/assets/icons/video.svg",
-		url: "/video",
+		url: "/videos",
 	},
 	{
 		name: "Audios",
 		icon: "/assets/icons/audio.svg",
-		url: "/audio",
+		url: "/audios",
 	},
 	{
 		name: "Other",
