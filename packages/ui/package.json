@@ -22,7 +22,8 @@
     "./checkbox": "./components/ui/checkbox.tsx",
     "./select": "./components/ui/select.tsx",
     "./table": "./components/ui/table.tsx",
-		"./switch": "./components/ui/switch.tsx"
+    "./switch": "./components/ui/switch.tsx",
+		"./chart": "./components/ui/chart.tsx"
   },
   "scripts": {
     "lint": "eslint . --max-warnings 0",
@@ -57,13 +58,14 @@
     "autoprefixer": "^10.4.20",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "lucide-react": "^0.469.0",
+    "lucide-react": "^0.475.0",
     "postcss": "^8.4.49",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.54.2",
     "react-icons": "^5.4.0",
     "react-spinners": "^0.15.0",
+    "recharts": "^2.15.1",
     "tailwind-merge": "^2.6.0",
     "tailwindcss": "^3.4.17",
     "tailwindcss-animate": "^1.0.7",

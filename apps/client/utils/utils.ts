@@ -225,11 +225,13 @@ export const getFileTypesParams = (type: string) => {
 			return ["DOCUMENT"];
 		case "images":
 			return ["IMAGE"];
-		case "media":
-			return ["MEDIA"];
+		case "audio":
+			return ["AUDIO"];
+		case "video":
+			return ["VIDEO"];
 		case "others":
 			return ["OTHER"];
 		default:
-			return ["DOCUMENT", "IMAGE", "MEDIA", "OTHER"];
+			return ["DOCUMENT", "IMAGE", "AUDIO", "VIDEO", "OTHER"];
 	}
 };

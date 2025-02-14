@@ -16,7 +16,7 @@ model User {
 	image    					String?   @default("https://img.freepik.com/free-psd/3d-illustration-person-with-sunglasses_23-2149436188.jpg")
 	password 					String?
 	maxStorage    		BigInt     @default(5368709120)
-  usedStorage   		BigInt		 	@default(0)
+  usedStorage   		BigInt		 @default(0)
 	accounts					Account[]
 	files		  				File[]
 	fileAccess   			FileAccess[] @relation("FileAccessRecipient")

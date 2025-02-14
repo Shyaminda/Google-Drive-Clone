@@ -25,11 +25,22 @@ export const uploadFile = async ({ files, ownerId }: FileUploadRequest) => {
 		}
 
 		let totalFileSize = 0;
+		console.log("totalFileSize external", totalFileSize);
 		for (const file of files) {
-			totalFileSize += file.size;
+			console.log("size upload", file.size);
+			if (!file.size) {
+				console.error("File size is undefined:", file);
+				return { success: false, error: "File size missing" };
+			}
+			console.log("totalFileSize before", totalFileSize);
+			totalFileSize += Number(file.size);
+			console.log("totalFileSize after", totalFileSize);
 		}
 
+		console.log("totalFileSize external after loop", totalFileSize);
+
 		const remainingStorage = BigInt(user.maxStorage) - BigInt(user.usedStorage);
+		console.log("remainingStorage", remainingStorage);
 		if (BigInt(totalFileSize) > remainingStorage) {
 			return { success: false, error: "Not enough storage space available" };
 		}

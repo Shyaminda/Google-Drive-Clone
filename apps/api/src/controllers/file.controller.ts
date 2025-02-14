@@ -12,10 +12,41 @@ import { deleteFile } from "../actions/deleteFile";
 import { revokeFileAccess } from "../actions/revokeFileAccess";
 import { getFiles } from "../actions/getFiles";
 import { serializeBigInt } from "../utils/bigIntSerializer";
+import { getDashboardData } from "../actions/dashboard";
 
-export const uploadController = async (req: Request, res: Response) => {
+export const dashboardController = async (
+	req: AuthenticatedRequest,
+	res: Response,
+) => {
+	try {
+		const ownerId = req.userId as string;
+
+		const dashboardData = await getDashboardData(ownerId);
+
+		if (!dashboardData.success) {
+			return res
+				.status(400)
+				.json({ success: false, error: dashboardData.message });
+		}
+
+		return res.status(200).json(
+			serializeBigInt({
+				dashboardData,
+				message: "Dashboard data fetched successfully",
+			}),
+		);
+	} catch (error) {
+		console.error("Unexpected error in dashboardController:", error);
+		return res.status(500).json({ error: "Internal server error" });
+	}
+};
+
+export const uploadController = async (
+	req: AuthenticatedRequest,
+	res: Response,
+) => {
 	const files = req.files as Express.MulterS3.File[];
-	const { ownerId } = req.body;
+	const ownerId = req.userId as string;
 	console.log("Files:", files, "OwnerId:", ownerId);
 
 	if (!files || files.length === 0) {
@@ -70,20 +101,13 @@ export const getFilesController = async (
 	try {
 		const validTypes = Object.values(PrismaType);
 		console.log("Valid Types:", validTypes);
-
 		const mappedTypes = Array.isArray(type)
-			? type.flatMap((t) =>
-					t === "MEDIA"
-						? [PrismaType.VIDEO, PrismaType.AUDIO]
-						: validTypes.includes(t as PrismaType)
-							? [t as PrismaType]
-							: [],
-				)
-			: type === "MEDIA"
-				? [PrismaType.VIDEO, PrismaType.AUDIO]
-				: validTypes.includes(type as PrismaType)
-					? [type as PrismaType]
-					: [];
+			? type
+					.filter((t) => validTypes.includes(t as PrismaType))
+					.map((t) => t as PrismaType)
+			: validTypes.includes(type as PrismaType)
+				? [type as PrismaType]
+				: [];
 
 		console.log("Mapped Types:", mappedTypes);
 

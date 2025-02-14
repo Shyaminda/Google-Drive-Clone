@@ -96,13 +96,7 @@ const Search = () => {
 		setResults([]);
 		debouncedFetch.cancel();
 
-		let pathType = pathname.split("/").filter(Boolean)[0] || "";
-
-		if (pathType === "audio" || pathType === "video") {
-			pathType = "media";
-		}
-
-		const pathVariable = pathType === "media" ? pathType : pathType + "s";
+		const pathType = pathname.split("/").filter(Boolean)[0] || "";
 
 		if (value.trim() === "") {
 			setResults([]);
@@ -110,7 +104,7 @@ const Search = () => {
 			setHasSearched(false);
 
 			if (pathType) {
-				router.push(`/${pathVariable}`);
+				router.push(`/${pathType}`);
 			}
 		}
 	};
