@@ -12,7 +12,6 @@ const Sidebar = () => {
 	const pathname = usePathname();
 
 	const { user } = useFetchUser();
-	//console.log("user", user?.name);
 
 	return (
 		<aside className="sidebar">
@@ -35,7 +34,11 @@ const Sidebar = () => {
 			<nav className="sidebar-nav">
 				<ul className="flex flex-1 flex-col gap-6">
 					{navItems.map(({ url, name, icon }) => (
-						<Link key={name} href={url} className="lg:w-full">
+						<Link
+							key={name}
+							href={url}
+							className="lg:w-full hover:ease-in-out hover:scale-105 hover:font-medium transition-transform duration-200"
+						>
 							<li
 								className={cn(
 									"sidebar-nav-item",

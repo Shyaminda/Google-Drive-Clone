@@ -54,20 +54,23 @@ export const bucketObjectAccess = () => {
 			console.log("Signed URL", signedUrl);
 
 			if (!isDownload) {
+				const blob = new Blob([response.data]);
+				const objectUrl = URL.createObjectURL(blob);
+
 				const expiresIn = 3600 * 1000;
 				const expiresAt = Date.now() + expiresIn;
 
 				localStorage.setItem(
 					bucketField,
-					JSON.stringify({ url: signedUrl, expiresAt }),
+					JSON.stringify({ url: objectUrl, expiresAt }),
 				);
-				console.log("Fetched and cached signed URL in localStorage", signedUrl);
+				console.log("Fetched and cached signed URL in localStorage", objectUrl);
 
-				if (options?.triggeredBy !== "fetchThumbnail") {
-					console.log("Opening URL in new tab", signedUrl);
-					window.open(signedUrl, "_blank");
-				}
-				return { success: true, url: signedUrl };
+				return { success: true, url: objectUrl };
+				// if (options?.triggeredBy !== "fetchThumbnail") {
+				// 	console.log("Opening URL in new tab", signedUrl);
+				// 	window.open(signedUrl, "_blank");
+				// }
 			}
 
 			const fileResponse = await axios.get(signedUrl, {

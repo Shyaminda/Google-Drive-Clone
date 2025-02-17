@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import Sort from "@/components/main/sort";
 import { fetchFiles } from "@/hooks/fetch-files";
-import { File, SearchParamProps } from "@/types/types";
+import { File, SearchParamProps, viewOnlyProps } from "@/types/types";
 import { Card } from "@/components/main/card";
 import { getFileTypesParams } from "@/utils/utils";
 import { useSearchParams } from "next/navigation";
@@ -11,6 +11,7 @@ import { Switch } from "@repo/ui/switch";
 import List from "@/components/main/list";
 import { Button } from "@repo/ui/button";
 import { ClipLoader, PulseLoader } from "react-spinners";
+import FileViewer from "@/components/ui/fileViewer";
 
 const Page = ({ params: initialParams }: SearchParamProps) => {
 	const [files, setFiles] = useState<File[]>([]);
@@ -20,6 +21,8 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 	const [isGridView, setIsGridView] = useState<boolean>(true);
 	const [nextCursor, setNextCursor] = useState<string | null>(null);
 	const [loadingMore, setLoadingMore] = useState(false);
+	const [selectedViewFile, setSelectedViewFile] =
+		useState<viewOnlyProps | null>(null);
 
 	const searchParams = useSearchParams();
 	const fileId = searchParams.get("f") || "";
@@ -107,6 +110,17 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 
 	const selectedFile = files.find((file) => file.id === fileId);
 
+	const handleFileClick = (id: string, bucketField: string, type: string) => {
+		console.log("File clicked:", id);
+		setSelectedViewFile({ id, bucketField, type });
+	};
+
+	const closePreview = () => {
+		setSelectedViewFile(null);
+	};
+
+	console.log("selectedFile for viewer", selectedViewFile);
+
 	return (
 		<div className="page-container">
 			<section className="w-full">
@@ -123,13 +137,11 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 						<p className="body-1">
 							Total: <span className="h5">0 MB</span>
 						</p>
-						<div className="">
-							<div className="sort-container">
-								<p className="body-1 hidden sm:block text-light-200">
-									Sort by:
-								</p>
-								<Sort setSort={setSort} />
-							</div>
+						<div className="sort-container">
+							<p className="body-1 hidden sm:block text-light-200 selection:font-medium">
+								Sort by:
+							</p>
+							<Sort setSort={setSort} />
 						</div>
 					</div>
 				)}
@@ -142,13 +154,27 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 								.filter((file) => file.id === fileId)
 								.map((file) =>
 									isGridView ? (
-										<Card key={file.id} file={file} />
+										<Card
+											key={file.id}
+											file={file}
+											onClick={() =>
+												handleFileClick(file.id, file.bucketField, file.type)
+											}
+										/>
 									) : (
 										<List key={file.id} file={[file]} />
 									),
 								)
 						) : isGridView ? (
-							files.map((file) => <Card key={file.id} file={file} />)
+							files.map((file) => (
+								<Card
+									key={file.id}
+									file={file}
+									onClick={() =>
+										handleFileClick(file.id, file.bucketField, file.type)
+									}
+								/>
+							))
 						) : (
 							<div ref={lastFileCallback}>
 								<List file={files} />
@@ -172,6 +198,15 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 				</>
 			) : (
 				<p className="empty-list">No files uploaded</p>
+			)}
+
+			{selectedViewFile && (
+				<FileViewer
+					bucketField={selectedViewFile?.bucketField || ""}
+					fileType={selectedViewFile?.type || ""}
+					id={selectedViewFile?.id || ""}
+					onClose={closePreview}
+				/>
 			)}
 		</div>
 	);

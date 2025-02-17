@@ -18,7 +18,7 @@ const Sort = ({ setSort }: { setSort: (value: string) => void }) => {
 					<SelectItem
 						key={sortType.value}
 						value={sortType.value}
-						className="shad-select-item"
+						className="shad-select-item hover:ease-in-out hover:scale-105 hover:font-medium transition-transform duration-200"
 					>
 						{sortType.label}
 					</SelectItem>

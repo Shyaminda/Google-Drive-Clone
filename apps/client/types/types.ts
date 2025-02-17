@@ -91,10 +91,12 @@ export interface User {
 
 export interface CardProps {
 	file: File;
+	onClick: () => void;
 }
 
 export interface ListViewProps {
 	file: File[];
+	onClick?: () => void;
 }
 
 export interface FileType {
@@ -158,4 +160,10 @@ export interface DashboardDataProps {
 		Others: FileCategorySummaryProps;
 	};
 	recentFiles: File[];
+}
+
+export interface viewOnlyProps {
+	id: string;
+	bucketField: string;
+	type: string;
 }

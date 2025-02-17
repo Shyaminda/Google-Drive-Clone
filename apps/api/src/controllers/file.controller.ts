@@ -13,6 +13,7 @@ import { revokeFileAccess } from "../actions/revokeFileAccess";
 import { getFiles } from "../actions/getFiles";
 import { serializeBigInt } from "../utils/bigIntSerializer";
 import { getDashboardData } from "../actions/dashboard";
+import { objectViewOnly } from "../actions/getObjectViewOnly";
 
 export const dashboardController = async (
 	req: AuthenticatedRequest,
@@ -149,6 +150,11 @@ export const preFileController = async (req: Request, res: Response) => {
 	}
 
 	try {
+		if (isDownload === false) {
+			console.log("Streaming file via getObjectViewOnly");
+			return await objectViewOnly(bucketField, res);
+		}
+
 		const { success, url, error } = await getPresignedUrl(
 			bucketField,
 			isDownload === "false",

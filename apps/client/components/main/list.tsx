@@ -14,7 +14,7 @@ import { bucketObjectAccess } from "@/hooks/bucket-file-action";
 import ActionDropdown from "./actionDropdown";
 import Image from "next/image";
 
-const List = ({ file }: ListViewProps) => {
+const List = ({ file, onClick }: ListViewProps) => {
 	const { objectAccess } = bucketObjectAccess();
 
 	const handleView = async (
@@ -24,7 +24,7 @@ const List = ({ file }: ListViewProps) => {
 	) => {
 		e.preventDefault();
 		if (bucketField) {
-			await objectAccess(bucketField, false, "VIEW", id);
+			onClick?.();
 		}
 	};
 
@@ -46,7 +46,6 @@ const List = ({ file }: ListViewProps) => {
 									alt="dots"
 									width={20}
 									height={20}
-									onClick={() => console.log("clicked")}
 								/>
 							</TableHead>
 						</TableRow>

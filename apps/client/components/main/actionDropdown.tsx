@@ -209,7 +209,7 @@ const ActionDropdown = ({ file }: DropDownProps) => {
 					{actionsDropdownItems.map((actionItem) => (
 						<DropdownMenuItem
 							key={actionItem.value}
-							className="shad-dropdown-item"
+							className="shad-dropdown-item hover:ease-in-out hover:scale-105 hover:font-medium transition-transform duration-200"
 							onClick={(e) => handleAction(e, actionItem)}
 						>
 							<div className="flex items-center gap-2">
