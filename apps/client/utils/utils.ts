@@ -239,3 +239,130 @@ export const getFileTypesParams = (type: string) => {
 			return ["DOCUMENT", "IMAGE", "AUDIO", "VIDEO", "OTHER"];
 	}
 };
+
+export const fileExtensions = {
+	document: [
+		"pdf",
+		"doc",
+		"docx",
+		"txt",
+		"xls",
+		"xlsx",
+		"csv",
+		"rtf",
+		"ods",
+		"ppt",
+		"odp",
+		"md",
+		"html",
+		"htm",
+		"epub",
+		"pages",
+		"fig",
+		"psd",
+		"ai",
+		"indd",
+		"xd",
+		"sketch",
+		"afdesign",
+		"afphoto",
+	],
+	image: ["jpg", "jpeg", "png", "gif", "bmp", "svg", "webp"],
+	video: ["mp4", "avi", "mov", "mkv", "webm"],
+	audio: ["mp3", "wav", "ogg", "flac"],
+	other: [
+		"txt",
+		"log",
+		"json",
+		"xml",
+		"csv",
+		"md",
+		"html",
+		"htm",
+		"zip",
+		"rar",
+		"tar",
+		"gz",
+		"bz2",
+		"iso",
+		"apk",
+		"exe",
+		"msi",
+		"ico",
+	],
+};
+
+export const getVideoMimeType = (extension: string) => {
+	const mimeTypes: { [key: string]: string } = {
+		mp4: "video/mp4",
+		avi: "video/x-msvideo",
+		mov: "video/quicktime",
+		mkv: "video/x-matroska",
+		webm: "video/webm",
+	};
+	return mimeTypes[extension] || "video/mp4";
+};
+
+export const getAudioMimeType = (extension: string) => {
+	const mimeTypes: Record<string, string> = {
+		mp3: "audio/mpeg",
+		wav: "audio/wav",
+		ogg: "audio/ogg",
+		flac: "audio/flac",
+	};
+	return mimeTypes[extension] || "audio/mpeg";
+};
+
+export const getDocumentMimeType = (extension: string) => {
+	const mimeTypes: Record<string, string> = {
+		pdf: "application/pdf",
+		doc: "application/msword",
+		docx: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+		txt: "text/plain",
+		xls: "application/vnd.ms-excel",
+		xlsx: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+		csv: "text/csv",
+		rtf: "application/rtf",
+		ods: "application/vnd.oasis.opendocument.spreadsheet",
+		ppt: "application/vnd.ms-powerpoint",
+		odp: "application/vnd.oasis.opendocument.presentation",
+		md: "text/markdown",
+		html: "text/html",
+		htm: "text/html",
+		epub: "application/epub+zip",
+		pages: "application/vnd.apple.pages",
+		fig: "application/x-dxf",
+		psd: "image/vnd.adobe.photoshop",
+		ai: "application/postscript",
+		indd: "application/x-indesign",
+		xd: "application/xd",
+		sketch: "application/sketch",
+		afdesign: "application/x-affinity-designer",
+		afphoto: "application/x-affinity-photo",
+	};
+	return mimeTypes[extension] || "";
+};
+
+export const getOtherMimeType = (extension: string) => {
+	const mimeTypes: Record<string, string> = {
+		txt: "text/plain",
+		log: "text/plain",
+		json: "application/json",
+		xml: "application/xml",
+		csv: "text/csv",
+		md: "text/markdown",
+		html: "text/html",
+		htm: "text/html",
+		zip: "application/zip",
+		rar: "application/x-rar-compressed",
+		tar: "application/x-tar",
+		gz: "application/gzip",
+		bz2: "application/x-bzip2",
+		iso: "application/x-iso9660-image",
+		apk: "application/vnd.android.package-archive",
+		exe: "application/x-msdownload",
+		msi: "application/x-msi",
+		ico: "image/x-icon",
+	};
+	return mimeTypes[extension] || "";
+};

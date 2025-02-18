@@ -110,9 +110,14 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 
 	const selectedFile = files.find((file) => file.id === fileId);
 
-	const handleFileClick = (id: string, bucketField: string, type: string) => {
+	const handleFileClick = (
+		id: string,
+		bucketField: string,
+		type: string,
+		name: string,
+	) => {
 		console.log("File clicked:", id);
-		setSelectedViewFile({ id, bucketField, type });
+		setSelectedViewFile({ id, bucketField, type, name });
 	};
 
 	const closePreview = () => {
@@ -158,7 +163,12 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 											key={file.id}
 											file={file}
 											onClick={() =>
-												handleFileClick(file.id, file.bucketField, file.type)
+												handleFileClick(
+													file.id,
+													file.bucketField,
+													file.type,
+													file.name,
+												)
 											}
 										/>
 									) : (
@@ -171,7 +181,12 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 									key={file.id}
 									file={file}
 									onClick={() =>
-										handleFileClick(file.id, file.bucketField, file.type)
+										handleFileClick(
+											file.id,
+											file.bucketField,
+											file.type,
+											file.name,
+										)
 									}
 								/>
 							))
@@ -205,6 +220,7 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 					bucketField={selectedViewFile?.bucketField || ""}
 					fileType={selectedViewFile?.type || ""}
 					id={selectedViewFile?.id || ""}
+					fileName={selectedViewFile?.name || ""}
 					onClose={closePreview}
 				/>
 			)}

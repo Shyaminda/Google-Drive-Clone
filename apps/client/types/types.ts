@@ -166,4 +166,13 @@ export interface viewOnlyProps {
 	id: string;
 	bucketField: string;
 	type: string;
+	name: string;
+}
+
+export interface FileViewerProps {
+	bucketField: string;
+	fileType: string;
+	id: string;
+	fileName: string;
+	onClose: () => void;
 }
