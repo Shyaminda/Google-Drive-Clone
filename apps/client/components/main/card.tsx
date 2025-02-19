@@ -3,18 +3,8 @@ import Thumbnail from "@/components/ui/Thumbnail";
 import { convertFileSize } from "@/utils/utils";
 import FormattedDateTime from "@/components/main/formattedDateTime";
 import ActionDropdown from "@/components/main/actionDropdown";
-// import { bucketObjectAccess } from "@/hooks/bucket-file-action";
 
 export const Card = ({ file, onClick }: CardProps) => {
-	// const { objectAccess } = bucketObjectAccess();
-
-	// const handleView = async (e: React.MouseEvent) => {
-	// 	e.preventDefault();
-	// 	if (file.bucketField) {
-	// 		await objectAccess(file.bucketField, false, "VIEW", file.id);
-	// 	}
-	// };
-
 	return (
 		<div
 			className="file-card hover:ease-in-out hover:scale-105 transition-transform duration-250"

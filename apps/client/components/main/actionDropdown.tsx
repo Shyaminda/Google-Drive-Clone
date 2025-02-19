@@ -235,3 +235,4 @@ export default ActionDropdown;
 //TODO: when rename function is open only select the file name don't select the extension
 //TODO: show the renamed file instantaneously without refreshing the page
 //TODO: add loading function for download action
+//TODO: download the file with the original name shown in the app
