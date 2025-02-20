@@ -10,24 +10,11 @@ import {
 import FormattedDateTime from "@/components/main/formattedDateTime";
 import { convertFileSize } from "@/utils/utils";
 import Thumbnail from "@/components/ui/Thumbnail";
-import { bucketObjectAccess } from "@/hooks/bucket-file-action";
 import ActionDropdown from "./actionDropdown";
 import Image from "next/image";
 
 const List = ({ file, onClick }: ListViewProps) => {
-	const { objectAccess } = bucketObjectAccess();
-
-	const handleView = async (
-		e: React.MouseEvent,
-		bucketField: string,
-		id: string,
-	) => {
-		e.preventDefault();
-		if (bucketField) {
-			onClick?.();
-		}
-	};
-
+	console.log("Files from list:", file);
 	return (
 		<div className="w-full overflow-x-auto">
 			<div className="hidden md:block">
@@ -51,33 +38,40 @@ const List = ({ file, onClick }: ListViewProps) => {
 						</TableRow>
 					</TableHeader>
 					<TableBody>
-						{file.map((file) => (
+						{file.map((singleFile) => (
 							<TableRow
-								key={file.id}
+								key={singleFile.id}
 								className="hover:bg-gray-300 cursor-pointer"
-								onClick={(e) => handleView(e, file.bucketField, file.id)}
+								onClick={() =>
+									onClick(
+										singleFile.id,
+										singleFile.bucketField,
+										singleFile.type,
+										singleFile.name,
+									)
+								}
 							>
 								<TableCell className="flex items-center gap-4">
 									<Thumbnail
-										id={file.id}
-										type={file.type}
-										extension={file.extension}
+										id={singleFile.id}
+										type={singleFile.type}
+										extension={singleFile.extension}
 										className="!size-12"
 									/>
-									{file.name}
+									{singleFile.name}
 								</TableCell>
 								<TableCell className="hidden lg:table-cell">
-									{file.owner?.name || "Unknown"}
+									{singleFile.owner?.name || "Unknown"}
 								</TableCell>
 								<TableCell className="hidden md:table-cell">
 									<FormattedDateTime
-										date={new Date(file.updatedAt).toISOString()}
+										date={new Date(singleFile.updatedAt).toISOString()}
 										className="body-2 text-light-100"
 									/>
 								</TableCell>
-								<TableCell>{convertFileSize(file.size)}</TableCell>
+								<TableCell>{convertFileSize(singleFile.size)}</TableCell>
 								<TableCell>
-									<ActionDropdown file={file} />
+									<ActionDropdown file={singleFile} />
 								</TableCell>
 							</TableRow>
 						))}
@@ -86,27 +80,34 @@ const List = ({ file, onClick }: ListViewProps) => {
 			</div>
 
 			<div className="md:hidden flex flex-col gap-4">
-				{file.map((file) => (
+				{file.map((singleFile) => (
 					<div
-						key={file.id}
+						key={singleFile.id}
 						className="flex items-center justify-between p-4 bg-white shadow rounded-lg"
-						onClick={(e) => handleView(e, file.bucketField, file.id)}
+						onClick={() =>
+							onClick(
+								singleFile.id,
+								singleFile.bucketField,
+								singleFile.type,
+								singleFile.name,
+							)
+						}
 					>
 						<div className="flex items-center gap-4">
 							<Thumbnail
-								id={file.id}
-								type={file.type}
-								extension={file.extension}
+								id={singleFile.id}
+								type={singleFile.type}
+								extension={singleFile.extension}
 								className="size-12"
 							/>
 							<div>
-								<p className="font-medium">{file.name}</p>
+								<p className="font-medium">{singleFile.name}</p>
 								<p className="text-sm text-gray-500">
-									{convertFileSize(file.size)}
+									{convertFileSize(singleFile.size)}
 								</p>
 							</div>
 						</div>
-						<ActionDropdown file={file} />
+						<ActionDropdown file={singleFile} />
 					</div>
 				))}
 			</div>

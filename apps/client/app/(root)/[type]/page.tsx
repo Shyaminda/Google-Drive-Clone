@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
@@ -125,6 +126,7 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 	};
 
 	console.log("selectedFile for viewer", selectedViewFile);
+	console.log("files from page type", files);
 
 	return (
 		<div className="page-container">
@@ -154,11 +156,34 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 			{files.length > 0 ? (
 				<>
 					<section className={isGridView ? "file-list" : "w-full"}>
-						{fileId ? (
-							files
-								.filter((file) => file.id === fileId)
-								.map((file) =>
-									isGridView ? (
+						{fileId
+							? files
+									.filter((file) => file.id === fileId)
+									.map((file) =>
+										isGridView ? (
+											<Card
+												key={file.id}
+												file={file}
+												onClick={
+													() =>
+														handleFileClick(
+															file.id,
+															file.bucketField,
+															file.type,
+															file.name,
+														) // here onClick={handleFileClick} not used directly because from card itself we pass the data unlike in list
+												}
+											/>
+										) : (
+											<List
+												key={file.id}
+												file={files}
+												onClick={handleFileClick}
+											/>
+										),
+									)
+							: isGridView
+								? files.map((file) => (
 										<Card
 											key={file.id}
 											file={file}
@@ -171,30 +196,12 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 												)
 											}
 										/>
-									) : (
-										<List key={file.id} file={[file]} />
-									),
-								)
-						) : isGridView ? (
-							files.map((file) => (
-								<Card
-									key={file.id}
-									file={file}
-									onClick={() =>
-										handleFileClick(
-											file.id,
-											file.bucketField,
-											file.type,
-											file.name,
-										)
-									}
-								/>
-							))
-						) : (
-							<div ref={lastFileCallback}>
-								<List file={files} />
-							</div>
-						)}
+									))
+								: files.length > 0 && (
+										<div ref={lastFileCallback}>
+											<List file={files} onClick={handleFileClick} />
+										</div>
+									)}
 					</section>
 					{loadingMore && !isGridView && <ClipLoader color="#997dff" />}
 					{loadingMore && isGridView ? (
@@ -229,3 +236,5 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 };
 
 export default Page;
+
+//80801420

@@ -42,12 +42,12 @@ export default function Dashboard() {
 	console.log("usageSummary", usageSummary);
 
 	const groupedFiles = data.recentFiles.reduce(
-		(acc, file) => {
-			if (!acc[file.type]) {
-				acc[file.type] = [];
+		(type, file) => {
+			if (!type[file.type]) {
+				type[file.type] = [];
 			}
-			acc[file.type].push(file);
-			return acc;
+			type[file.type].push(file);
+			return type;
 		},
 		{} as Record<string, File[]>,
 	);

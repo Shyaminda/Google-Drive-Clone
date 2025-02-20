@@ -96,7 +96,12 @@ export interface CardProps {
 
 export interface ListViewProps {
 	file: File[];
-	onClick?: () => void;
+	onClick: (
+		id: string,
+		bucketField: string,
+		type: string,
+		name: string,
+	) => void;
 }
 
 export interface FileType {
