@@ -22,7 +22,6 @@ const upload = multer({
 			cb(null, file.mimetype);
 		},
 	}),
-	//limits: { fileSize: 50 * 1024 * 1024 }, // Limit file size to 50 MB
 });
 console.log("multer reached");
 export const uploadMiddleware = upload.array("file");

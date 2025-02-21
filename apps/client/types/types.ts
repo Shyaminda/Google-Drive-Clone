@@ -8,6 +8,7 @@ export interface File {
 	owner: User;
 	extension: string;
 	size: number;
+	thumbnailUrl: string;
 	user: string[];
 	createdAt: Date;
 	updatedAt: Date;
@@ -74,6 +75,7 @@ export interface ThumbnailProps {
 	type: string;
 	extension: string;
 	bucketField?: string;
+	thumbnailUrl?: string;
 	imageClassName?: string;
 	className?: string;
 }

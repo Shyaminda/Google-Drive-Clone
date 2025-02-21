@@ -15,6 +15,7 @@ export const Card = ({ file, onClick }: CardProps) => {
 					id={file.id}
 					type={file.type}
 					extension={file.extension}
+					thumbnailUrl={file.thumbnailUrl}
 					bucketField={file.type === "IMAGE" ? file.bucketField : ""}
 					className="!size-20"
 					imageClassName="!size-11"

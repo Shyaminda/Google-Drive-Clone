@@ -4,6 +4,8 @@ import dotenv from "dotenv";
 import { handleDbFailure } from "../helpers/uploadDbFailure";
 import { FileUploadRequest } from "../type";
 import { serializeBigInt } from "../utils/bigIntSerializer";
+import generateThumbnail from "../services/generateThumbnail";
+import path from "path";
 
 dotenv.config();
 
@@ -54,6 +56,25 @@ export const uploadFile = async ({ files, ownerId }: FileUploadRequest) => {
 
 			const fileUrl = file.location;
 
+			let thumbnailUrl = null;
+
+			if (file.mimetype.startsWith("image/")) {
+				try {
+					const fileBuffer = await fetch(fileUrl).then((res) =>
+						res.arrayBuffer(),
+					);
+
+					const thumbnailFileKey = path.parse(fileKey).name;
+
+					thumbnailUrl = await generateThumbnail(
+						Buffer.from(fileBuffer),
+						thumbnailFileKey,
+					);
+				} catch (thumbnailError) {
+					console.error("Thumbnail generation failed:", thumbnailError);
+				}
+			}
+
 			const fileDocument = await prisma.file.create({
 				data: {
 					type: getFileType(file.originalname).type,
@@ -62,6 +83,7 @@ export const uploadFile = async ({ files, ownerId }: FileUploadRequest) => {
 					extension: getFileType(file.originalname).extension,
 					size: file.size,
 					ownerId: ownerId,
+					thumbnailUrl: thumbnailUrl,
 					bucketField: fileKey,
 					user: [ownerId],
 					fileAccess: {

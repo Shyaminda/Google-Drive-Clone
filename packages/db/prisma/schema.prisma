@@ -55,6 +55,7 @@ model File {
 	owner       	User     @relation(fields: [ownerId], references: [id])
 	extension   	String?
 	size        	Int?
+	thumbnailUrl  String?
 	user        	String[]
 	fileAccess    FileAccess[]
 	createdAt   	DateTime  @default(now())

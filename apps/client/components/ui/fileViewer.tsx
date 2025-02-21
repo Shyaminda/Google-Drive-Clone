@@ -18,6 +18,8 @@ const FileViewer: React.FC<FileViewerProps> = ({
 
 	const { objectAccess } = bucketObjectAccess();
 
+	const isImage = fileType === "IMAGE";
+
 	useEffect(() => {
 		async function fetchFile() {
 			const { success, url } = await objectAccess(
@@ -25,6 +27,7 @@ const FileViewer: React.FC<FileViewerProps> = ({
 				false,
 				"VIEW",
 				id,
+				isImage,
 			);
 			console.log("File URL file viewer", url);
 			if (success) {

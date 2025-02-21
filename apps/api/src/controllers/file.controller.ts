@@ -141,9 +141,10 @@ export const getFilesController = async (
 };
 
 export const preFileController = async (req: Request, res: Response) => {
-	const { bucketField, isDownload } = req.body;
+	const { bucketField, isDownload, timestamp } = req.body;
 	console.log("Key:", bucketField);
 	console.log("isDownload:", isDownload);
+	console.log("Timestamp:", timestamp);
 
 	if (!bucketField) {
 		return res.status(400).json({ error: "Missing bucketField" });
@@ -152,7 +153,7 @@ export const preFileController = async (req: Request, res: Response) => {
 	try {
 		if (isDownload === false) {
 			console.log("Streaming file via getObjectViewOnly");
-			return await objectViewOnly(bucketField, res);
+			return await objectViewOnly(bucketField, res, timestamp);
 		}
 
 		const { success, url, error } = await getPresignedUrl(
