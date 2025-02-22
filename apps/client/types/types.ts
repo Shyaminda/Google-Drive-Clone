@@ -1,7 +1,7 @@
 export interface File {
 	id: string;
 	name: string;
-	url: string;
+	//url: string;
 	type: string;
 	bucketField: string;
 	ownerId: string;
@@ -148,7 +148,7 @@ export interface DashboardFileProps {
 	name: string;
 	type: string;
 	size: string;
-	url: string;
+	//url: string;
 	createdAt: string;
 	bucketField: string;
 	extension: string;

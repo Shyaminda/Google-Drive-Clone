@@ -1,10 +1,9 @@
-/* eslint-disable indent */
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import Sort from "@/components/main/sort";
 import { fetchFiles } from "@/hooks/fetch-files";
-import { File, SearchParamProps, viewOnlyProps } from "@/types/types";
+import { File, SearchParamProps } from "@/types/types";
 import { Card } from "@/components/main/card";
 import { getFileTypesParams } from "@/utils/utils";
 import { useSearchParams } from "next/navigation";
@@ -13,6 +12,7 @@ import List from "@/components/main/list";
 import { Button } from "@repo/ui/button";
 import { ClipLoader, PulseLoader } from "react-spinners";
 import FileViewer from "@/components/ui/fileViewer";
+import { useFilePreview } from "@/hooks/file-preview";
 
 const Page = ({ params: initialParams }: SearchParamProps) => {
 	const [files, setFiles] = useState<File[]>([]);
@@ -22,8 +22,7 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 	const [isGridView, setIsGridView] = useState<boolean>(true);
 	const [nextCursor, setNextCursor] = useState<string | null>(null);
 	const [loadingMore, setLoadingMore] = useState(false);
-	const [selectedViewFile, setSelectedViewFile] =
-		useState<viewOnlyProps | null>(null);
+	const { selectedViewFile, handleFileClick, closePreview } = useFilePreview();
 
 	const searchParams = useSearchParams();
 	const fileId = searchParams.get("f") || "";
@@ -111,23 +110,6 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 
 	const selectedFile = files.find((file) => file.id === fileId);
 
-	const handleFileClick = (
-		id: string,
-		bucketField: string,
-		type: string,
-		name: string,
-	) => {
-		console.log("File clicked:", id);
-		setSelectedViewFile({ id, bucketField, type, name });
-	};
-
-	const closePreview = () => {
-		setSelectedViewFile(null);
-	};
-
-	console.log("selectedFile for viewer", selectedViewFile);
-	console.log("files from page type", files);
-
 	return (
 		<div className="page-container">
 			<section className="w-full">
@@ -156,52 +138,52 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 			{files.length > 0 ? (
 				<>
 					<section className={isGridView ? "file-list" : "w-full"}>
-						{fileId
-							? files
-									.filter((file) => file.id === fileId)
-									.map((file) =>
-										isGridView ? (
-											<Card
-												key={file.id}
-												file={file}
-												onClick={
-													() =>
-														handleFileClick(
-															file.id,
-															file.bucketField,
-															file.type,
-															file.name,
-														) // here onClick={handleFileClick} not used directly because from card itself we pass the data unlike in list
-												}
-											/>
-										) : (
-											<List
-												key={file.id}
-												file={files}
-												onClick={handleFileClick}
-											/>
-										),
-									)
-							: isGridView
-								? files.map((file) => (
+						{fileId ? (
+							files
+								.filter((file) => file.id === fileId)
+								.map((file) =>
+									isGridView ? (
 										<Card
 											key={file.id}
 											file={file}
-											onClick={() =>
-												handleFileClick(
-													file.id,
-													file.bucketField,
-													file.type,
-													file.name,
-												)
+											onClick={
+												() =>
+													handleFileClick(
+														file.id,
+														file.bucketField,
+														file.type,
+														file.name,
+													) // here onClick={handleFileClick} not used directly because from card itself we pass the data unlike in list
 											}
 										/>
-									))
-								: files.length > 0 && (
-										<div ref={lastFileCallback}>
-											<List file={files} onClick={handleFileClick} />
-										</div>
-									)}
+									) : (
+										<List
+											key={file.id}
+											file={files}
+											onClick={handleFileClick}
+										/>
+									),
+								)
+						) : isGridView ? (
+							files.map((file) => (
+								<Card
+									key={file.id}
+									file={file}
+									onClick={() =>
+										handleFileClick(
+											file.id,
+											file.bucketField,
+											file.type,
+											file.name,
+										)
+									}
+								/>
+							))
+						) : (
+							<div ref={lastFileCallback}>
+								<List file={files} onClick={handleFileClick} />
+							</div>
+						)}
 					</section>
 					{loadingMore && !isGridView && <ClipLoader color="#997dff" />}
 					{loadingMore && isGridView ? (
@@ -224,10 +206,10 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 
 			{selectedViewFile && (
 				<FileViewer
-					bucketField={selectedViewFile?.bucketField || ""}
-					fileType={selectedViewFile?.type || ""}
-					id={selectedViewFile?.id || ""}
-					fileName={selectedViewFile?.name || ""}
+					bucketField={selectedViewFile?.bucketField}
+					fileType={selectedViewFile?.type}
+					id={selectedViewFile?.id}
+					fileName={selectedViewFile?.name}
 					onClose={closePreview}
 				/>
 			)}

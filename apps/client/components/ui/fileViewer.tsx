@@ -66,3 +66,5 @@ const FileViewer: React.FC<FileViewerProps> = ({
 };
 
 export default FileViewer;
+
+//TODO: when close is click terminate the file retrieval process any further

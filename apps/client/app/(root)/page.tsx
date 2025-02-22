@@ -3,8 +3,10 @@
 import ActionDropdown from "@/components/main/actionDropdown";
 import FormattedDateTime from "@/components/main/formattedDateTime";
 import { Chart } from "@/components/ui/chart";
+import FileViewer from "@/components/ui/fileViewer";
 import Thumbnail from "@/components/ui/Thumbnail";
 import { dashboardData } from "@/hooks/fetch-dashboard";
+import { useFilePreview } from "@/hooks/file-preview";
 import { DashboardDataProps, File } from "@/types/types";
 import { convertFileSize, getUsageSummary } from "@/utils/utils";
 import { Separator } from "@repo/ui/separator";
@@ -13,6 +15,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 export default function Dashboard() {
+	const { selectedViewFile, handleFileClick, closePreview } = useFilePreview();
 	const [data, setData] = useState<DashboardDataProps | null>(null);
 	const [loading, setLoading] = useState(true);
 
@@ -101,10 +104,16 @@ export default function Dashboard() {
 								</h3>
 								<ul className="flex flex-col gap-1">
 									{files.map((file: File) => (
-										<Link
-											href={file.url}
-											target="_blank"
-											className="flex items-center gap-3 hover:bg-slate-100 p-2 rounded-2xl hover:ease-in-out hover:scale-105 transition-transform duration-200"
+										<div
+											onClick={() =>
+												handleFileClick(
+													file.id,
+													file.bucketField,
+													file.type,
+													file.name,
+												)
+											}
+											className="flex items-center gap-3 hover:bg-slate-100 p-2 rounded-2xl hover:ease-in-out hover:scale-105 transition-transform duration-200 cursor-pointer"
 											key={file.id}
 										>
 											<Thumbnail type={file.type} extension={file.extension} />
@@ -119,7 +128,7 @@ export default function Dashboard() {
 												</div>
 												<ActionDropdown file={file} />
 											</div>
-										</Link>
+										</div>
 									))}
 								</ul>
 							</div>
@@ -129,6 +138,15 @@ export default function Dashboard() {
 					<p className="empty-list">No files uploaded</p>
 				)}
 			</section>
+			{selectedViewFile && (
+				<FileViewer
+					bucketField={selectedViewFile?.bucketField}
+					fileType={selectedViewFile?.type}
+					id={selectedViewFile?.id}
+					fileName={selectedViewFile?.name}
+					onClose={closePreview}
+				/>
+			)}
 		</div>
 	);
 }

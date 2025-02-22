@@ -18,8 +18,19 @@ export const getFiles = async ({
 			const queries = createQueries(currentUser, type, searchText, sort, limit);
 			return prisma.file.findMany({
 				...queries,
-				include: {
-					owner: true,
+				select: {
+					id: true,
+					name: true,
+					type: true,
+					bucketField: true,
+					extension: true,
+					size: true,
+					thumbnailUrl: true,
+					createdAt: true,
+					updatedAt: true,
+					owner: {
+						select: { id: true, name: true },
+					},
 					fileAccess: {
 						where: { userId: currentUser.id },
 						select: { permissions: true },

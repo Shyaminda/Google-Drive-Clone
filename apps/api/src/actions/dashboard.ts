@@ -15,7 +15,6 @@ export const getDashboardData = async (ownerId: string) => {
 			return { success: false, message: "User not found" };
 		}
 
-		// const remainingStorage = BigInt(user.maxStorage) - BigInt(user.usedStorage);
 		const usedPercentage =
 			user.maxStorage > 0
 				? Number((BigInt(user.usedStorage) * 100n) / BigInt(user.maxStorage))
@@ -30,7 +29,6 @@ export const getDashboardData = async (ownerId: string) => {
 				name: true,
 				type: true,
 				size: true,
-				url: true,
 				createdAt: true,
 				bucketField: true,
 				extension: true,
