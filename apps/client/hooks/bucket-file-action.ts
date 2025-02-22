@@ -9,7 +9,7 @@ export const bucketObjectAccess = () => {
 		isImage: boolean,
 	) => {
 		try {
-			if (!isDownload || isImage) {
+			if (!isDownload || !isImage) {
 				const cachedData = localStorage.getItem(bucketField);
 				console.log("Cached data found in localStorage", cachedData);
 				if (cachedData) {

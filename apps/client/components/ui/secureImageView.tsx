@@ -1,24 +1,33 @@
-import { useEffect, useRef } from "react";
+"use client";
+
+import { useEffect, useRef, useState } from "react";
 
 const SecureImageView = ({ url }: { url: string }) => {
 	console.log("Secure Image View URL reached", url);
 
+	const [imageUrl, setImageUrl] = useState<string | null>(null);
+
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 
 	useEffect(() => {
+		if (!url) return;
 		const img = new Image();
 		img.src = url;
-		img.crossOrigin = "Anonymous"; // Prevents CORS issues when drawing to canvas
-
 		img.onload = () => {
+			setImageUrl(url);
 			const canvas = canvasRef.current!;
 			const ctx = canvas.getContext("2d")!;
 			canvas.width = img.width;
 			canvas.height = img.height;
 			ctx.drawImage(img, 0, 0);
 		};
+		img.crossOrigin = "Anonymous";
 
-		return () => URL.revokeObjectURL(url);
+		return () => {
+			if (imageUrl) {
+				URL.revokeObjectURL(imageUrl);
+			}
+		};
 	}, [url]);
 
 	const handleContextMenu = (e: React.MouseEvent) => e.preventDefault();
