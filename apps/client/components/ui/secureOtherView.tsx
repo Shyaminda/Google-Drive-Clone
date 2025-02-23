@@ -1,4 +1,16 @@
-/* eslint-disable indent */
+/* eslint-disable prettier/prettier */
+
+"use client";
+
+import { Button } from "@repo/ui/button";
+import {
+	Dialog,
+	DialogClose,
+	DialogContent,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+} from "@repo/ui/dialog";
 import { fileExtensions, getOtherMimeType } from "@/utils/utils";
 import Image from "next/image";
 import { useEffect, useState } from "react";
@@ -6,27 +18,30 @@ import { useEffect, useState } from "react";
 const SecureOtherFileView = ({
 	url,
 	fileName,
+	onClose,
 }: {
 	url: string;
 	fileName: string;
+	onClose: () => void;
 }) => {
 	const [mimeType, setMimeType] = useState<string>("");
 	const [fileCategory, setFileCategory] = useState("OTHER");
+	const [isDialogOpen, setIsDialogOpen] = useState(true);
+	const [dimensions] = useState({
+		width: 800,
+		height: 600,
+	});
 
 	const handleContextMenu = (e: React.MouseEvent) => e.preventDefault();
 	const handleDragStart = (e: React.DragEvent) => e.preventDefault();
 
 	useEffect(() => {
 		const extractFileInfo = () => {
-			console.log("Extracting file info", fileName);
 			const extractedExtension = fileName.split(".").pop()?.toLowerCase() || "";
-			console.log("Extracted extension", extractedExtension);
 			const type = getOtherMimeType(extractedExtension);
-
 			setFileCategory(
 				fileExtensions.other.includes(extractedExtension) ? "OTHER" : "UNKNOWN",
 			);
-
 			setMimeType(type);
 		};
 
@@ -50,8 +65,9 @@ const SecureOtherFileView = ({
 			return (
 				<iframe
 					src={url}
-					style={{ width: "100%", height: "80vh" }}
+					style={{ width: "100%", height: "60vh" }}
 					sandbox="allow-scripts allow-same-origin"
+					onContextMenu={handleContextMenu}
 				/>
 			);
 		}
@@ -65,8 +81,9 @@ const SecureOtherFileView = ({
 				return (
 					<iframe
 						src={url}
-						style={{ width: "100%", height: "80vh" }}
+						style={{ width: "100%", height: "60vh" }}
 						sandbox="allow-same-origin"
+						onContextMenu={handleContextMenu}
 					/>
 				);
 
@@ -88,35 +105,98 @@ const SecureOtherFileView = ({
 			case "application/x-bzip2":
 			case "application/x-iso9660-image":
 				return (
-					<p className="warning">
+					<p className="warning text-center py-4">
 						Archives must be downloaded to view contents
 					</p>
 				);
 
 			case "application/vnd.android.package-archive":
-				return <p className="warning">APK files cannot be previewed</p>;
+				return (
+					<p className="warning text-center py-4">
+						APK files cannot be previewed
+					</p>
+				);
 
 			case "application/x-msdownload":
 			case "application/x-msi":
 				return (
-					<p className="warning">Executable files are blocked for security</p>
+					<p className="warning text-center py-4">
+						Executable files are blocked for security
+					</p>
 				);
 
 			default:
 				return (
-					<p className="warning">No preview available for this file type</p>
+					<p className="warning text-center py-4">
+						No preview available for this file type
+					</p>
 				);
 		}
 	};
 
 	return (
-		<div
-			className="secure-file-viewer"
-			onContextMenu={handleContextMenu}
-			onDragStart={handleDragStart}
+		<Dialog
+			open={isDialogOpen}
+			onOpenChange={(open) => {
+				setIsDialogOpen(open);
+				if (!open) onClose();
+			}}
 		>
-			{fileCategory === "OTHER" ? renderOtherPreview() : "Unknown file type"}
-		</div>
+			<DialogContent
+				className="flex flex-col items-center"
+				style={{
+					backgroundColor: "transparent",
+					maxWidth: "80vw",
+					maxHeight: "80vh",
+					width: dimensions.width,
+					height: dimensions.height,
+					boxShadow: "none",
+					border: "none",
+					padding: "1rem",
+				}}
+			>
+				<DialogHeader className="w-full">
+					<DialogTitle className="text-light-300">{fileName}</DialogTitle>
+				</DialogHeader>
+
+				<div className="relative flex-1 w-full h-full flex flex-col items-center justify-center">
+					<div
+						className="secure-file-viewer"
+						onContextMenu={handleContextMenu}
+						onDragStart={handleDragStart}
+					>
+						{fileCategory === "OTHER"
+							? renderOtherPreview()
+							: "Unknown file type"}
+					</div>
+
+					<div
+						style={{
+							position: "absolute",
+							top: 0,
+							left: 0,
+							width: "100%",
+							height: "100%",
+							background: "transparent",
+							zIndex: 10,
+							pointerEvents: "none",
+						}}
+					/>
+				</div>
+
+				<DialogFooter className="flex justify-end">
+					<DialogClose asChild>
+						<Button
+							onClick={onClose}
+							variant="view"
+							className="px-4 py-2 rounded-md"
+						>
+							Close
+						</Button>
+					</DialogClose>
+				</DialogFooter>
+			</DialogContent>
+		</Dialog>
 	);
 };
 

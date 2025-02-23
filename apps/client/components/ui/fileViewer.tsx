@@ -63,7 +63,11 @@ const FileViewer: React.FC<FileViewerProps> = ({
 				<SecureAudioView url={fileUrl} onClose={onClose} fileName={fileName} />
 			)}
 			{fileUrl && fileType === "OTHER" && (
-				<SecureOtherFileView url={fileUrl} fileName={fileName} />
+				<SecureOtherFileView
+					url={fileUrl}
+					fileName={fileName}
+					onClose={onClose}
+				/>
 			)}
 		</div>
 	);
