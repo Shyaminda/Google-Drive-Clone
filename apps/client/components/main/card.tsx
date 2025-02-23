@@ -38,3 +38,5 @@ export const Card = ({ file, onClick }: CardProps) => {
 		</div>
 	);
 };
+
+//TODO: add breadcrumbs

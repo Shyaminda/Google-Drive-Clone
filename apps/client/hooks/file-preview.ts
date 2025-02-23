@@ -16,6 +16,7 @@ export function useFilePreview() {
 	};
 
 	const closePreview = () => {
+		console.log("Closing preview...");
 		setSelectedViewFile(null);
 	};
 

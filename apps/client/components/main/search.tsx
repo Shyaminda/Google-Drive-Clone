@@ -176,3 +176,4 @@ const Search = () => {
 export default Search;
 
 //TODO: add state resets for error handling
+//TODO: add scroll area for search results

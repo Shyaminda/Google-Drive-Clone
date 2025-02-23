@@ -6,10 +6,9 @@ export const bucketObjectAccess = () => {
 		isDownload: boolean,
 		requestedPermission: string,
 		fileId: string,
-		isImage: boolean,
 	) => {
 		try {
-			if (!isDownload || !isImage) {
+			if (!isDownload) {
 				const cachedData = localStorage.getItem(bucketField);
 				console.log("Cached data found in localStorage", cachedData);
 				if (cachedData) {

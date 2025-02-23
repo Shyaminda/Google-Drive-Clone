@@ -18,8 +18,6 @@ const FileViewer: React.FC<FileViewerProps> = ({
 
 	const { objectAccess } = bucketObjectAccess();
 
-	const isImage = fileType === "IMAGE";
-
 	useEffect(() => {
 		async function fetchFile() {
 			const { success, url } = await objectAccess(
@@ -27,7 +25,6 @@ const FileViewer: React.FC<FileViewerProps> = ({
 				false,
 				"VIEW",
 				id,
-				isImage,
 			);
 			console.log("File URL file viewer", url);
 			if (success) {
@@ -47,11 +44,11 @@ const FileViewer: React.FC<FileViewerProps> = ({
 
 	return (
 		<div className="file-viewer">
-			<button onClick={onClose}>Close</button>
-
 			{!fileUrl && <p>Loading...</p>}
 
-			{fileUrl && fileType === "IMAGE" && <SecureImageView url={fileUrl} />}
+			{fileUrl && fileType === "IMAGE" && (
+				<SecureImageView url={fileUrl} fileName={fileName} onClose={onClose} />
+			)}
 
 			{fileUrl && fileType === "DOCUMENT" && (
 				<SecureDocumentView url={fileUrl} fileName={fileName} />
