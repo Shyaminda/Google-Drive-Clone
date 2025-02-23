@@ -3,6 +3,7 @@ import { Poppins } from "next/font/google";
 import "@repo/ui/global";
 import { SessionProvider } from "next-auth/react";
 import { auth } from "@/auth";
+import BlobUrlCleanup from "@/helpers/revokeUrls";
 
 const poppins = Poppins({
 	subsets: ["latin"],
@@ -25,6 +26,7 @@ export default async function RootLayout({
 		<SessionProvider session={session}>
 			<html lang="en">
 				<body className={`${poppins.variable} font-poppins antialiased`}>
+					<BlobUrlCleanup />
 					{children}
 				</body>
 			</html>

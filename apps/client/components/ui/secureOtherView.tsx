@@ -1,5 +1,4 @@
-/* eslint-disable prettier/prettier */
-
+/* eslint-disable indent */
 "use client";
 
 import { Button } from "@repo/ui/button";
