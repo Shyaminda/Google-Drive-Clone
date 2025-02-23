@@ -50,7 +50,11 @@ const FileViewer: React.FC<FileViewerProps> = ({
 				<SecureImageView url={fileUrl} fileName={fileName} onClose={onClose} />
 			)}
 			{fileUrl && fileType === "DOCUMENT" && (
-				<SecureDocumentView url={fileUrl} fileName={fileName} />
+				<SecureDocumentView
+					url={fileUrl}
+					fileName={fileName}
+					onClose={onClose}
+				/>
 			)}
 			{fileUrl && fileType === "VIDEO" && (
 				<SecureVideoView url={fileUrl} fileName={fileName} onClose={onClose} />
