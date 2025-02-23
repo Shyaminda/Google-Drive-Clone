@@ -49,14 +49,15 @@ const FileViewer: React.FC<FileViewerProps> = ({
 			{fileUrl && fileType === "IMAGE" && (
 				<SecureImageView url={fileUrl} fileName={fileName} onClose={onClose} />
 			)}
-
 			{fileUrl && fileType === "DOCUMENT" && (
 				<SecureDocumentView url={fileUrl} fileName={fileName} />
 			)}
 			{fileUrl && fileType === "VIDEO" && (
 				<SecureVideoView url={fileUrl} fileName={fileName} onClose={onClose} />
 			)}
-			{fileUrl && fileType === "AUDIO" && <SecureAudioView url={fileUrl} />}
+			{fileUrl && fileType === "AUDIO" && (
+				<SecureAudioView url={fileUrl} onClose={onClose} fileName={fileName} />
+			)}
 			{fileUrl && fileType === "OTHER" && (
 				<SecureOtherFileView url={fileUrl} fileName={fileName} />
 			)}
