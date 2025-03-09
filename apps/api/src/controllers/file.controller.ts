@@ -142,6 +142,7 @@ export const getFilesController = async (
 
 export const preFileController = async (req: Request, res: Response) => {
 	const { bucketField, isDownload, timestamp } = req.body;
+	//const range = req.headers.range;
 	console.log("Key:", bucketField);
 	console.log("isDownload:", isDownload);
 	console.log("Timestamp:", timestamp);
@@ -153,7 +154,7 @@ export const preFileController = async (req: Request, res: Response) => {
 	try {
 		if (isDownload === false) {
 			console.log("Streaming file via getObjectViewOnly");
-			return await objectViewOnly(bucketField, res, timestamp);
+			return objectViewOnly(bucketField, res, timestamp);
 		}
 
 		const { success, url, error } = await getPresignedUrl(
