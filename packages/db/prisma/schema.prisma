@@ -10,19 +10,20 @@ datasource db {
 
 model User {
 	id        				String       @id @default(cuid())
-	email     				String    @unique
+	email     				String       @unique
 	name		  				String
 	emailVerified 		DateTime?
-	image    					String?   @default("https://img.freepik.com/free-psd/3d-illustration-person-with-sunglasses_23-2149436188.jpg")
+	image    					String?      @default("https://img.freepik.com/free-psd/3d-illustration-person-with-sunglasses_23-2149436188.jpg")
 	password 					String?
-	maxStorage    		BigInt     @default(5368709120)
-  usedStorage   		BigInt		 @default(0)
+	maxStorage    		BigInt       @default(5368709120)
+  usedStorage   		BigInt		   @default(0)
 	accounts					Account[]
 	files		  				File[]
+	folders           Folder[]     @relation("UserFolders")
 	fileAccess   			FileAccess[] @relation("FileAccessRecipient")
 	sharedFiles   		FileAccess[] @relation("FileAccessSharer") 
-	createdAt 				DateTime  @default(now())
-	updatedAt 				DateTime  @updatedAt
+	createdAt 				DateTime     @default(now())
+	updatedAt 				DateTime     @updatedAt
 }
 
 model Account {
@@ -45,38 +46,52 @@ model Account {
   @@map("accounts")
 }
 
+model Folder {
+  id           String     @id @default(cuid())
+  name         String
+  ownerId      String
+  parentId     String?
+	owner        User       @relation("UserFolders", fields: [ownerId], references: [id], onDelete: Cascade)
+  parentFolder Folder?    @relation("SubFolders", fields: [parentId], references: [id])
+	subFolders   Folder[]   @relation("SubFolders")
+  files        File[]     @relation("FolderFiles")
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+}
+
 model File {
-	id          	String   @id @default(cuid())
+	id          	String   			@id @default(cuid())
 	name        	String
 	url         	String
 	type			  	type
-	bucketField 	String   @unique
+	bucketField 	String   			@unique
 	ownerId     	String
-	owner       	User     @relation(fields: [ownerId], references: [id])
+	folderId     	String?
+	owner       	User     			@relation(fields: [ownerId], references: [id])
+	folder        Folder?    		@relation("FolderFiles", fields: [folderId], references: [id])
 	extension   	String?
 	size        	Int?
 	thumbnailUrl  String?
 	user        	String[]
 	fileAccess    FileAccess[]
-	createdAt   	DateTime  @default(now())
-	updatedAt   	DateTime  @updatedAt
+	createdAt   	DateTime  		@default(now())
+	updatedAt   	DateTime  		@updatedAt
 
 }
 
 model FileAccess {
-  id            String   @id @default(cuid())
+  id            String   			@id @default(cuid())
   fileId        String
   userId        String
 	sharedById    String
-  accessLevel   AccessLevel @default(VIEW)
+  accessLevel   AccessLevel 	@default(VIEW)
 	permissions   Permission[]
-	sharedAt   		DateTime?  @default(now())
+	sharedAt   		DateTime?  		@default(now())
   lastAccessed  DateTime?
-	canShare  		Boolean  @default(false)
 	deletedAt    	DateTime?
-  file         	File   @relation(fields: [fileId], references: [id])
-  user         	User   @relation(name: "FileAccessRecipient",fields: [userId], references: [id])
-	sharedBy      User   @relation(name: "FileAccessSharer",fields: [sharedById], references: [id])
+  file         	File   				@relation(fields: [fileId], references: [id])
+  user         	User   				@relation(name: "FileAccessRecipient",fields: [userId], references: [id])
+	sharedBy      User   				@relation(name: "FileAccessSharer",fields: [sharedById], references: [id])
 
   @@unique([fileId, userId])
 }
