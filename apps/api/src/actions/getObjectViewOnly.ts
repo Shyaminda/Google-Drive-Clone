@@ -1,6 +1,6 @@
-import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
-
-const s3 = new S3Client({ region: process.env.AWS_REGION });
+import { readFileSync } from "fs";
+import path from "path";
+import { getSignedCookies } from "@aws-sdk/cloudfront-signer";
 
 const EXPIRATION_TIME_MS = 5 * 60 * 1000;
 
@@ -28,29 +28,57 @@ export const objectViewOnly = async (
 			return;
 		}
 
-		const command = new GetObjectCommand({
-			Bucket: process.env.AWS_S3_BUCKET_NAME as string,
-			Key: bucketField,
-		});
+		const cloudFrontDomain = process.env.CLOUDFRONT_DOMAIN;
+		// const privateKeyPath = path.resolve("private-key.pem");
 
-		const { Body, ContentType } = await s3.send(command);
-		console.log("content type", ContentType);
-		if (!Body) {
-			res.status(404).json({ success: false, error: "File not found" });
+		const privateKeyPath = process.env.CLOUDFRONT_PRIVATE_KEY_PATH;
+		if (!privateKeyPath) {
+			res
+				.status(500)
+				.json({ success: false, error: "Private key path is not defined" });
 			return;
 		}
+		const privateKey = readFileSync(privateKeyPath, "utf8");
 
-		res.set({
-			"Content-Type": ContentType || "application/octet-stream",
-			"Content-Disposition": "inline",
-			"Cache-Control": "no-store, max-age=0",
-			"X-Content-Type-Options": "nosniff",
-			"Content-Security-Policy": "default-src 'none'; frame-ancestors 'self'", // Prevent embedding
+		const expires = Math.floor(Date.now() / 1000) + 60 * 60;
+		const resourceUrl = `${cloudFrontDomain}/${bucketField}`;
+
+		const policy = JSON.stringify({
+			Statement: [
+				{
+					Resource: resourceUrl,
+					Condition: { DateLessThan: { "AWS:EpochTime": expires } },
+				},
+			],
 		});
 
-		(Body as NodeJS.ReadableStream).pipe(res);
+		const signedCookies = getSignedCookies({
+			url: resourceUrl,
+			keyPairId: process.env.CLOUDFRONT_KEY_PAIR_ID!,
+			privateKey: privateKey,
+			policy: policy,
+		});
+
+		res.cookie("CloudFront-Policy", signedCookies["CloudFront-Policy"], {
+			httpOnly: false,
+			secure: false,
+			domain: `${process.env.CLOUDFRONT_DOMAIN_NO_PROTOCOL}`,
+			path: "/",
+			sameSite: "Lax",
+		});
+
+		res.cookie("CloudFront-Signature", signedCookies["CloudFront-Signature"], {
+			httpOnly: false,
+			secure: false,
+			domain: `${process.env.CLOUDFRONT_DOMAIN_NO_PROTOCOL}`,
+			path: "/",
+			sameSite: "Lax",
+		});
+
+		const signedUrl = `${cloudFrontDomain}/${bucketField}`;
+		res.json({ success: true, url: signedUrl });
 	} catch (error) {
-		console.error("Error fetching file:", error);
-		return { success: false, error: "Internal server error" };
+		console.error("Error generating CloudFront signed cookies:", error);
+		res.status(500).json({ success: false, error: "Internal server error" });
 	}
 };

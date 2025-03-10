@@ -21,6 +21,10 @@ const nextConfig: NextConfig = {
 				protocol: "https",
 				hostname: "driveway-store.s3.us-east-1.amazonaws.com",
 			},
+			{
+				protocol: "https",
+				hostname: "d2c31yv0tsgha3.cloudfront.net",
+			},
 		],
 	},
 };

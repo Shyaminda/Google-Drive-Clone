@@ -98,6 +98,7 @@ const SecureVideoView = ({
 					<video
 						controls
 						controlsList="nodownload"
+						disablePictureInPicture
 						style={{
 							maxWidth: "100%",
 							maxHeight: "100%",

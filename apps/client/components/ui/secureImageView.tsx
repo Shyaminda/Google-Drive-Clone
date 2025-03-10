@@ -207,3 +207,5 @@ const SecureImageView = ({
 };
 
 export default SecureImageView;
+
+//TODO: check image zooming functionality and fix if needed

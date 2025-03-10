@@ -48,3 +48,5 @@ async function generateThumbnail(file: Buffer, fileId: string) {
 }
 
 export default generateThumbnail;
+
+//TODO: cache the thumbnail and thumbnail url is visible in the frontend mitigate the issue

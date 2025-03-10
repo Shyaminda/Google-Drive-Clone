@@ -14,6 +14,8 @@
 	"description": "",
 	"dependencies": {
 		"@auth/express": "^0.8.4",
+		"@aws-sdk/client-cloudfront": "^3.764.0",
+		"@aws-sdk/cloudfront-signer": "^3.734.0",
 		"@aws-sdk/s3-request-presigner": "^3.731.1",
 		"@prisma/client": "^6.1.0",
 		"@repo/common": "*",
@@ -24,6 +26,9 @@
 		"@types/dotenv": "^8.2.3",
 		"@types/jsonwebtoken": "^9.0.7",
 		"@types/multer-s3": "^3.0.3",
+		"@types/uuid": "^10.0.0",
+		"D": "^1.0.0",
+		"aws-cloudfront-sign": "^3.0.2",
 		"aws-sdk": "^2.1692.0",
 		"bcryptjs": "^2.4.3",
 		"cookie-parser": "^1.4.7",

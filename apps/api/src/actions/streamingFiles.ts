@@ -3,7 +3,7 @@ import { s3 } from "../utils/bucket";
 
 const EXPIRATION_TIME_MS = 5 * 60 * 1000; // 5 minutes
 
-export const objectViewOnly = async (
+export const objectViewOnlyStreaming = async (
 	bucketField: string,
 	res: any,
 	timestamp: number,

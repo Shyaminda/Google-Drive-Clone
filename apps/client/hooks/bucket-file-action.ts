@@ -42,28 +42,26 @@ export const bucketObjectAccess = () => {
 				"http://localhost:3001/api/v1/files/access",
 				{ bucketField, isDownload, requestedPermission, timestamp },
 				{
-					responseType: isDownload ? "json" : "blob",
+					//responseType: isDownload ? "json" : "blob",
 					withCredentials: true,
 					params: { fileId },
 				},
 			);
+
 			const signedUrl = response.data.url;
 			console.log("Signed URL", signedUrl);
 
 			if (!isDownload) {
-				const blob = response.data;
-				const objectUrl = URL.createObjectURL(blob);
-
 				const expiresIn = 1800 * 1000; // 30 minutes
 				const expiresAt = Date.now() + expiresIn;
 
 				localStorage.setItem(
 					bucketField,
-					JSON.stringify({ url: objectUrl, expiresAt }),
+					JSON.stringify({ url: signedUrl, expiresAt }),
 				);
-				console.log("Fetched and cached signed URL in localStorage", objectUrl);
+				console.log("Fetched and cached signed URL in localStorage", signedUrl);
 
-				return { success: true, url: objectUrl };
+				return { success: true, url: signedUrl };
 			}
 
 			const fileResponse = await axios.get(signedUrl, {
