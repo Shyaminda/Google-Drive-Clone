@@ -5,8 +5,9 @@ import Image from "next/image";
 import { Button } from "@repo/ui/button";
 import { createFolder } from "@/hooks/create-folder";
 import { BeatLoader } from "react-spinners";
+import { CreateFolderProps } from "@/types/types";
 
-export const CreateFolder = () => {
+export const CreateFolder = ({ type }: CreateFolderProps) => {
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
 	const [folderName, setFolderName] = useState("");
 	const [isLoading, setIsLoading] = useState(false);
@@ -29,7 +30,7 @@ export const CreateFolder = () => {
 
 		setIsLoading(true);
 		try {
-			await createFolder(folderName);
+			await createFolder(folderName, type);
 			handleDialogClose();
 		} catch (error) {
 			console.error("Failed to create folder:", error);

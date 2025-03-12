@@ -94,6 +94,7 @@ export interface User {
 export interface CardProps {
 	file: File;
 	onClick: () => void;
+	showFolders: boolean;
 }
 
 export interface ListViewProps {
@@ -182,4 +183,20 @@ export interface FileViewerProps {
 	id: string;
 	fileName: string;
 	onClose: () => void;
+}
+
+export interface Folder {
+	id: string;
+	name: string;
+}
+export interface folderProps {
+	setShowFolders: React.Dispatch<
+		React.SetStateAction<{ show: boolean; folders: any }>
+	>;
+	showFolders: { show: boolean; folders: any };
+	inType: string;
+}
+
+export interface CreateFolderProps {
+	type: string;
 }

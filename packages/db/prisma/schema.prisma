@@ -51,6 +51,7 @@ model Folder {
   name         String
   ownerId      String
   parentId     String?
+	inType			 String
 	owner        User       @relation("UserFolders", fields: [ownerId], references: [id], onDelete: Cascade)
   parentFolder Folder?    @relation("SubFolders", fields: [parentId], references: [id])
 	subFolders   Folder[]   @relation("SubFolders")

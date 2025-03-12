@@ -3,6 +3,7 @@ import prisma from "../lib/db";
 export const createFolder = async (
 	name: string,
 	userId: string,
+	inType: string,
 	parentId?: string,
 ) => {
 	try {
@@ -11,6 +12,7 @@ export const createFolder = async (
 				name,
 				ownerId: userId,
 				parentId: parentId || null,
+				inType: inType,
 			},
 		});
 

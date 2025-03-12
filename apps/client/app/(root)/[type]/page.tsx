@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import Sort from "@/components/main/sort";
 import { fetchFiles } from "@/hooks/fetch-files";
-import { File, SearchParamProps } from "@/types/types";
+import { File, Folder, SearchParamProps } from "@/types/types";
 import { Card } from "@/components/main/card";
 import { getFileTypesParams } from "@/utils/utils";
 import { useSearchParams } from "next/navigation";
@@ -13,8 +13,8 @@ import { Button } from "@repo/ui/button";
 import { ClipLoader, PulseLoader } from "react-spinners";
 import FileViewer from "@/components/ui/fileViewer";
 import { useFilePreview } from "@/hooks/file-preview";
-import Image from "next/image";
 import { CreateFolder } from "@/components/main/createFolder";
+import { Folders } from "@/components/main/folders";
 
 const Page = ({ params: initialParams }: SearchParamProps) => {
 	const [files, setFiles] = useState<File[]>([]);
@@ -25,6 +25,13 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 	const [nextCursor, setNextCursor] = useState<string | null>(null);
 	const [loadingMore, setLoadingMore] = useState(false);
 	const { selectedViewFile, handleFileClick, closePreview } = useFilePreview();
+	const [showFolders, setShowFolders] = useState<{
+		show: boolean;
+		folders: any;
+	}>({
+		show: false,
+		folders: null,
+	});
 
 	const searchParams = useSearchParams();
 	const fileId = searchParams.get("f") || "";
@@ -112,6 +119,8 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 
 	const selectedFile = files.find((file) => file.id === fileId);
 
+	console.log("showFolders page:", showFolders);
+
 	return (
 		<div className="page-container">
 			<section className="w-full">
@@ -130,14 +139,11 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 						</p>
 						<div className="flex justify-between items-center gap-5">
 							<div className="flex gap-5">
-								<CreateFolder />
-
-								<Image
-									src="/assets/icons/folder.svg"
-									alt="folder"
-									width={23}
-									height={23}
-									className="h-auto cursor-pointer transition-all hover:scale-110 ease-in-out duration-200"
+								<CreateFolder type={type?.join(",") || ""} />
+								<Folders
+									setShowFolders={setShowFolders}
+									showFolders={showFolders}
+									inType={type?.join(",") || ""}
 								/>
 							</div>
 							<div className="sort-container">
@@ -151,14 +157,27 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 				)}
 			</section>
 			{files.length > 0 ? (
-				<>
-					<section className={isGridView ? "file-list" : "w-full"}>
+				<div
+					className={
+						showFolders.show
+							? "grid grid-cols-4 gap-6 w-full items-start"
+							: "flex w-full gap-6"
+					}
+				>
+					<section
+						className={
+							showFolders.show
+								? `col-span-3 ${isGridView ? "file-list" : "w-full"}`
+								: `${isGridView ? "file-list" : "w-full"}`
+						}
+					>
 						{fileId ? (
 							files
 								.filter((file) => file.id === fileId)
 								.map((file) =>
 									isGridView ? (
 										<Card
+											showFolders={showFolders?.show}
 											key={file.id}
 											file={file}
 											onClick={
@@ -183,6 +202,7 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 							files.map((file) => (
 								<Card
 									key={file.id}
+									showFolders={showFolders?.show}
 									file={file}
 									onClick={() =>
 										handleFileClick(
@@ -200,6 +220,32 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 							</div>
 						)}
 					</section>
+
+					{showFolders.show && (
+						<section className="dashboard-recent-files col-span-1">
+							<h2 className="h3 xl:h2 text-light-100">Folders</h2>
+							<div className="flex flex-col gap-4">
+								{showFolders.folders?.length > 0 ? (
+									showFolders.folders.map((folder: Folder) => (
+										<div
+											key={folder.id}
+											className="folder-item p-2 rounded-lg bg-light-800 hover:bg-light-700 transition-colors cursor-pointer"
+											onClick={() =>
+												console.log(`Folder clicked: ${folder.name}`)
+											}
+										>
+											<p className="text-light-100 font-medium">
+												{folder.name}
+											</p>
+										</div>
+									))
+								) : (
+									<p className="text-light-300">No folders to display</p>
+								)}
+							</div>
+						</section>
+					)}
+
 					{loadingMore && !isGridView && <ClipLoader color="#997dff" />}
 					{loadingMore && isGridView ? (
 						<PulseLoader size={15} color="#997dff" />
@@ -214,7 +260,7 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 							</Button>
 						</div>
 					) : null}
-				</>
+				</div>
 			) : (
 				<p className="empty-list">No files uploaded</p>
 			)}
