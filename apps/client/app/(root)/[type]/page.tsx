@@ -13,6 +13,8 @@ import { Button } from "@repo/ui/button";
 import { ClipLoader, PulseLoader } from "react-spinners";
 import FileViewer from "@/components/ui/fileViewer";
 import { useFilePreview } from "@/hooks/file-preview";
+import Image from "next/image";
+import { CreateFolder } from "@/components/main/createFolder";
 
 const Page = ({ params: initialParams }: SearchParamProps) => {
 	const [files, setFiles] = useState<File[]>([]);
@@ -126,11 +128,24 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 						<p className="body-1">
 							Total: <span className="h5">0 MB</span>
 						</p>
-						<div className="sort-container">
-							<p className="body-1 hidden sm:block text-light-200 selection:font-medium">
-								Sort by:
-							</p>
-							<Sort setSort={setSort} />
+						<div className="flex justify-between items-center gap-5">
+							<div className="flex gap-5">
+								<CreateFolder />
+
+								<Image
+									src="/assets/icons/folder.svg"
+									alt="folder"
+									width={23}
+									height={23}
+									className="h-auto cursor-pointer transition-all hover:scale-110 ease-in-out duration-200"
+								/>
+							</div>
+							<div className="sort-container">
+								<p className="body-1 hidden sm:block text-light-200 selection:font-medium">
+									Sort by:
+								</p>
+								<Sort setSort={setSort} />
+							</div>
 						</div>
 					</div>
 				)}
@@ -218,5 +233,3 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 };
 
 export default Page;
-
-//80801420
