@@ -4,6 +4,7 @@ import "@repo/ui/global";
 import { SessionProvider } from "next-auth/react";
 import { auth } from "@/auth";
 import BlobUrlCleanup from "@/helpers/revokeUrls";
+import { Providers } from "@repo/common";
 
 const poppins = Poppins({
 	subsets: ["latin"],
@@ -24,12 +25,14 @@ export default async function RootLayout({
 	const session = await auth();
 	return (
 		<SessionProvider session={session}>
-			<html lang="en">
-				<body className={`${poppins.variable} font-poppins antialiased`}>
-					<BlobUrlCleanup />
-					{children}
-				</body>
-			</html>
+			<Providers>
+				<html lang="en">
+					<body className={`${poppins.variable} font-poppins antialiased`}>
+						<BlobUrlCleanup />
+						{children}
+					</body>
+				</html>
+			</Providers>
 		</SessionProvider>
 	);
 }

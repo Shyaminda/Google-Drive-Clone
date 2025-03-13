@@ -48,7 +48,8 @@ export const uploadController = async (
 ) => {
 	const files = req.files as Express.MulterS3.File[];
 	const ownerId = req.userId as string;
-	console.log("Files:", files, "OwnerId:", ownerId);
+	const folderId = req.body.folderId as string;
+	console.log("Files:", files, "OwnerId:", ownerId, "FolderId:", folderId);
 
 	if (!files || files.length === 0) {
 		return res.status(400).json({ error: "No file to upload" });
@@ -62,7 +63,7 @@ export const uploadController = async (
 
 	try {
 		console.log("reached here");
-		const upload = await uploadFile({ files, ownerId });
+		const upload = await uploadFile({ files, ownerId, folderId });
 
 		if (!upload || !upload.success) {
 			return res.status(400).json({ error: upload?.error });

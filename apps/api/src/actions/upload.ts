@@ -9,7 +9,11 @@ import path from "path";
 
 dotenv.config();
 
-export const uploadFile = async ({ files, ownerId }: FileUploadRequest) => {
+export const uploadFile = async ({
+	files,
+	ownerId,
+	folderId,
+}: FileUploadRequest) => {
 	if (!files || files.length === 0) {
 		return { success: false, error: "No file to uploaded" };
 	}
@@ -83,6 +87,7 @@ export const uploadFile = async ({ files, ownerId }: FileUploadRequest) => {
 					extension: getFileType(file.originalname).extension,
 					size: file.size,
 					ownerId: ownerId,
+					folderId: folderId,
 					thumbnailUrl: thumbnailUrl,
 					bucketField: fileKey,
 					user: [ownerId],

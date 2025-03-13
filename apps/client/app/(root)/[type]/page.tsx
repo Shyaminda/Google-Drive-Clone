@@ -15,6 +15,10 @@ import FileViewer from "@/components/ui/fileViewer";
 import { useFilePreview } from "@/hooks/file-preview";
 import { CreateFolder } from "@/components/main/createFolder";
 import { Folders } from "@/components/main/folders";
+import { useDispatch } from "react-redux";
+import { openedFolder, setOpenedFolder } from "@repo/common";
+import { useSelector } from "react-redux";
+import { RootState } from "@repo/common/src/store/store";
 
 const Page = ({ params: initialParams }: SearchParamProps) => {
 	const [files, setFiles] = useState<File[]>([]);
@@ -32,6 +36,11 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 		show: false,
 		folders: null,
 	});
+	const openedFolderState = useSelector((state: RootState) =>
+		openedFolder(state),
+	);
+
+	const dispatch = useDispatch();
 
 	const searchParams = useSearchParams();
 	const fileId = searchParams.get("f") || "";
@@ -42,6 +51,9 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 		const fetchParams = async () => {
 			const params = await initialParams;
 			const fileTypes = getFileTypesParams(params?.type || "");
+			console.log("File types:", fileTypes);
+
+			//setFolderType(params?.type || null);
 
 			setType(fileTypes);
 			setLimit(params?.limit || "15");
@@ -117,6 +129,11 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 		[loadingMore, nextCursor, isGridView],
 	);
 
+	const handleClick = (folder: Folder) => {
+		dispatch(setOpenedFolder(folder));
+		setShowFolders({ show: true, folders: folder });
+	};
+
 	const selectedFile = files.find((file) => file.id === fileId);
 
 	console.log("showFolders page:", showFolders);
@@ -126,7 +143,18 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 			<section className="w-full">
 				<div className="flex justify-between items-center">
 					<h1 className="h1 capitalize">
-						{fileId && selectedFile ? selectedFile.name : type}
+						{fileId && selectedFile ? (
+							selectedFile.name
+						) : openedFolderState ? (
+							<>
+								{type}{" "}
+								<span className="text-base text-light-100 font-normal">
+									{openedFolderState.name}
+								</span>
+							</>
+						) : (
+							type
+						)}
 					</h1>
 					<div className="mb-2 mr-2">
 						<Switch checked={isGridView} onCheckedChange={setIsGridView} />
@@ -156,6 +184,7 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 					</div>
 				)}
 			</section>
+
 			{files.length > 0 ? (
 				<div
 					className={
@@ -171,33 +200,36 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 								: `${isGridView ? "file-list" : "w-full"}`
 						}
 					>
-						{fileId ? (
-							files
-								.filter((file) => file.id === fileId)
-								.map((file) =>
-									isGridView ? (
-										<Card
-											showFolders={showFolders?.show}
-											key={file.id}
-											file={file}
-											onClick={
-												() =>
-													handleFileClick(
-														file.id,
-														file.bucketField,
-														file.type,
-														file.name,
-													) // here onClick={handleFileClick} not used directly because from card itself we pass the data unlike in list
-											}
-										/>
-									) : (
-										<List
-											key={file.id}
-											file={files}
-											onClick={handleFileClick}
-										/>
-									),
-								)
+						{openedFolderState ? (
+							<div>
+								<div className={isGridView ? "file-list" : "w-full"}>
+									{files
+										.filter((file) => file.folderId === openedFolderState?.id)
+										.map((file) =>
+											isGridView ? (
+												<Card
+													key={file.id}
+													showFolders={showFolders?.show}
+													file={file}
+													onClick={() =>
+														handleFileClick(
+															file.id,
+															file.bucketField,
+															file.type,
+															file.name,
+														)
+													}
+												/>
+											) : (
+												<List
+													key={file.id}
+													file={[file]}
+													onClick={handleFileClick}
+												/>
+											),
+										)}
+								</div>
+							</div>
 						) : isGridView ? (
 							files.map((file) => (
 								<Card
@@ -223,6 +255,17 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 
 					{showFolders.show && (
 						<section className="dashboard-recent-files col-span-1">
+							{openedFolderState && (
+								<button
+									onClick={() => {
+										dispatch(setOpenedFolder(null));
+										//setShowFolders((prev) => ({ ...prev, show: false }));
+									}}
+									className="mb-4 p-2 bg-blue-500 text-white rounded"
+								>
+									Back
+								</button>
+							)}
 							<h2 className="h3 xl:h2 text-light-100">Folders</h2>
 							<div className="flex flex-col gap-4">
 								{showFolders.folders?.length > 0 ? (
@@ -230,9 +273,7 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 										<div
 											key={folder.id}
 											className="folder-item p-2 rounded-lg bg-light-800 hover:bg-light-700 transition-colors cursor-pointer"
-											onClick={() =>
-												console.log(`Folder clicked: ${folder.name}`)
-											}
+											onClick={() => handleClick(folder)}
 										>
 											<p className="text-light-100 font-medium">
 												{folder.name}
@@ -264,7 +305,6 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 			) : (
 				<p className="empty-list">No files uploaded</p>
 			)}
-
 			{selectedViewFile && (
 				<FileViewer
 					bucketField={selectedViewFile?.bucketField}
@@ -279,3 +319,5 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 };
 
 export default Page;
+
+//TODO: disabled the folder button until fetching the folders

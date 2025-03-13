@@ -12,7 +12,7 @@ import axios, { AxiosProgressEvent } from "axios";
 import { Progress } from "@repo/ui/progress";
 import { FileUploaderProps } from "@/types/types";
 
-const FileUploader = ({ ownerId, className }: FileUploaderProps) => {
+const FileUploader = ({ ownerId, className, folderId }: FileUploaderProps) => {
 	const [files, setFiles] = useState<File[]>([]);
 	const [uploadProgress, setUploadProgress] = useState<{
 		[key: string]: number;
@@ -24,6 +24,10 @@ const FileUploader = ({ ownerId, className }: FileUploaderProps) => {
 
 			const formData = new FormData();
 			acceptedFiles.forEach((file) => formData.append("file", file));
+
+			if (folderId) {
+				formData.append("folderId", folderId);
+			}
 			try {
 				const response = await axios.post(
 					"http://localhost:3001/api/v1/files/upload",

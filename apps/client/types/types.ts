@@ -5,6 +5,7 @@ export interface File {
 	type: string;
 	bucketField: string;
 	ownerId: string;
+	folderId: string;
 	owner: User;
 	extension: string;
 	size: number;
@@ -53,6 +54,7 @@ export interface UserButtonProps {
 export interface FileUploaderProps {
 	ownerId: string;
 	className?: string;
+	folderId?: string;
 }
 
 export interface MobileNavigationProps {

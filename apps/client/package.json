@@ -44,6 +44,7 @@
     "@repo/types": "*",
     "@repo/typescript-config": "*",
     "@repo/ui": "*",
+		"@repo/common": "*",
     "@types/hls.js": "^1.0.0",
     "@types/react": "^19.0.2",
     "eslint": "^9",

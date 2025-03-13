@@ -1,11 +1,7 @@
 {
   "name": "@repo/common",
   "version": "1.0.0",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
-  "exports": {
-    "./config": "./src/config.ts"
-  },
+  "types": "module",
   "scripts": {
     "dev": "tsc -b && node dist/index.js"
   },
@@ -13,5 +9,11 @@
   "author": "",
   "license": "ISC",
   "description": "",
-  "dependencies": {}
+  "dependencies": {
+    "@reduxjs/toolkit": "^2.6.1",
+    "react-redux": "^9.2.0"
+  },
+  "devDependencies": {
+    "@types/react-redux": "^7.1.34"
+  }
 }
