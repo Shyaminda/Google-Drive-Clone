@@ -48,7 +48,7 @@ export const uploadController = async (
 ) => {
 	const files = req.files as Express.MulterS3.File[];
 	const ownerId = req.userId as string;
-	const folderId = req.body.folderId as string;
+	const folderId = req.query.folderId as string;
 	console.log("Files:", files, "OwnerId:", ownerId, "FolderId:", folderId);
 
 	if (!files || files.length === 0) {
@@ -87,10 +87,13 @@ export const getFilesController = async (
 	const { searchText } = req.query;
 	const { cursor } = req.query;
 	const { sort } = req.query;
+	const { folderId } = req.query;
+	console.log("Sort controller:", sort);
 	console.log("Type controller:", type);
 	console.log("Limit controller:", limit);
 	console.log("Search Text controller:", searchText);
 	console.log("Cursor controller:", cursor);
+	console.log("FolderId controller:", folderId);
 	const userId = req.userId as string;
 	const email = req.email as string;
 
@@ -120,6 +123,7 @@ export const getFilesController = async (
 			limit: limit ? parseInt(limit as string) : undefined,
 			searchText: typeof searchText === "string" ? searchText : undefined,
 			cursor: typeof cursor === "string" ? cursor : undefined,
+			folderId: typeof folderId === "string" ? folderId : undefined,
 		});
 
 		if (!files.success) {

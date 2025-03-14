@@ -19,6 +19,7 @@ export interface GetFilesProps {
 	sort?: string;
 	limit?: number;
 	cursor?: string;
+	folderId?: string;
 }
 
 export interface AuthenticatedRequest extends Request {

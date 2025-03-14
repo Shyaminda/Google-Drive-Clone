@@ -7,6 +7,7 @@ export const createQueries = (
 	searchText: string,
 	sort: string,
 	limit?: number,
+	folderId?: string,
 ): Prisma.FileFindManyArgs => {
 	const where: Prisma.FileWhereInput = {
 		AND: [
@@ -25,6 +26,7 @@ export const createQueries = (
 						})),
 					}
 				: {},
+			folderId ? { folderId } : {},
 		],
 	};
 

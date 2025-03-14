@@ -11,12 +11,20 @@ import { useToast } from "@repo/ui/toasterHook";
 import axios, { AxiosProgressEvent } from "axios";
 import { Progress } from "@repo/ui/progress";
 import { FileUploaderProps } from "@/types/types";
+import { useSelector } from "react-redux";
+import { RootState } from "@repo/common/src/store/store";
 
-const FileUploader = ({ ownerId, className, folderId }: FileUploaderProps) => {
+const FileUploader = ({ ownerId, className }: FileUploaderProps) => {
 	const [files, setFiles] = useState<File[]>([]);
 	const [uploadProgress, setUploadProgress] = useState<{
 		[key: string]: number;
 	}>({});
+	const openedFolder = useSelector(
+		(state: RootState) => state.folder.openedFolder,
+	);
+	const folderId = openedFolder?.id;
+	console.log("Opened folder fileUploader:", folderId);
+
 	const { toast } = useToast();
 	const onDrop = useCallback(
 		async (acceptedFiles: File[]) => {
@@ -25,9 +33,6 @@ const FileUploader = ({ ownerId, className, folderId }: FileUploaderProps) => {
 			const formData = new FormData();
 			acceptedFiles.forEach((file) => formData.append("file", file));
 
-			if (folderId) {
-				formData.append("folderId", folderId);
-			}
 			try {
 				const response = await axios.post(
 					"http://localhost:3001/api/v1/files/upload",
@@ -37,6 +42,7 @@ const FileUploader = ({ ownerId, className, folderId }: FileUploaderProps) => {
 							"Content-Type": "multipart/form-data",
 						},
 						withCredentials: true,
+						params: { folderId },
 						onUploadProgress: (progressEvent: AxiosProgressEvent) => {
 							if (progressEvent.total) {
 								const percent = Math.round(

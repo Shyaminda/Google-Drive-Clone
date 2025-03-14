@@ -54,7 +54,6 @@ export interface UserButtonProps {
 export interface FileUploaderProps {
 	ownerId: string;
 	className?: string;
-	folderId?: string;
 }
 
 export interface MobileNavigationProps {
@@ -191,6 +190,7 @@ export interface Folder {
 	id: string;
 	name: string;
 }
+
 export interface folderProps {
 	setShowFolders: React.Dispatch<
 		React.SetStateAction<{ show: boolean; folders: any }>

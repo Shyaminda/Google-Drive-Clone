@@ -9,13 +9,29 @@ export const getFiles = async ({
 	sort = "date-newest",
 	limit = 10,
 	cursor,
+	folderId,
 }: GetFilesProps) => {
 	try {
 		console.log({ getFiles: { currentUser, type, sort, limit } });
 		if (!currentUser) throw new Error("User not found");
 
 		const fetchFiles = async (queryCursor?: string) => {
-			const queries = createQueries(currentUser, type, searchText, sort, limit);
+			const queries = createQueries(
+				currentUser,
+				type,
+				searchText,
+				sort,
+				limit,
+				folderId,
+			);
+
+			if (!folderId) {
+				queries.where = {
+					...queries.where, //prevent fetching files from folders
+					folderId: null,
+				};
+			}
+
 			return prisma.file.findMany({
 				...queries,
 				select: {
@@ -24,6 +40,7 @@ export const getFiles = async ({
 					type: true,
 					bucketField: true,
 					extension: true,
+					folderId: true,
 					size: true,
 					thumbnailUrl: true,
 					createdAt: true,

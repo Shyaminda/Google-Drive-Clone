@@ -39,6 +39,7 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 	const openedFolderState = useSelector((state: RootState) =>
 		openedFolder(state),
 	);
+	console.log("Opened folder page:", openedFolderState);
 
 	const dispatch = useDispatch();
 
@@ -64,6 +65,8 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 					params?.limit || "15",
 					sort,
 					params?.searchText,
+					undefined,
+					openedFolderState?.id,
 				);
 				console.log("Fetched files page:", fetchedFiles);
 				if (fetchedFiles && Array.isArray(fetchedFiles.files)) {
@@ -79,7 +82,7 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 		};
 
 		fetchParams();
-	}, [initialParams, limit, sort]);
+	}, [initialParams, limit, sort, openedFolderState]);
 
 	const handleLoadMore = async () => {
 		if (!nextCursor) return;
@@ -92,6 +95,7 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 				sort,
 				searchParams.get("searchText") || "",
 				nextCursor,
+				openedFolderState?.id,
 			);
 
 			if (fetchedMoreFiles?.files) {
@@ -167,6 +171,16 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 						</p>
 						<div className="flex justify-between items-center gap-5">
 							<div className="flex gap-5">
+								{openedFolderState && (
+									<button
+										onClick={() => {
+											dispatch(setOpenedFolder(null));
+										}}
+										className="mb-4 p-2 bg-blue-500 text-white rounded"
+									>
+										Back
+									</button>
+								)}
 								<CreateFolder type={type?.join(",") || ""} />
 								<Folders
 									setShowFolders={setShowFolders}
@@ -185,7 +199,7 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 				)}
 			</section>
 
-			{files.length > 0 ? (
+			{files.length >= 0 ? (
 				<div
 					className={
 						showFolders.show
@@ -202,39 +216,37 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 					>
 						{openedFolderState ? (
 							<div>
-								<div className={isGridView ? "file-list" : "w-full"}>
-									{files
-										.filter((file) => file.folderId === openedFolderState?.id)
-										.map((file) =>
-											isGridView ? (
-												<Card
-													key={file.id}
-													showFolders={showFolders?.show}
-													file={file}
-													onClick={() =>
-														handleFileClick(
-															file.id,
-															file.bucketField,
-															file.type,
-															file.name,
-														)
-													}
-												/>
-											) : (
-												<List
-													key={file.id}
-													file={[file]}
-													onClick={handleFileClick}
-												/>
-											),
-										)}
-								</div>
+								{files
+									.filter((file) => file.folderId === openedFolderState?.id)
+									.map((file) =>
+										isGridView ? (
+											<Card
+												key={file.id}
+												showFolders={showFolders?.show}
+												file={file}
+												onClick={() =>
+													handleFileClick(
+														file.id,
+														file.bucketField,
+														file.type,
+														file.name,
+													)
+												}
+											/>
+										) : (
+											<List
+												key={file.id}
+												file={[file]}
+												onClick={handleFileClick}
+											/>
+										),
+									)}
 							</div>
 						) : isGridView ? (
 							files.map((file) => (
 								<Card
 									key={file.id}
-									showFolders={showFolders?.show}
+									showFolders={showFolders?.show} //used for UI changes
 									file={file}
 									onClick={() =>
 										handleFileClick(
@@ -321,3 +333,5 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 export default Page;
 
 //TODO: disabled the folder button until fetching the folders
+//TODO: don't pass the bucket url for files
+//TODO: check load more function with folderId
