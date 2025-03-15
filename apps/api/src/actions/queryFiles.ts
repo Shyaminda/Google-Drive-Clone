@@ -9,6 +9,7 @@ export const createQueries = (
 	limit?: number,
 	folderId?: string,
 ): Prisma.FileFindManyArgs => {
+	console.log({ folderIdd: folderId });
 	const where: Prisma.FileWhereInput = {
 		AND: [
 			{

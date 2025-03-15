@@ -33,6 +33,10 @@ const FileUploader = ({ ownerId, className }: FileUploaderProps) => {
 			const formData = new FormData();
 			acceptedFiles.forEach((file) => formData.append("file", file));
 
+			if (folderId) {
+				formData.append("folderId", folderId);
+			}
+
 			try {
 				const response = await axios.post(
 					"http://localhost:3001/api/v1/files/upload",
@@ -42,7 +46,6 @@ const FileUploader = ({ ownerId, className }: FileUploaderProps) => {
 							"Content-Type": "multipart/form-data",
 						},
 						withCredentials: true,
-						params: { folderId },
 						onUploadProgress: (progressEvent: AxiosProgressEvent) => {
 							if (progressEvent.total) {
 								const percent = Math.round(
@@ -97,7 +100,7 @@ const FileUploader = ({ ownerId, className }: FileUploaderProps) => {
 				});
 			}
 		},
-		[ownerId, toast],
+		[ownerId, toast, folderId],
 	);
 	const { getRootProps, getInputProps } = useDropzone({ onDrop });
 

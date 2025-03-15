@@ -7,10 +7,12 @@ interface Folder {
 
 interface FolderState {
 	openedFolder: Folder | null;
+	history: Folder[];
 }
 
 const initialState: FolderState = {
 	openedFolder: null,
+	history: [],
 };
 
 const folderSlice = createSlice({
@@ -18,14 +20,27 @@ const folderSlice = createSlice({
 	initialState,
 	reducers: {
 		setOpenedFolder: (state, action: PayloadAction<Folder | null>) => {
-			state.openedFolder = action.payload;
+			if (action.payload) {
+				if (state.openedFolder) {
+					state.history.push(state.openedFolder);
+				}
+				state.openedFolder = action.payload;
+			} else {
+				state.openedFolder = null;
+				state.history = [];
+			}
+		},
+		goBack: (state) => {
+			if (state.history.length > 0) {
+				state.openedFolder = state.history.pop() || null;
+			} else {
+				state.openedFolder = null;
+			}
 		},
 	},
 });
 
-export const { setOpenedFolder } = folderSlice.actions;
+export const { setOpenedFolder, goBack } = folderSlice.actions;
 export const openedFolder = (state: { folder: FolderState }) =>
 	state.folder.openedFolder;
 export default folderSlice.reducer;
-
-//Todo: add eslint for common

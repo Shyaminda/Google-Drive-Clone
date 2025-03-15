@@ -16,7 +16,7 @@ import { useFilePreview } from "@/hooks/file-preview";
 import { CreateFolder } from "@/components/main/createFolder";
 import { Folders } from "@/components/main/folders";
 import { useDispatch } from "react-redux";
-import { openedFolder, setOpenedFolder } from "@repo/common";
+import { goBack, openedFolder, setOpenedFolder } from "@repo/common";
 import { useSelector } from "react-redux";
 import { RootState } from "@repo/common/src/store/store";
 import { fetchFolders } from "@/hooks/fetch-folders";
@@ -84,6 +84,31 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 
 		fetchParams();
 	}, [initialParams, limit, sort, openedFolderState]);
+
+	useEffect(() => {
+		const fetchFoldersOnBack = async () => {
+			if (openedFolderState || !openedFolderState) {
+				try {
+					const response = await fetchFolders(
+						type?.join(",") || "",
+						openedFolderState?.id,
+					);
+					console.log("Fetched folders on back:", response.folders);
+
+					setShowFolders({
+						show: true,
+						folders: response.folders,
+					});
+				} catch (error) {
+					console.error("Error fetching folders on back:", error);
+				}
+			} else {
+				setShowFolders({ show: true, folders: null });
+			}
+		};
+
+		fetchFoldersOnBack();
+	}, [openedFolderState, type]);
 
 	const handleLoadMore = async () => {
 		if (!nextCursor) return;
@@ -187,7 +212,7 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 								{openedFolderState && (
 									<button
 										onClick={() => {
-											dispatch(setOpenedFolder(null));
+											dispatch(goBack());
 										}}
 										className="mb-4 p-2 bg-blue-500 text-white rounded"
 									>
@@ -284,7 +309,7 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 							{openedFolderState && (
 								<button
 									onClick={() => {
-										dispatch(setOpenedFolder(null));
+										dispatch(goBack());
 										//setShowFolders((prev) => ({ ...prev, show: false }));
 									}}
 									className="mb-4 p-2 bg-blue-500 text-white rounded"

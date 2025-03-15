@@ -12,7 +12,7 @@ export const getFiles = async ({
 	folderId,
 }: GetFilesProps) => {
 	try {
-		console.log({ getFiles: { currentUser, type, sort, limit } });
+		console.log({ getFiles: { currentUser, type, sort, limit, folderId } });
 		if (!currentUser) throw new Error("User not found");
 
 		const fetchFiles = async (queryCursor?: string) => {
