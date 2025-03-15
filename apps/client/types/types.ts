@@ -197,6 +197,7 @@ export interface folderProps {
 	>;
 	showFolders: { show: boolean; folders: any };
 	inType: string;
+	folderId?: string;
 }
 
 export interface CreateFolderProps {

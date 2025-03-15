@@ -6,11 +6,21 @@ import { Button } from "@repo/ui/button";
 import { createFolder } from "@/hooks/create-folder";
 import { BeatLoader } from "react-spinners";
 import { CreateFolderProps } from "@/types/types";
+import { useSelector } from "react-redux";
+import { RootState } from "@repo/common/src/store/store";
+import { openedFolder } from "@repo/common";
 
 export const CreateFolder = ({ type }: CreateFolderProps) => {
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
 	const [folderName, setFolderName] = useState("");
 	const [isLoading, setIsLoading] = useState(false);
+
+	const openedFolderState = useSelector((state: RootState) =>
+		openedFolder(state),
+	);
+
+	const parentId = openedFolderState?.id || undefined;
+	console.log("Opened folder create folder:", openedFolderState?.id);
 
 	const handleDialogOpen = () => {
 		setIsDialogOpen(true);
@@ -30,7 +40,7 @@ export const CreateFolder = ({ type }: CreateFolderProps) => {
 
 		setIsLoading(true);
 		try {
-			await createFolder(folderName, type);
+			await createFolder(folderName, type, parentId);
 			handleDialogClose();
 		} catch (error) {
 			console.error("Failed to create folder:", error);

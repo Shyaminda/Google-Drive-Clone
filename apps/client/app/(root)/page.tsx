@@ -94,7 +94,7 @@ export default function Dashboard() {
 			</section>
 
 			<section className="dashboard-recent-files">
-				<h2 className="h3 xl:h2 text-light-100">Recent files uploaded</h2>
+				<h2 className="h3 xl:h2 text-light-100">Recent files</h2>
 				{Object.keys(groupedFiles).length > 0 ? (
 					<div className="mt-5 flex flex-col gap-5">
 						{Object.entries(groupedFiles).map(([type, files]) => (

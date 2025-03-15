@@ -19,6 +19,7 @@ import { useDispatch } from "react-redux";
 import { openedFolder, setOpenedFolder } from "@repo/common";
 import { useSelector } from "react-redux";
 import { RootState } from "@repo/common/src/store/store";
+import { fetchFolders } from "@/hooks/fetch-folders";
 
 const Page = ({ params: initialParams }: SearchParamProps) => {
 	const [files, setFiles] = useState<File[]>([]);
@@ -133,9 +134,21 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 		[loadingMore, nextCursor, isGridView],
 	);
 
-	const handleClick = (folder: Folder) => {
+	const handleClick = async (folder: Folder) => {
 		dispatch(setOpenedFolder(folder));
-		setShowFolders({ show: true, folders: folder });
+		setShowFolders({ show: true, folders: null });
+
+		try {
+			const response = await fetchFolders(type?.join(",") || "", folder.id);
+			console.log("Fetched folders (inside folder):", response.folders);
+
+			setShowFolders({
+				show: true,
+				folders: response.folders,
+			});
+		} catch (error) {
+			console.error("Error fetching folders:", error);
+		}
 	};
 
 	const selectedFile = files.find((file) => file.id === fileId);
@@ -186,6 +199,7 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 									setShowFolders={setShowFolders}
 									showFolders={showFolders}
 									inType={type?.join(",") || ""}
+									folderId={openedFolderState?.id || ""}
 								/>
 							</div>
 							<div className="sort-container">
