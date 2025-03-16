@@ -37,7 +37,7 @@ export const getFoldersController = async (
 	const userId = req.userId as string;
 
 	if (!inType) {
-		return res.status(400).json({ error: "Type field missing" });
+		console.error("Type is missing");
 	}
 
 	try {

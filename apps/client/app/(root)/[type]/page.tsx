@@ -16,7 +16,12 @@ import { useFilePreview } from "@/hooks/file-preview";
 import { CreateFolder } from "@/components/main/createFolder";
 import { Folders } from "@/components/main/folders";
 import { useDispatch } from "react-redux";
-import { goBack, openedFolder, setOpenedFolder } from "@repo/common";
+import {
+	goBack,
+	openedFolder,
+	resetFolderState,
+	setOpenedFolder,
+} from "@repo/common";
 import { useSelector } from "react-redux";
 import { RootState } from "@repo/common/src/store/store";
 import { fetchFolders } from "@/hooks/fetch-folders";
@@ -55,8 +60,6 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 			const fileTypes = getFileTypesParams(params?.type || "");
 			console.log("File types:", fileTypes);
 
-			//setFolderType(params?.type || null);
-
 			setType(fileTypes);
 			setLimit(params?.limit || "15");
 
@@ -85,9 +88,18 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 		fetchParams();
 	}, [initialParams, limit, sort, openedFolderState]);
 
+	const memoizedDispatch = useCallback(() => {
+		dispatch(resetFolderState()); //added for consistency in dependency array of useEffect
+	}, [dispatch]);
+
+	useEffect(() => {
+		memoizedDispatch();
+		setShowFolders({ show: false, folders: null });
+	}, [memoizedDispatch]);
+
 	useEffect(() => {
 		const fetchFoldersOnBack = async () => {
-			if (openedFolderState || !openedFolderState) {
+			if (showFolders.show) {
 				try {
 					const response = await fetchFolders(
 						type?.join(",") || "",
@@ -103,12 +115,12 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 					console.error("Error fetching folders on back:", error);
 				}
 			} else {
-				setShowFolders({ show: true, folders: null });
+				setShowFolders({ show: false, folders: null });
 			}
 		};
 
 		fetchFoldersOnBack();
-	}, [openedFolderState, type]);
+	}, [openedFolderState, type, showFolders.show]);
 
 	const handleLoadMore = async () => {
 		if (!nextCursor) return;
@@ -310,7 +322,6 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 								<button
 									onClick={() => {
 										dispatch(goBack());
-										//setShowFolders((prev) => ({ ...prev, show: false }));
 									}}
 									className="mb-4 p-2 bg-blue-500 text-white rounded"
 								>

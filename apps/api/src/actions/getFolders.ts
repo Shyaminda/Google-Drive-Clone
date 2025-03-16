@@ -2,7 +2,7 @@ import prisma from "../lib/db";
 
 export const getFolders = async (
 	userId: string,
-	inType: string,
+	inType?: string,
 	parentId?: string,
 ) => {
 	try {

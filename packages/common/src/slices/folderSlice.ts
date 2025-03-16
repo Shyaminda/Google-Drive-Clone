@@ -37,10 +37,15 @@ const folderSlice = createSlice({
 				state.openedFolder = null;
 			}
 		},
+		resetFolderState: (state) => {
+			state.openedFolder = null;
+			state.history = [];
+		},
 	},
 });
 
-export const { setOpenedFolder, goBack } = folderSlice.actions;
+export const { setOpenedFolder, goBack, resetFolderState } =
+	folderSlice.actions;
 export const openedFolder = (state: { folder: FolderState }) =>
 	state.folder.openedFolder;
 export default folderSlice.reducer;
