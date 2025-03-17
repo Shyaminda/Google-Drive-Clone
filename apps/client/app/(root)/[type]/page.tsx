@@ -5,7 +5,7 @@ import Sort from "@/components/main/sort";
 import { fetchFiles } from "@/hooks/fetch-files";
 import { File, Folder, SearchParamProps } from "@/types/types";
 import { Card } from "@/components/main/card";
-import { getFileTypesParams } from "@/utils/utils";
+import { getFileTypesParams, getFolderIcon } from "@/utils/utils";
 import { useSearchParams } from "next/navigation";
 import { Switch } from "@repo/ui/switch";
 import List from "@/components/main/list";
@@ -25,6 +25,7 @@ import {
 import { useSelector } from "react-redux";
 import { RootState } from "@repo/common/src/store/store";
 import { fetchFolders } from "@/hooks/fetch-folders";
+import Image from "next/image";
 
 const Page = ({ params: initialParams }: SearchParamProps) => {
 	const [files, setFiles] = useState<File[]>([]);
@@ -190,7 +191,7 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 
 	const selectedFile = files.find((file) => file.id === fileId);
 
-	console.log("showFolders page:", showFolders);
+	console.log("showFolders type:", type?.join(","));
 
 	return (
 		<div className="page-container">
@@ -220,16 +221,23 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 							Total: <span className="h5">0 MB</span>
 						</p>
 						<div className="flex justify-between items-center gap-5">
-							<div className="flex gap-5">
+							<div className="flex gap-5 items-center">
 								{openedFolderState && (
-									<button
+									<Button
+										variant="link"
 										onClick={() => {
 											dispatch(goBack());
 										}}
-										className="mb-4 p-2 bg-blue-500 text-white rounded"
+										className=" p-2 bg-blue-500 text-white rounded"
 									>
-										Back
-									</button>
+										<Image
+											src="/assets/icons/folder-previous.svg"
+											alt={`folder icon`}
+											width={23}
+											height={23}
+											className="h-auto cursor-pointer transition-all hover:scale-110 ease-in-out duration-200"
+										/>
+									</Button>
 								)}
 								<CreateFolder type={type?.join(",") || ""} />
 								<Folders
@@ -318,28 +326,46 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 
 					{showFolders.show && (
 						<section className="dashboard-recent-files col-span-1">
-							{openedFolderState && (
-								<button
-									onClick={() => {
-										dispatch(goBack());
-									}}
-									className="mb-4 p-2 bg-blue-500 text-white rounded"
-								>
-									Back
-								</button>
-							)}
-							<h2 className="h3 xl:h2 text-light-100">Folders</h2>
+							<div className="flex items-center">
+								{openedFolderState && (
+									<Button
+										variant="link"
+										onClick={() => {
+											dispatch(goBack());
+										}}
+										className="mb-4 p-2 bg-blue-500 text-white rounded"
+									>
+										<Image
+											src="/assets/icons/folder-back.svg"
+											alt={`folder icon`}
+											width={20}
+											height={20}
+											className="mr-2"
+										/>
+									</Button>
+								)}
+								<h2 className="h3 xl:h2 text-light-100 mb-5">Folders</h2>
+							</div>
 							<div className="flex flex-col gap-4">
 								{showFolders.folders?.length > 0 ? (
 									showFolders.folders.map((folder: Folder) => (
 										<div
 											key={folder.id}
-											className="folder-item p-2 rounded-lg bg-light-800 hover:bg-light-700 transition-colors cursor-pointer"
+											className="rounded-lg bg-light-800 hover:bg-light-700 transition-colors cursor-pointer"
 											onClick={() => handleClick(folder)}
 										>
-											<p className="text-light-100 font-medium">
-												{folder.name}
-											</p>
+											<div className="flex items-center justify-start gap-3 hover:bg-slate-100 py-1 rounded-2xl hover:ease-in-out hover:scale-105 transition-transform duration-200 cursor-pointer">
+												<Image
+													src={getFolderIcon(type?.join(",") || "")}
+													alt={`${type} folder icon`}
+													width={35}
+													height={35}
+													className=""
+												/>
+												<p className="text-light-100 font-medium">
+													{folder.name}
+												</p>
+											</div>
 										</div>
 									))
 								) : (

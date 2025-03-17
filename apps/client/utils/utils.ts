@@ -110,6 +110,21 @@ export const formatDateTime = (isoString: string | null | undefined) => {
 	return `${time}, ${day} ${month}`;
 };
 
+export const getFolderIcon = (type: string) => {
+	switch (type) {
+		case "DOCUMENT":
+			return "/assets/icons/folder-document.png";
+		case "IMAGE":
+			return "/assets/icons/folder-image.png";
+		case "VIDEO":
+			return "/assets/icons/folder-video.png";
+		case "AUDIO":
+			return "/assets/icons/folder-audio.png";
+		default:
+			return "/assets/icons/folder-other.png";
+	}
+};
+
 export const getFileIcon = (
 	extension: string | undefined,
 	type: FileType | string,
@@ -131,6 +146,10 @@ export const getFileIcon = (
 			return "/assets/icons/file-document.svg";
 		// Image
 		case "svg":
+			return "/assets/icons/file-image.svg";
+		case "jpg":
+			return "/assets/icons/file-image.svg";
+		case "jpeg":
 			return "/assets/icons/file-image.svg";
 		// Video
 		case "mkv":
