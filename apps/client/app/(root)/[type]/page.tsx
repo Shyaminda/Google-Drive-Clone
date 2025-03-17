@@ -196,6 +196,10 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 		}
 	};
 
+	const handleFolderHome = async () => {
+		memoizedDispatch();
+	};
+
 	const selectedFile = files.find((file) => file.id === fileId);
 
 	console.log("showFolders type:", type?.join(","));
@@ -246,6 +250,23 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 										/>
 									</Button>
 								)}
+								<Button
+									variant="link"
+									onClick={() => {
+										handleFolderHome();
+									}}
+									className=" p-2 bg-blue-500 text-white rounded"
+								>
+									{showFolders.show && openedFolderState && (
+										<Image
+											src="/assets/icons/folder-home.png"
+											alt={`folder icon`}
+											width={23}
+											height={23}
+											className="h-auto cursor-pointer transition-all hover:scale-110 ease-in-out duration-200"
+										/>
+									)}
+								</Button>
 								<CreateFolder type={type?.join(",") || ""} />
 								<Folders
 									setShowFolders={setShowFolders}
