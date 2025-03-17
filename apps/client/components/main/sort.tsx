@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { sortTypes } from "@/constants";
 import {
 	Select,
@@ -6,15 +7,40 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@repo/ui/select";
+import Image from "next/image";
 
-const Sort = ({ setSort }: { setSort: (value: string) => void }) => {
+const Sort = ({
+	handleSortChange,
+	isFolderSort = false,
+}: {
+	handleSortChange: (value: string) => void;
+	isFolderSort?: boolean;
+}) => {
+	const filteredSortTypes = isFolderSort
+		? sortTypes.filter(
+				(sortType) =>
+					sortType.value !== "size-largest" &&
+					sortType.value !== "size-smallest",
+			)
+		: sortTypes;
 	return (
-		<Select onValueChange={setSort}>
-			<SelectTrigger className="sort-select">
-				<SelectValue placeholder="Sort by" />
+		<Select onValueChange={handleSortChange}>
+			<SelectTrigger
+				className={`${isFolderSort ? "sort-select-folder" : "sort-select"} flex items-center gap-2`}
+			>
+				{isFolderSort ? (
+					<Image
+						src="/assets/icons/folder-sort.svg"
+						alt="Folder Sort"
+						width={20}
+						height={20}
+					/>
+				) : (
+					<SelectValue placeholder="Sort by" />
+				)}
 			</SelectTrigger>
 			<SelectContent className="sort-select-content">
-				{sortTypes.map((sortType) => (
+				{filteredSortTypes.map((sortType) => (
 					<SelectItem
 						key={sortType.value}
 						value={sortType.value}

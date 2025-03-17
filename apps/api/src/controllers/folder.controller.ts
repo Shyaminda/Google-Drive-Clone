@@ -3,6 +3,7 @@ import { AuthenticatedRequest } from "../type";
 import { createFolder } from "../actions/createFolder";
 import { getFolders } from "../actions/getFolders";
 import { renameFolder } from "../actions/renameFolder";
+import { deleteFolder } from "../actions/deleteFolder";
 
 export const createFolderController = async (
 	req: AuthenticatedRequest,
@@ -34,11 +35,11 @@ export const getFoldersController = async (
 	req: AuthenticatedRequest,
 	res: Response,
 ) => {
-	const { inType, parentId } = req.query;
+	const { inType, parentId, sort } = req.query;
 	const userId = req.userId as string;
 
-	if (!inType) {
-		console.error("Type is missing");
+	if (!inType || !sort) {
+		console.error("Type or sort is missing");
 	}
 
 	try {
@@ -46,6 +47,7 @@ export const getFoldersController = async (
 			userId,
 			inType as string,
 			parentId as string,
+			sort as string,
 		);
 
 		if (!folders.success) {
@@ -88,5 +90,28 @@ export const renameFolderController = async (req: Request, res: Response) => {
 			success: false,
 			error: "Internal server error (renameFolderController)",
 		});
+	}
+};
+
+export const deleteFolderController = async (
+	req: AuthenticatedRequest,
+	res: Response,
+) => {
+	const { folderId } = req.query;
+	const userId = req.userId;
+
+	try {
+		const removeFile = await deleteFolder(userId as string, folderId as string);
+
+		if (!removeFile.success) {
+			return res.status(400).json({ success: false, error: removeFile.error });
+		}
+
+		return res.status(200).json({ success: true, message: removeFile.message });
+	} catch (error) {
+		console.error("Unexpected error in deleteFolderController:", error);
+		return res
+			.status(500)
+			.json({ success: false, error: "Internal server error(dfc)" });
 	}
 };

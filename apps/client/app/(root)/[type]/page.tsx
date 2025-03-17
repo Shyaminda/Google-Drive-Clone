@@ -26,12 +26,14 @@ import { useSelector } from "react-redux";
 import { RootState } from "@repo/common/src/store/store";
 import { fetchFolders } from "@/hooks/fetch-folders";
 import Image from "next/image";
+import FolderActionDropdown from "@/components/main/actionDropdownFolder";
 
 const Page = ({ params: initialParams }: SearchParamProps) => {
 	const [files, setFiles] = useState<File[]>([]);
 	const [type, setType] = useState<string[] | undefined>(undefined);
 	const [limit, setLimit] = useState<string>("10");
 	const [sort, setSort] = useState<string>("date-newest");
+	const [sortFolder, setSortFolder] = useState<string>("date-newest");
 	const [isGridView, setIsGridView] = useState<boolean>(true);
 	const [nextCursor, setNextCursor] = useState<string | null>(null);
 	const [loadingMore, setLoadingMore] = useState(false);
@@ -105,6 +107,7 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 					const response = await fetchFolders(
 						type?.join(",") || "",
 						openedFolderState?.id,
+						sortFolder,
 					);
 					console.log("Fetched folders on back:", response.folders);
 
@@ -121,7 +124,7 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 		};
 
 		fetchFoldersOnBack();
-	}, [openedFolderState, type, showFolders.show]);
+	}, [openedFolderState, type, showFolders.show, sortFolder]);
 
 	const handleLoadMore = async () => {
 		if (!nextCursor) return;
@@ -177,7 +180,11 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 		setShowFolders({ show: true, folders: null });
 
 		try {
-			const response = await fetchFolders(type?.join(",") || "", folder.id);
+			const response = await fetchFolders(
+				type?.join(",") || "",
+				folder.id,
+				sortFolder,
+			);
 			console.log("Fetched folders (inside folder):", response.folders);
 
 			setShowFolders({
@@ -251,7 +258,7 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 								<p className="body-1 hidden sm:block text-light-200 selection:font-medium">
 									Sort by:
 								</p>
-								<Sort setSort={setSort} />
+								<Sort handleSortChange={(value) => setSort(value)} />
 							</div>
 						</div>
 					</div>
@@ -344,7 +351,15 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 										/>
 									</Button>
 								)}
-								<h2 className="h3 xl:h2 text-light-100 mb-5">Folders</h2>
+								<div className="flex items-center justify-between w-full">
+									<h2 className="h3 xl:h2 text-light-100 mb-2">Folders</h2>
+									<div className="sort-container">
+										<Sort
+											handleSortChange={(value) => setSortFolder(value)}
+											isFolderSort={true}
+										/>
+									</div>
+								</div>
 							</div>
 							<div className="flex flex-col gap-4">
 								{showFolders.folders?.length > 0 ? (
@@ -354,22 +369,25 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 											className="rounded-lg bg-light-800 hover:bg-light-700 transition-colors cursor-pointer"
 											onClick={() => handleClick(folder)}
 										>
-											<div className="flex items-center justify-start gap-3 hover:bg-slate-100 py-1 rounded-2xl hover:ease-in-out hover:scale-105 transition-transform duration-200 cursor-pointer">
+											<div className="flex items-center justify-between gap-3 hover:bg-slate-100 py-1 rounded-2xl hover:ease-in-out hover:scale-105 transition-transform duration-200 cursor-pointer">
 												<Image
 													src={getFolderIcon(type?.join(",") || "")}
 													alt={`${type} folder icon`}
 													width={35}
 													height={35}
-													className=""
+													className="ml-2"
 												/>
 												<p className="text-light-100 font-medium">
 													{folder.name}
 												</p>
+												<div className="flex items-center justify-end w-full mr-2">
+													<FolderActionDropdown folder={folder} />
+												</div>
 											</div>
 										</div>
 									))
 								) : (
-									<p className="text-light-300">No folders to display</p>
+									<p className="text-light-100">No folders to display</p>
 								)}
 							</div>
 						</section>
@@ -411,3 +429,4 @@ export default Page;
 //TODO: disabled the folder button until fetching the folders
 //TODO: don't pass the bucket url for files
 //TODO: check load more function with folderId
+//TODO: mobile view for folders UI

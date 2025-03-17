@@ -203,3 +203,12 @@ export interface folderProps {
 export interface CreateFolderProps {
 	type: string;
 }
+
+export interface FolderActionDropdownProps {
+	folder: { id: string; name: string };
+}
+
+export interface SortProps {
+	setSort: (value: string) => void;
+	isFolderSort?: boolean;
+}

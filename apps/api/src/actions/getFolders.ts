@@ -4,8 +4,16 @@ export const getFolders = async (
 	userId: string,
 	inType?: string,
 	parentId?: string,
+	sort: string = "date-newest",
 ) => {
 	try {
+		const sortOptions: Record<string, { [key: string]: "asc" | "desc" }> = {
+			"date-newest": { createdAt: "desc" }, //no sort orders can be used other than asc and desc
+			"date-oldest": { createdAt: "asc" },
+			"name-asc": { name: "asc" },
+			"name-desc": { name: "desc" },
+		};
+
 		const folders = await prisma.folder.findMany({
 			where: {
 				ownerId: userId,
@@ -16,6 +24,7 @@ export const getFolders = async (
 				id: true,
 				name: true,
 			},
+			orderBy: sortOptions[sort] || { createdAt: "desc" },
 		});
 
 		return { success: true, message: "Folders fetched successfully", folders };

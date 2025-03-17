@@ -522,6 +522,11 @@
   .sort-select {
     @apply shad-no-focus h-11 w-full rounded-[8px] border-transparent bg-white !shadow-sm sm:w-[210px] !important;
   }
+
+	.sort-select-folder {
+    @apply shad-no-focus h-11 rounded-[8px] border-transparent bg-white !shadow-sm  !important;
+  }
+
   .sort-select-content {
     @apply !shadow-drop-3 !important;
   }

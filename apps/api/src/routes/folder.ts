@@ -2,6 +2,7 @@ import express from "express";
 import asyncHandler from "../utils/handler";
 import {
 	createFolderController,
+	deleteFolderController,
 	getFoldersController,
 	renameFolderController,
 } from "../controllers/folder.controller";
@@ -17,6 +18,12 @@ folderRouter.post(
 	"/rename",
 	authMiddleware(),
 	asyncHandler(renameFolderController),
+);
+
+folderRouter.delete(
+	"/",
+	authMiddleware(),
+	asyncHandler(deleteFolderController),
 );
 
 export default folderRouter;

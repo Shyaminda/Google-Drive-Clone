@@ -59,6 +59,19 @@ export const actionsDropdownItems = [
 	},
 ];
 
+export const actionsDropdownItemsFolder = [
+	{
+		label: "Rename",
+		icon: "/assets/icons/edit.svg",
+		value: "rename",
+	},
+	{
+		label: "Delete",
+		icon: "/assets/icons/delete.svg",
+		value: "delete",
+	},
+];
+
 export const sortTypes = [
 	{
 		label: "Name (A-Z)",
