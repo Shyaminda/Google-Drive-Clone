@@ -11,6 +11,8 @@ import Thumbnail from "../ui/Thumbnail";
 import FormattedDateTime from "./formattedDateTime";
 import { debounce } from "lodash";
 import { Button } from "@repo/ui/button";
+import { resetFolderState } from "@repo/common";
+import { useDispatch } from "react-redux";
 
 const Search = () => {
 	const [search, setSearch] = useState("");
@@ -24,6 +26,8 @@ const Search = () => {
 	const searchParams = useSearchParams();
 	const searchQuery = searchParams.get("search") || "";
 	const pathname = usePathname();
+
+	const dispatch = useDispatch();
 
 	useEffect(() => {
 		if (!searchQuery) {
@@ -66,7 +70,7 @@ const Search = () => {
 		const filteredTypeFromPath = pathType.length > 0 ? pathType[0] : "";
 
 		const fileTypes = getFileTypesParams(filteredTypeFromPath || "");
-		console.log("File types:", fileTypes);
+		console.log("File types search:", fileTypes);
 		try {
 			debouncedFetch(search, fileTypes, cursor);
 			console.log("Fetching search results...");
@@ -85,7 +89,8 @@ const Search = () => {
 		setResults([]);
 		setHasSearched(true);
 		setOpen(false);
-		router.push(`/${file.type.toLowerCase()}?f=${file.id}`);
+		router.push(`/${file.type.toLowerCase() + "s"}?f=${file.id}`);
+		// dispatch(resetFolderState());
 	};
 
 	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {

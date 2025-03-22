@@ -25,7 +25,7 @@ export const getFiles = async ({
 				folderId,
 			);
 
-			if (!folderId) {
+			if (!folderId && !searchText) {
 				queries.where = {
 					...queries.where, //prevent fetching files from folders
 					folderId: null,

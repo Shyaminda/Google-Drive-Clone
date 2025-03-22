@@ -27,6 +27,7 @@ import { RootState } from "@repo/common/src/store/store";
 import { fetchFolders } from "@/hooks/fetch-folders";
 import Image from "next/image";
 import FolderActionDropdown from "@/components/main/actionDropdownFolder";
+import { fetchFile } from "@/hooks/fetch-file";
 
 const Page = ({ params: initialParams }: SearchParamProps) => {
 	const [files, setFiles] = useState<File[]>([]);
@@ -38,6 +39,7 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 	const [nextCursor, setNextCursor] = useState<string | null>(null);
 	const [loadingMore, setLoadingMore] = useState(false);
 	const { selectedViewFile, handleFileClick, closePreview } = useFilePreview();
+	const [isSearchResultClicked, setIsSearchResultClicked] = useState(false);
 	const [showFolders, setShowFolders] = useState<{
 		show: boolean;
 		folders: any;
@@ -54,10 +56,26 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 
 	const searchParams = useSearchParams();
 	const fileId = searchParams.get("f") || "";
+	console.log("File ID page:", fileId);
 
 	const observerRef = useRef<IntersectionObserver | null>(null);
 
+	const handleSearchResultClick = async (fileId: string, type: string) => {
+		setIsSearchResultClicked(true);
+		try {
+			const fetchedFile = await fetchFile(fileId, type);
+			if (fetchedFile?.file) {
+				setFiles([fetchedFile.file]);
+			} else {
+				console.error("File not found");
+			}
+		} catch (error) {
+			console.error("Error fetching selected file:", error);
+		}
+	};
+
 	useEffect(() => {
+		if (isSearchResultClicked) return;
 		const fetchParams = async () => {
 			const params = await initialParams;
 			const fileTypes = getFileTypesParams(params?.type || "");
@@ -89,7 +107,7 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 		};
 
 		fetchParams();
-	}, [initialParams, limit, sort, openedFolderState]);
+	}, [initialParams, limit, sort, openedFolderState, isSearchResultClicked]);
 
 	const memoizedDispatch = useCallback(() => {
 		dispatch(resetFolderState()); //added for consistency in dependency array of useEffect
@@ -201,8 +219,7 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 	};
 
 	const selectedFile = files.find((file) => file.id === fileId);
-
-	console.log("showFolders type:", type?.join(","));
+	console.log("Selected file page:", selectedFile);
 
 	return (
 		<div className="page-container">
@@ -301,10 +318,14 @@ const Page = ({ params: initialParams }: SearchParamProps) => {
 								: `${isGridView ? "file-list" : "w-full"}`
 						}
 					>
-						{openedFolderState ? (
+						{openedFolderState || selectedFile ? (
 							<div>
 								{files
-									.filter((file) => file.folderId === openedFolderState?.id)
+									.filter(
+										(file) =>
+											file.folderId === openedFolderState?.id ||
+											file.id === fileId,
+									)
 									.map((file) =>
 										isGridView ? (
 											<Card

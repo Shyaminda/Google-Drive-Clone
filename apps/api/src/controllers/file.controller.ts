@@ -14,6 +14,7 @@ import { getFiles } from "../actions/getFiles";
 import { serializeBigInt } from "../utils/bigIntSerializer";
 import { getDashboardData } from "../actions/dashboard";
 import { objectViewOnly } from "../actions/getObjectViewOnly";
+import { getFile } from "../actions/getFile";
 
 export const dashboardController = async (
 	req: AuthenticatedRequest,
@@ -149,6 +150,47 @@ export const getFilesController = async (
 		return res
 			.status(500)
 			.json({ success: false, error: "Internal server error(gfc)" });
+	}
+};
+
+export const getFileController = async (
+	req: AuthenticatedRequest,
+	res: Response,
+) => {
+	const { fileId, type } = req.query;
+	const userId = req.userId as string;
+	console.log("FileId:", fileId);
+	console.log("UserId:", userId);
+
+	if (!fileId) {
+		return res.status(400).json({ error: "Missing fileId" });
+	}
+
+	try {
+		const validTypes = Object.values(PrismaType);
+		console.log("Valid Types:", validTypes);
+		const mappedTypes = Array.isArray(type)
+			? type
+					.filter((t) => validTypes.includes(t as PrismaType))
+					.map((t) => t as PrismaType)
+			: validTypes.includes(type as PrismaType)
+				? [type as PrismaType]
+				: [];
+
+		const file = await getFile({
+			userId,
+			fileId: fileId as string,
+			type: mappedTypes,
+		});
+
+		if (!file.success) {
+			return res.status(404).json({ error: file.error });
+		}
+
+		return res.status(200).json({ file, message: file.message });
+	} catch (error) {
+		console.error("Unexpected error in getFileController:", error);
+		return res.status(500).json({ error: "Internal server error(gfc)" });
 	}
 };
 

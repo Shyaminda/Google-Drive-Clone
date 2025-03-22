@@ -12,7 +12,7 @@ const Thumbnail = ({
 }: ThumbnailProps) => {
 	const isImage = type === "IMAGE" && extension !== "svg";
 
-	console.log("Thumbnail URL", thumbnailUrl);
+	//console.log("Thumbnail URL", thumbnailUrl);
 
 	const thumbnail =
 		type === "IMAGE" ? thumbnailUrl : getFileIcon(extension, type);

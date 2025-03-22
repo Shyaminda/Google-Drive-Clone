@@ -12,6 +12,7 @@ import {
 	deleteFileController,
 	revokeFileAccessController,
 	dashboardController,
+	getFileController,
 } from "../controllers/file.controller";
 import authMiddleware from "../middleware/authMiddleware";
 import { checkFilePermission } from "../middleware/permissionMiddleware";
@@ -31,6 +32,7 @@ fileRouter.post(
 	asyncHandler(uploadController),
 );
 fileRouter.get("/", authMiddleware(), asyncHandler(getFilesController));
+fileRouter.get("/file", authMiddleware(), asyncHandler(getFileController));
 fileRouter.post(
 	"/access",
 	authMiddleware(),

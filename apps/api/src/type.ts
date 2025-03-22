@@ -22,6 +22,12 @@ export interface GetFilesProps {
 	folderId?: string;
 }
 
+export interface GetFileProps {
+	userId: string;
+	fileId: string;
+	type: PrismaType[];
+}
+
 export interface AuthenticatedRequest extends Request {
 	userId?: string;
 	email?: string;
