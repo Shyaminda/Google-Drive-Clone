@@ -11,8 +11,6 @@ import Thumbnail from "../ui/Thumbnail";
 import FormattedDateTime from "./formattedDateTime";
 import { debounce } from "lodash";
 import { Button } from "@repo/ui/button";
-import { resetFolderState } from "@repo/common";
-import { useDispatch } from "react-redux";
 
 const Search = () => {
 	const [search, setSearch] = useState("");
@@ -26,8 +24,6 @@ const Search = () => {
 	const searchParams = useSearchParams();
 	const searchQuery = searchParams.get("search") || "";
 	const pathname = usePathname();
-
-	const dispatch = useDispatch();
 
 	useEffect(() => {
 		if (!searchQuery) {

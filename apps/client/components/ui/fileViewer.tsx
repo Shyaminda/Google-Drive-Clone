@@ -13,7 +13,7 @@ const FileViewer: React.FC<FileViewerProps> = ({
 	id,
 	fileName,
 	onClose,
-}) => {
+}: FileViewerProps) => {
 	const [fileUrl, setFileUrl] = useState<string | null>(null);
 
 	const { objectAccess } = bucketObjectAccess();

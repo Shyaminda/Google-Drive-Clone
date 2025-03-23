@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "types": "module",
   "scripts": {
-    "dev": "tsc -b && node dist/index.js"
+    "dev": "tsc -b && node dist/index.js",
+		"build": "tsc -b"
   },
   "keywords": [],
   "author": "",

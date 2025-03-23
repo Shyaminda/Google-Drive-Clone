@@ -16,12 +16,12 @@ export interface File {
 }
 
 export interface SearchParamProps {
-	params: {
-		type: string;
+	params: Promise<{
+		type?: string;
 		limit?: string;
 		sort?: string;
 		searchText?: string;
-	};
+	}>;
 }
 
 export interface BackButtonProps {
@@ -211,4 +211,12 @@ export interface FolderActionDropdownProps {
 export interface SortProps {
 	setSort: (value: string) => void;
 	isFolderSort?: boolean;
+}
+
+export interface FileViewerProps {
+	bucketField: string;
+	fileType: string;
+	id: string;
+	fileName: string;
+	onClose: () => void;
 }

@@ -6,7 +6,8 @@
 		"dev": "ts-node-dev --respawn src/index.ts",
 		"lint": "eslint .",
 		"format": "prettier --write \"**/*.{ts,tsx,md}\"",
-		"lint:fix": "eslint . --fix"
+		"lint:fix": "eslint . --fix",
+		"build": "tsc"
 	},
 	"keywords": [],
 	"author": "",
