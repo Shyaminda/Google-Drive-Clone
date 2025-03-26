@@ -1,0 +1,57 @@
+FROM node:20.12.0-alpine3.19 AS builder
+
+RUN apk add --no-cache \
+    python3 \
+    py3-pip \
+    make \
+    g++ \
+    cairo-dev \
+    pango-dev \
+    pixman-dev \
+    libjpeg-turbo-dev \
+    giflib-dev \
+    freetype-dev
+
+WORKDIR /app
+
+COPY package.json tsconfig.json turbo.json yarn.lock ./
+COPY packages/db/package.json ./packages/db/
+COPY packages/db/prisma ./packages/db/prisma/
+COPY packages/typescript-config ./packages/typescript-config/
+COPY packages/ui/package.json ./packages/ui/
+COPY packages/eslint-config/package.json ./packages/eslint-config/
+COPY packages/common/package.json ./packages/common/
+COPY packages/types/package.json ./packages/types/
+COPY apps/client/package.json ./apps/client/
+
+RUN yarn install --frozen-lockfile
+
+COPY apps ./apps
+COPY packages ./packages
+
+RUN cd packages/db && npx prisma generate && cd ../..
+
+RUN yarn turbo build --filter=client
+
+FROM node:20.12.0-alpine3.19
+
+RUN apk add --no-cache \
+    cairo \
+    pango \
+    pixman \
+    libjpeg-turbo \
+    giflib \
+    freetype
+
+WORKDIR /app
+
+COPY --from=builder /app /app
+COPY --from=builder /app/packages /app/packages
+COPY --from=builder /app/node_modules /app/node_modules
+COPY --from=builder /app/package.json /app/package.json
+
+EXPOSE 3000
+
+ENV NODE_ENV=production
+
+CMD ["yarn", "turbo", "start", "--filter=client"]

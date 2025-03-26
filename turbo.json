@@ -19,6 +19,13 @@
     "dev": {
       "cache": false,
       "persistent": true
+    },
+		"start": {
+      "dependsOn": ["build"],
+      "outputs": [],
+      "env": [
+        "GITHUB_CLIENT_ID", "GITHUB_CLIENT_SECRET", "GOOGLE_CLIENT_ID", "GOOGLE_CLIENT_SECRET", "NODE_ENV", "RESEND_API_KEY", "NEXTAUTH_URL"
+      ]
     }
   }
 }

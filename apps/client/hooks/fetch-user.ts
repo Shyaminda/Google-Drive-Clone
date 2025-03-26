@@ -2,9 +2,7 @@
 
 import axios from "axios";
 import { useEffect, useState } from "react";
-import dotenv from "dotenv";
 import { User } from "@/types/types";
-dotenv.config();
 
 export const useFetchUser = () => {
 	const [user, setUser] = useState<User | null>(null);
