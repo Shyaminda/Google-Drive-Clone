@@ -7,8 +7,12 @@ export const getFolders = async (
 	sort: string = "date-newest",
 ) => {
 	try {
+		if (!userId) {
+			return { success: false, error: "user not found" };
+		}
+
 		const sortOptions: Record<string, { [key: string]: "asc" | "desc" }> = {
-			"date-newest": { createdAt: "desc" }, //no sort orders can be used other than asc and desc
+			"date-newest": { createdAt: "desc" },
 			"date-oldest": { createdAt: "asc" },
 			"name-asc": { name: "asc" },
 			"name-desc": { name: "desc" },

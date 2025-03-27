@@ -4,8 +4,8 @@ import { Logout } from "@/actions/logout";
 import { LogoutButtonProps } from "@/types/types";
 
 export const LogoutButton = ({ children }: LogoutButtonProps) => {
-	const onClick = () => {
-		Logout();
+	const onClick = async () => {
+		await Logout();
 	};
 
 	return (

@@ -5,6 +5,7 @@ import FormattedDateTime from "@/components/main/formattedDateTime";
 import { Chart } from "@/components/ui/chart";
 import FileViewer from "@/components/ui/fileViewer";
 import Thumbnail from "@/components/ui/Thumbnail";
+import { defaultData } from "@/constants";
 import { dashboardData } from "@/hooks/fetch-dashboard";
 import { useFilePreview } from "@/hooks/file-preview";
 import { DashboardDataProps, File } from "@/types/types";
@@ -16,18 +17,21 @@ import { useEffect, useState } from "react";
 
 export default function Dashboard() {
 	const { selectedViewFile, handleFileClick, closePreview } = useFilePreview();
-	const [data, setData] = useState<DashboardDataProps | null>(null);
+	const [data, setData] = useState<DashboardDataProps>(defaultData);
 	const [loading, setLoading] = useState(true);
+
+	console.log("data", data);
 
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
 				const response = await dashboardData();
 				console.log("storage", response);
-				setData(response);
+				setData(response || defaultData);
 				setLoading(false);
 			} catch (error) {
 				console.error("Error fetching dashboard data:", error);
+				setData(defaultData);
 				setLoading(false);
 			}
 		};
@@ -36,7 +40,6 @@ export default function Dashboard() {
 	}, []);
 
 	if (loading) return <p>Loading...</p>;
-	if (!data) return <p>No data available</p>;
 
 	const usedStorage = parseFloat(data.usedStorage);
 	const maxStorage = parseFloat(data.maxStorage);

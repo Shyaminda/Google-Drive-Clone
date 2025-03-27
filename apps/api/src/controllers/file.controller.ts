@@ -23,6 +23,12 @@ export const dashboardController = async (
 	try {
 		const ownerId = req.userId as string;
 
+		if (!ownerId) {
+			return res
+				.status(200)
+				.json({ success: true, message: "Login to view dashboard" });
+		}
+
 		const dashboardData = await getDashboardData(ownerId);
 
 		if (!dashboardData.success) {
@@ -104,6 +110,12 @@ export const getFilesController = async (
 	console.log("FolderId controller:", folderId);
 	const userId = req.userId as string;
 	const email = req.email as string;
+
+	if (!userId) {
+		return res
+			.status(200) // or 204
+			.json({ success: true, message: "Login to view files" });
+	}
 
 	if (!type) {
 		return res
@@ -194,12 +206,22 @@ export const getFileController = async (
 	}
 };
 
-export const preFileController = async (req: Request, res: Response) => {
+export const preFileController = async (
+	req: AuthenticatedRequest,
+	res: Response,
+) => {
 	const { bucketField, isDownload, timestamp } = req.body;
 	//const range = req.headers.range;
 	console.log("Key:", bucketField);
 	console.log("isDownload:", isDownload);
 	console.log("Timestamp:", timestamp);
+	const userId = req.userId as string;
+
+	if (!userId) {
+		return res
+			.status(200) // or 204
+			.json({ success: true, message: "Login to view files" });
+	}
 
 	if (!bucketField) {
 		return res.status(400).json({ error: "Missing bucketField" });

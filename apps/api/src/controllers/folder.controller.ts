@@ -12,6 +12,12 @@ export const createFolderController = async (
 	const { name, parentId, inType } = req.body;
 	const userId = req.userId as string;
 
+	if (!userId) {
+		return res
+			.status(200) // or possibly 204
+			.json({ success: true, message: "Login to create folder" });
+	}
+
 	if (!name || !inType) {
 		return res.status(400).json({ error: "Required fields missing" });
 	}
@@ -37,6 +43,12 @@ export const getFoldersController = async (
 ) => {
 	const { inType, parentId, sort } = req.query;
 	const userId = req.userId as string;
+
+	if (!userId) {
+		return res
+			.status(200)
+			.json({ success: true, message: "Login to view folders" });
+	}
 
 	if (!inType || !sort) {
 		console.error("Type or sort is missing");

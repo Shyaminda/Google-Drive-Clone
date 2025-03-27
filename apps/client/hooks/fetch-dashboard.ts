@@ -11,7 +11,10 @@ export const dashboardData = async () => {
 		console.log("Response dashboard:", dashboardData.data.dashboardData);
 		return dashboardData.data.dashboardData;
 	} catch (error) {
-		console.error("Unexpected error in dashboard:", error);
-		return { success: false, message: "Internal server error" };
+		if (axios.isAxiosError(error) && error.response?.status === 401) {
+			console.warn("User is not authenticated, returning default data.");
+			return null;
+		}
+		throw error;
 	}
 };

@@ -1,3 +1,5 @@
+import { DashboardDataProps } from "@/types/types";
+
 export const navItems = [
 	{
 		name: "Dashboard",
@@ -103,3 +105,17 @@ export const avatarPlaceholderUrl =
 	"https://img.freepik.com/free-psd/3d-illustration-person-with-sunglasses_23-2149436188.jpg";
 
 export const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
+
+export const defaultData: DashboardDataProps = {
+	usedStorage: "0",
+	maxStorage: "5368709120",
+	remainingStorage: "5368709120",
+	summary: {
+		Documents: { size: 0, latestDate: "0" },
+		Images: { size: 0, latestDate: "0" },
+		Videos: { size: 0, latestDate: "0" },
+		Audios: { size: 0, latestDate: "0" },
+		Others: { size: 0, latestDate: "0" },
+	},
+	recentFiles: [],
+};
