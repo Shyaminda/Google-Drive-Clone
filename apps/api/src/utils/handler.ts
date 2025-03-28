@@ -190,16 +190,6 @@ export const getFileIcon = (
 	}
 };
 
-// APPWRITE URL UTILS
-// Construct appwrite file URL - https://appwrite.io/docs/apis/rest#images
-export const constructFileUrl = (bucketField: string) => {
-	return `https://${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${bucketField}`;
-};
-
-export const constructDownloadUrl = (bucketField: string) => {
-	return `${process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT}/storage/buckets/${process.env.NEXT_PUBLIC_APPWRITE_BUCKET}/files/${bucketField}/download?project=${process.env.NEXT_PUBLIC_APPWRITE_PROJECT}`;
-};
-
 // DASHBOARD UTILS
 export const getUsageSummary = (totalSpace: any) => {
 	return [
