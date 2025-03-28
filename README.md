@@ -1,84 +1,154 @@
-# Turborepo starter
+Google Drive Clone
 
-This is an official starter Turborepo.
 
-## Using this example
 
-Run the following command:
+📌 About the Project
+A cloud storage web application inspired by Google Drive, enabling users to create folders, upload files, and manage permissions. Users can share files with specific access controls, ensuring secure and efficient collaboration.
 
-```sh
-npx create-turbo@latest
-```
+📑 Index
 
-## What's inside?
+Features
 
-This Turborepo includes the following packages/apps:
+Built With
 
-### Apps and Packages
+Installation
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+How It Works
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+Support
 
-### Utilities
+Contribute
 
-This Turborepo has some additional tools already setup for you:
+License
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
+🚀 Features
+✅ Authentication & Security
 
-### Build
+User authentication with NextAuth
 
-To build all apps and packages, run the following command:
+Email verification on signup
 
-```
-cd my-turborepo
-pnpm build
-```
+OAuth login (Google, GitHub, etc.)
 
-### Develop
+✅ File Management
 
-To develop all apps and packages, run the following command:
+Create folders and upload files
 
-```
-cd my-turborepo
-pnpm dev
-```
+Categorize files based on type (Images, Videos, Documents, etc.)
 
-### Remote Caching
+AWS S3 for cloud storage
 
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
+CloudFront CDN for optimized delivery
 
-Turborepo can use a technique known as [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
+✅ File Sharing & Access Control
 
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
+Share files with specific users
 
-```
-cd my-turborepo
-npx turbo login
-```
+Set custom permissions:
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
+Download
 
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
+Rename
 
-```
-npx turbo link
-```
+Share
 
-## Useful Links
+Only users with granted permissions can perform respective actions
 
-Learn more about the power of Turborepo:
+✅ Performance & Deployment
 
-- [Tasks](https://turbo.build/repo/docs/core-concepts/monorepos/running-tasks)
-- [Caching](https://turbo.build/repo/docs/core-concepts/caching)
-- [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching)
-- [Filtering](https://turbo.build/repo/docs/core-concepts/monorepos/filtering)
-- [Configuration Options](https://turbo.build/repo/docs/reference/configuration)
-- [CLI Usage](https://turbo.build/repo/docs/reference/command-line-reference)
+Dockerized for easy deployment
+
+Hosted on AWS for scalability
+
+🛠 Built With
+Frontend: Next.js, Tailwind CSS, ShadCN UI
+
+Backend: Express, Prisma, NextAuth
+
+Database: PostgreSQL (NeonDB)
+
+Storage & CDN: AWS S3, AWS CloudFront
+
+Deployment: Docker, EC2
+
+📦 Installation
+Running Locally
+1️⃣ Clone the repository
+
+git clone https://github.com/yourusername/google-drive-clone.git
+cd google-drive-clone
+2️⃣ Install dependencies
+
+yarn install
+3️⃣ Set up environment variables
+Copy .env.example to .env and configure the following:
+
+DATABASE_URL=your_database_url
+NEXTAUTH_SECRET=your_secret_key
+AWS_ACCESS_KEY_ID=your_aws_key
+AWS_SECRET_ACCESS_KEY=your_aws_secret
+S3_BUCKET_NAME=your_s3_bucket
+4️⃣ Start the database using Docker
+
+docker run -e POSTGRES_PASSWORD=mysecretpassword -p 5432:5432 -d postgres
+5️⃣  Generate Prisma Client
+
+npx prisma generate 
+6️⃣ Run database migrations
+
+npx prisma migrate dev
+7️⃣ Start the development server
+
+yarn dev
+Your app should now be running at http://localhost:3000 🚀
+
+☁️ Deployment
+This project is containerized using Docker. To deploy, use:
+
+
+docker-compose up --build
+For AWS deployment:
+
+Use EC2 instance with Docker
+
+Set up a reverse proxy using NGINX
+
+Configure your S3 bucket & CloudFront for file storage
+
+🔍 How It Works
+1️⃣ Authentication
+Users sign up with email verification
+
+OAuth login is available for seamless access
+
+2️⃣ File Upload & Storage
+Files are uploaded to AWS S3
+
+Folders and files are categorized dynamically
+
+3️⃣ File Sharing & Permissions
+Users can share files with specific access levels
+
+Permissions control whether a user can rename, share, or download a file
+
+4️⃣ Deployment & Performance
+Prisma ORM manages database operations
+
+AWS CloudFront optimizes file delivery
+
+Docker ensures smooth deployment
+
+💡 Support
+If you find this project useful, please consider giving it a ⭐ on GitHub.
+
+🤝 Contribute
+Contributions are welcome! Feel free to:
+
+Open an issue
+
+Submit a pull request
+
+Improve documentation
+
+📝 License
+MIT License – Free to use and modify.
