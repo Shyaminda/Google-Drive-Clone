@@ -60,5 +60,7 @@ export const {
 	},
 	adapter: PrismaAdapter(prisma),
 	session: { strategy: "jwt" },
+	trustHost: true,
 	...authConfig,
 });
+//$ docker run -e POSTGRES_PASSWORD=mysecretpassword -p 5432:5432 -d postgres
