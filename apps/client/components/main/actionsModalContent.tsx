@@ -109,7 +109,7 @@ export const ShareFile = ({
 						/>
 						<div className="mt-4">
 							<p className="subtitle-2 text-light-100 mb-2">
-								Select Permissions:
+								Select permissions to grant file access:
 							</p>
 							<div>
 								{filteredPermissionList.map((perm) => (
@@ -138,9 +138,7 @@ export const ShareFile = ({
 							</p>
 						</div>
 					) : (
-						<p className="subtitle-2 text-light-200">
-							You don&apos;t have permission to share this file
-						</p>
+						<p className="subtitle-2 text-light-200"></p>
 					)}
 					<ul className="pt-2">
 						{sharedUsers.map((email) => (
