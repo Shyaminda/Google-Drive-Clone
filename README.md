@@ -12,26 +12,40 @@ A cloud storage web application inspired by Google Drive, enabling users to crea
 
 ## 📸 Project Screenshots
 
-### Screenshot 1: Authentication
-![Screenshot 1](apps/client/public/assets/images/authentication.png)
+<details>
+  <summary>Screenshot 1: Authentication</summary>
+  <img src="apps/client/public/assets/images/authentication.png" alt="Screenshot 1" />
+</details>
 
-### Screenshot 2: Dashboard View
-![Screenshot 2](apps/client/public/assets/images/dashboard.png)
+<details>
+  <summary>Screenshot 2: Dashboard View</summary>
+  <img src="apps/client/public/assets/images/dashboard.png" alt="Screenshot 2" />
+</details>
 
-### Screenshot 3: File Upload Interface
-![Screenshot 3](apps/client/public/assets/images/upload.png)
+<details>
+  <summary>Screenshot 3: File Upload Interface</summary>
+  <img src="apps/client/public/assets/images/upload.png" alt="Screenshot 3" />
+</details>
 
-### Screenshot 4: Folder Management
-![Screenshot 4](apps/client/public/assets/images/folder.png)
+<details>
+  <summary>Screenshot 4: Folder Management</summary>
+  <img src="apps/client/public/assets/images/folder.png" alt="Screenshot 4" />
+</details>
 
-### Screenshot 5: File Sharing Permissions
-![Screenshot 5](apps/client/public/assets/images/share.png)
+<details>
+  <summary>Screenshot 5: File Sharing Permissions</summary>
+  <img src="apps/client/public/assets/images/share.png" alt="Screenshot 5" />
+</details>
 
-### Screenshot 6: Mobile View/tablet of the App
-![Screenshot 6](apps/client/public/assets/images/mobile.png)
+<details>
+  <summary>Screenshot 6: Mobile View/Tablet of the App</summary>
+  <img src="apps/client/public/assets/images/mobile.png" alt="Screenshot 6" />
+</details>
 
-### Screenshot 6: Files View of the App
-![Screenshot 6](apps/client/public/assets/images/filevideo.png)
+<details>
+  <summary>Screenshot 7: Files View of the App</summary>
+  <img src="apps/client/public/assets/images/filevideo.png" alt="Screenshot 7" />
+</details>
 
 ---
 
