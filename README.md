@@ -10,6 +10,31 @@ A cloud storage web application inspired by Google Drive, enabling users to crea
 
 ---
 
+## 📸 Project Screenshots
+
+### Screenshot 1: Authentication
+![Screenshot 1](apps/client/public/assets/images/authentication.png)
+
+### Screenshot 2: Dashboard View
+![Screenshot 2](apps/client/public/assets/images/dashboard.png)
+
+### Screenshot 3: File Upload Interface
+![Screenshot 3](apps/client/public/assets/images/upload.png)
+
+### Screenshot 4: Folder Management
+![Screenshot 4](apps/client/public/assets/images/folder.png)
+
+### Screenshot 5: File Sharing Permissions
+![Screenshot 5](apps/client/public/assets/images/share.png)
+
+### Screenshot 6: Mobile View/tablet of the App
+![Screenshot 6](apps/client/public/assets/images/mobile.png)
+
+### Screenshot 6: Files View of the App
+![Screenshot 6](apps/client/public/assets/images/filevideo.png)
+
+---
+
 ## 📑 Index
 
 - [Features](#features)
@@ -110,13 +135,23 @@ npx prisma generate
 npx prisma migrate dev
 ```
 
-#### 7️⃣ Start the development server
+#### 7️⃣ Start the frontend development server /Google-drive-clone/apps/client
 
 ```sh
 yarn dev
 ```
 
 Your app should now be running at [http://localhost:3000](http://localhost:3000) 🚀
+
+---
+
+#### 8️⃣ Start the backend development server /Google-drive-clone/apps/api
+
+```sh
+yarn dev
+```
+
+Your app should now be running at [http://localhost:3001](http://localhost:3001) 🚀
 
 ---
 
