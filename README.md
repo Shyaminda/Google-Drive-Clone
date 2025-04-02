@@ -108,8 +108,8 @@ A cloud storage web application inspired by Google Drive, enabling users to crea
 #### 1️⃣ Clone the repository
 
 ```sh
-git clone https://github.com/yourusername/google-drive-clone.git
-cd google-drive-clone
+git clone https://github.com/Shyaminda/Google-Drive-Clone.git
+cd Google-Drive-Clone
 ```
 
 #### 2️⃣ Install dependencies
