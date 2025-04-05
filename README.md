@@ -50,6 +50,7 @@ A cloud storage web application inspired by Google Drive, enabling users to crea
 ---
 
 ## 📑 Index
+
 - [Features](#-features)
 - [Built With](#-built-with)
 - [Installation](#-installation)

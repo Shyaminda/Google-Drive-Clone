@@ -38,4 +38,4 @@ jobs:
         run: docker pull shyamindasenevi/driveway-store:backend
 
       - name: Verify Frontend Image
-        run: docker pull shyamindasenevi/driveway-store:frontend
+        run: docker pull shyamindasenevi/driveway-store:frontend 
