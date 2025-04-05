@@ -47,6 +47,7 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           script: |
+            echo ${{ secrets.DOCKER_PASSWORD }} | sudo docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
             sudo docker pull shyamindasenevi/driveway-store:backend
             sudo docker pull shyamindasenevi/driveway-store:frontend
 
