@@ -5,11 +5,13 @@
 ![License](https://img.shields.io/badge/license-MIT-lightgrey)
 
 ## 📌 About the Project
+
 A cloud storage web application inspired by Google Drive, enabling users to create folders, upload files, and manage permissions. Users can share files with specific access controls, ensuring secure and efficient collaboration.
 
 ---
 
 ## 📑 Index
+
 - [Features](#features)
 - [Built With](#built-with)
 - [Installation](#installation)
@@ -21,18 +23,22 @@ A cloud storage web application inspired by Google Drive, enabling users to crea
 ---
 
 ## 🚀 Features
+
 ✅ **Authentication & Security**
+
 - User authentication with **NextAuth**
 - **Email verification** on signup
 - **OAuth login** (Google, GitHub, etc.)
 
 ✅ **File Management**
+
 - Create **folders** and **upload files**
 - Categorize files based on type (Images, Videos, Documents, etc.)
 - **AWS S3** for cloud storage
 - **CloudFront CDN** for optimized delivery
 
 ✅ **File Sharing & Access Control**
+
 - Share files with specific users
 - Set custom **permissions**:
   - **Download**
@@ -41,12 +47,14 @@ A cloud storage web application inspired by Google Drive, enabling users to crea
 - Only users with granted permissions can perform respective actions
 
 ✅ **Performance & Deployment**
+
 - **Dockerized** for easy deployment
 - Hosted on **AWS** for scalability
 
 ---
 
 ## 🛠 Built With
+
 - **Frontend**: Next.js, Tailwind CSS, ShadCN UI
 - **Backend**: Express, Prisma, NextAuth
 - **Database**: PostgreSQL
@@ -56,20 +64,26 @@ A cloud storage web application inspired by Google Drive, enabling users to crea
 ---
 
 ## 📦 Installation
+
 ### Running Locally
+
 #### 1️⃣ Clone the repository
+
 ```sh
 git clone https://github.com/yourusername/google-drive-clone.git
 cd google-drive-clone
 ```
 
 #### 2️⃣ Install dependencies
+
 ```sh
 yarn install
 ```
 
 #### 3️⃣ Set up environment variables
+
 Copy `.env.example` to `.env` and configure the following:
+
 ```env
 DATABASE_URL=your_database_url
 NEXTAUTH_SECRET=your_secret_key
@@ -79,34 +93,43 @@ S3_BUCKET_NAME=your_s3_bucket
 ```
 
 #### 4️⃣ Start the database using Docker or using neonDB link with DATABASE_URL
+
 ```sh
 docker run -e POSTGRES_PASSWORD=mysecretpassword -p 5432:5432 -d postgres
 ```
 
 #### 5️⃣ Generate Prisma Client
+
 ```sh
 npx prisma generate
 ```
 
 #### 6️⃣ Run database migrations
+
 ```sh
 npx prisma migrate dev
 ```
 
 #### 7️⃣ Start the development server
+
 ```sh
 yarn dev
 ```
+
 Your app should now be running at [http://localhost:3000](http://localhost:3000) 🚀
 
 ---
 
 ## ☁️ Deployment
+
 This project is containerized using Docker. To deploy, use:
+
 ```sh
 docker-compose build
 ```
+
 For AWS deployment:
+
 - Use EC2 instance with Docker
 - Set up a reverse proxy using NGINX
 - Configure your S3 bucket & CloudFront for file storage
@@ -116,14 +139,17 @@ For AWS deployment:
 ## 🔍 How It Works
 
 1️⃣ **Authentication**
+
 - Users sign up with email verification
 - OAuth login is available for seamless access
 
 2️⃣ **File Upload & Storage**
+
 - Files are uploaded to AWS S3
 - Folders and files are categorized dynamically
 
-3️⃣ **File Sharing & Permissions
+3️⃣ \*\*File Sharing & Permissions
+
 - Users can share files with specific access levels.
 
 - Cascading Permissions:
@@ -139,36 +165,39 @@ For AWS deployment:
 - Other permissions (Download, Rename) also follow the same rule—only users with explicit permission can perform those actions.
 
 4️⃣ **Deployment & Performance**
+
 - Prisma ORM manages database operations
 - AWS CloudFront optimizes file delivery
 - Docker ensures smooth deployment
 
 ---
 
-## 📌 Roadmap  
+## 📌 Roadmap
 
-This project is actively being improved. Below are some upcoming features and enhancements:  
+This project is actively being improved. Below are some upcoming features and enhancements:
 
-- 📂 Improve file & folder management (instant renaming, better loading states).  
-- 🚀 Enhance performance (caching thumbnails, optimizing downloads).  
-- 🛠 Improve error handling and state management.  
+- 📂 Improve file & folder management (instant renaming, better loading states).
+- 🚀 Enhance performance (caching thumbnails, optimizing downloads).
+- 🛠 Improve error handling and state management.
 - 🖼 UI/UX improvements (better mobile view, breadcrumb navigation).
-- 🔧 Infrastructure & Scalability  
+- 🔧 Infrastructure & Scalability
 
-For the full list of planned improvements, check out the [TODO.md](./TODO.md) file.  
+For the full list of planned improvements, check out the [TODO.md](./TODO.md) file.
 
 ---
 
 ## 💡 Support
+
 If you find this project useful, please consider giving it a ⭐ on GitHub.
 
 ---
 
 ## 🤝 Contribute
-This project is a work in progress! If you'd like to contribute, check out the [TODO.md](./TODO.md) for a list of pending improvements. 
+
+This project is a work in progress! If you'd like to contribute, check out the [TODO.md](./TODO.md) for a list of pending improvements.
 
 ---
 
 ## 📝 License
-MIT License – Free to use and modify.
 
+MIT License – Free to use and modify.
