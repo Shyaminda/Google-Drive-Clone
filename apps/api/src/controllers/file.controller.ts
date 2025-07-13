@@ -219,7 +219,7 @@ export const preFileController = async (
 
 	if (!userId) {
 		return res
-			.status(200) // or 204
+			.status(200)
 			.json({ success: true, message: "Login to view files" });
 	}
 
