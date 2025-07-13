@@ -12,7 +12,7 @@ RUN apk add --no-cache \
     giflib-dev \
     freetype-dev
 
-WORKDIR /app
+WORKDIR /app/api
 
 COPY package.json tsconfig.json turbo.json yarn.lock ./
 COPY packages/db/package.json ./packages/db/
@@ -43,12 +43,12 @@ RUN apk add --no-cache \
     giflib \
     freetype
 
-WORKDIR /app
+WORKDIR /app/api
 
-COPY --from=builder /app /app
-COPY --from=builder /app/packages /app/packages
-COPY --from=builder /app/node_modules /app/node_modules
-COPY --from=builder /app/package.json /app/package.json
+COPY --from=builder /app/api /app/api
+COPY --from=builder /app/api/packages /app/api/packages
+COPY --from=builder /app/api/node_modules /app/api/node_modules
+COPY --from=builder /app/api/package.json /app/api/package.json
 
 EXPOSE 3001
 

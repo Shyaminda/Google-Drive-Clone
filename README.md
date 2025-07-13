@@ -10,15 +10,54 @@ A cloud storage web application inspired by Google Drive, enabling users to crea
 
 ---
 
+## 📸 Project Screenshots
+
+<details>
+  <summary>Screenshot 1: Authentication</summary>
+  <img src="apps/client/public/assets/images/authentication.png" alt="Screenshot 1" />
+</details>
+
+<details>
+  <summary>Screenshot 2: Dashboard View</summary>
+  <img src="apps/client/public/assets/images/dashboard.png" alt="Screenshot 2" />
+</details>
+
+<details>
+  <summary>Screenshot 3: File Upload Interface</summary>
+  <img src="apps/client/public/assets/images/upload.png" alt="Screenshot 3" />
+</details>
+
+<details>
+  <summary>Screenshot 4: Folder Management</summary>
+  <img src="apps/client/public/assets/images/folder.png" alt="Screenshot 4" />
+</details>
+
+<details>
+  <summary>Screenshot 5: File Sharing Permissions</summary>
+  <img src="apps/client/public/assets/images/share.png" alt="Screenshot 5" />
+</details>
+
+<details>
+  <summary>Screenshot 6: Mobile View/Tablet of the App</summary>
+  <img src="apps/client/public/assets/images/mobile.png" alt="Screenshot 6" />
+</details>
+
+<details>
+  <summary>Screenshot 7: Files View of the App</summary>
+  <img src="apps/client/public/assets/images/filevideo.png" alt="Screenshot 7" />
+</details>
+
+---
+
 ## 📑 Index
 
-- [Features](#features)
-- [Built With](#built-with)
-- [Installation](#installation)
-- [How It Works](#how-it-works)
-- [Support](#support)
-- [Contribute](#contribute)
-- [License](#license)
+- [Features](#-features)
+- [Built With](#-built-with)
+- [Installation](#-installation)
+- [How It Works](#-how-it-works)
+- [Support](#-support)
+- [Contribute](#-contribute)
+- [License](#-license)
 
 ---
 
@@ -70,8 +109,8 @@ A cloud storage web application inspired by Google Drive, enabling users to crea
 #### 1️⃣ Clone the repository
 
 ```sh
-git clone https://github.com/yourusername/google-drive-clone.git
-cd google-drive-clone
+git clone https://github.com/Shyaminda/Google-Drive-Clone.git
+cd Google-Drive-Clone
 ```
 
 #### 2️⃣ Install dependencies
@@ -110,13 +149,23 @@ npx prisma generate
 npx prisma migrate dev
 ```
 
-#### 7️⃣ Start the development server
+#### 7️⃣ Start the frontend development server /Google-drive-clone/apps/client
 
 ```sh
 yarn dev
 ```
 
 Your app should now be running at [http://localhost:3000](http://localhost:3000) 🚀
+
+---
+
+#### 8️⃣ Start the backend development server /Google-drive-clone/apps/api
+
+```sh
+yarn dev
+```
+
+Your app should now be running at [http://localhost:3001](http://localhost:3001) 🚀
 
 ---
 
