@@ -1,8 +1,0 @@
-# Example: Automatically assign reviewers based on file paths
-
-# Entire repo requires tech leads
-* @shyaminda
-
-# Specific folders
-apps/api/**    @shyaminda @bhhgtr
-apps/client/** @shyaminda @bhhgtr
