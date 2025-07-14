@@ -12,6 +12,18 @@ pipeline {
   }
 
   stages {
+		stage('Debug Info') {
+      steps {
+        echo "🔍 DEBUG INFO"
+        echo "BRANCH_NAME: ${env.BRANCH_NAME}"
+        echo "CHANGE_ID: ${env.CHANGE_ID}"
+        echo "CHANGE_BRANCH: ${env.CHANGE_BRANCH}"
+        echo "CHANGE_TARGET: ${env.CHANGE_TARGET}"
+        echo "CHANGE_URL: ${env.CHANGE_URL}"
+        echo "Is this a PR? ${env.CHANGE_ID != null}"
+      }
+    }
+		
     stage('Build & Test') {
       when {
 				anyOf {
