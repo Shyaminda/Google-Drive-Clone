@@ -2,7 +2,7 @@ pipeline {
   agent any
 
   tools {
-    nodejs 'Node 20' // pipeline
+    nodejs 'Node 20'
   }
 
   environment {
@@ -14,11 +14,15 @@ pipeline {
   stages {
     stage('Build & Test') {
       when {
-        anyOf {
-          changeRequest()
-          branch 'releases'
-        }
-      }
+				anyOf {
+					allOf {
+						changeRequest()
+						expression { env.CHANGE_TARGET == 'releases' }
+					}
+
+					branch 'releases'
+				}
+			}
       steps {
         checkout scm
         sh '''
