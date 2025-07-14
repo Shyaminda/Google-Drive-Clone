@@ -13,8 +13,12 @@ pipeline {
 
   stages {
     stage('Build & Test') {
-      when { changeRequest() }  // Only run for PRs
-			expression { env.CHANGE_TARGET == 'releases' }
+      when {
+        allOf {
+          changeRequest()                            // “this is a PR build”
+          expression { env.CHANGE_TARGET == 'releases' }  // “and PR target is releases”
+        }
+      }
       steps {
         checkout scm
         sh '''
