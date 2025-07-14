@@ -3,7 +3,7 @@ import prisma from "../lib/db";
 export const userFilePermission = async (fileId: string, userId: string) => {
 	try {
 		const file = await prisma.file.findUnique({
-			where: { id: fileId },
+			where: { id: fileId }, //pipeline
 			include: {
 				owner: true,
 				fileAccess: {
