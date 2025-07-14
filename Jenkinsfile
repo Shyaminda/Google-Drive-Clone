@@ -14,6 +14,7 @@ pipeline {
   stages {
     stage('Build & Test') {
       when { changeRequest() }  // Only run for PRs
+			expression { env.CHANGE_TARGET == 'releases' }
       steps {
         checkout scm
         sh '''
