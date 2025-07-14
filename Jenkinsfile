@@ -14,9 +14,9 @@ pipeline {
   stages {
     stage('Build & Test') {
       when {
-        allOf {
+        anyOf {
           changeRequest()
-          expression { env.CHANGE_TARGET == 'releases' }
+          branch 'releases'
         }
       }
       steps {
@@ -30,19 +30,16 @@ pipeline {
     }
 
     stage('Dockerize & Deploy') {
-      when { branch 'releases' }  // Only on merge to releases
+      when { branch 'releases' }
       steps {
         checkout scm
 
-        // 1) Build Docker images
         sh "docker build -t $REGISTRY/driveway-backend:latest -f docker/Dockerfile.api ."
         sh "docker build -t $REGISTRY/driveway-frontend:latest -f docker/Dockerfile.client ."
 
-        // 2) Push to your private registry (no login needed)
         sh "docker push $REGISTRY/driveway-backend:latest"
         sh "docker push $REGISTRY/driveway-frontend:latest"
 
-        // 3) SSH to EC2 and deploy containers
         sshagent([SSH_CRED]) {
           sh """
             ssh -o StrictHostKeyChecking=no $SSH_TARGET << 'EOF'
