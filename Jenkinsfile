@@ -25,7 +25,7 @@ pipeline {
     }
 
     stage('Dockerize & Deploy') {
-      when { branch 'main' }  // Only on merge to main
+      when { branch 'releases' }  // Only on merge to releases
       steps {
         checkout scm
 
