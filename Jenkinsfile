@@ -2,12 +2,12 @@ pipeline {
   agent any
 
   tools {
-    nodejs 'Node 20'  // Ensure Node 20 is configured under Manage Jenkins → Global Tool Configuration
+    nodejs 'Node 20'
   }
 
   environment {
     REGISTRY   = "ec2-54-89-252-56.compute-1.amazonaws.com:5000"
-    SSH_CRED   = 'ec2-ssh-key'  // Jenkins SSH private key for EC2 instance
+    SSH_CRED   = 'ec2-ssh-key'
     SSH_TARGET = "ubuntu@ec2-54-89-252-56.compute-1.amazonaws.com"
   }
 
@@ -15,8 +15,8 @@ pipeline {
     stage('Build & Test') {
       when {
         allOf {
-          changeRequest()                            // “this is a PR build”
-          expression { env.CHANGE_TARGET == 'releases' }  // “and PR target is releases”
+          changeRequest()
+          expression { env.CHANGE_TARGET == 'releases' }
         }
       }
       steps {
