@@ -6,9 +6,9 @@ pipeline {
   }
 
   environment {
-    REGISTRY   = "ec2-54-89-252-56.compute-1.amazonaws.com:5000"
+    REGISTRY   = "xx.xx.xx.xxx:5000"
     SSH_CRED   = 'ec2-ssh-key'  // Jenkins SSH private key for EC2 instance
-    SSH_TARGET = "ubuntu@ec2-54-89-252-56.compute-1.amazonaws.com"
+    SSH_TARGET = "xxx.xxx.xxx.xxx.amazonaws.com"
   }
 
   stages {
